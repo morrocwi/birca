@@ -1,7 +1,7 @@
 schema_version: birca_universal_skill.v1
 id: BIRCA
 name: "BIRCA — vendor-agnostic health-advisory skill (short call name: BIRCA)"
-version: 1.3.0
+version: 1.4.0
 generated_at: "2026-07-09"
 status: PUBLISHED_EDUCATIONAL_RESEARCH_USE_ONLY   # public release approved by rights holder; non-commercial (see LICENSE.md/LEGAL_DISCLAIMER.md); human two-reviewer clinical audit + cross-model validation still open, see README.md "What's still open"
 issue: ISSUE-0151
@@ -324,6 +324,33 @@ dynamic_graph_boundary:
       eligibility gates, or "report-level projection, not proven physiological law" framing anywhere in this
       spec. Prospective data, clinician review, and outcome tracking remain required for any validation claim
       (same standard as plausibility_vs_validation above).
+  cross_domain_literature_corroboration:
+    claim_tier: [finite_diagnostic, Dr]   # structural corroboration of equation FORM only, NOT clinical validation
+    scope: "physical health AND mental health/affective-science literature, independently published (not BIRCA-derived)"
+    finding: >
+      The double-well/cusp potential form BIRCA's corrected repair equation uses, and BIRCA's allostatic-
+      burden concept, are not ad hoc: the same structural forms appear independently, with real citations,
+      in established quantitative physiology and clinical-psychology/affective-science literature --
+      (1) mood cusp/bistable affect (van der Maas et al. 2003) uses the identical cusp potential
+      V(m)=m^4/4 - m^2/2 + hm; (2) affect "home base" reversion (Kuppens et al. 2010, Emotion) is the same
+      linear-relaxation form as the corrected causal-safety equation; (3) critical slowing down near a
+      tipping point (Scheffer et al. 2009, Nature; van de Leemput et al. 2014, PNAS, applied to depression
+      relapse) is the same phenomenon as the monograph's claimed critical-slowing-down (sec 3.5) -- HONEST
+      CAVEAT: that specific early-warning signature is reported in that literature as mostly-not-novel /
+      weak real-world predictive evidence, cited here for structural correspondence only, not as a validated
+      clinical early-warning tool; (4) symptom-network theory of psychopathology (Borsboom & Cramer 2013,
+      Annu Rev Clin Psychol; Cramer et al. 2016) shows strong symptom-coupling sustains a self-reinforcing
+      state after a stressor is removed while weak coupling returns to baseline -- structurally the same
+      pattern BIRCA's biopsychosocial (Layer 0b) framing describes, though mapping it onto a potential-well
+      form requires an added gradient-flow-closure assumption the source literature itself flags; (5) the
+      HPA axis (CRH->ACTH->cortisol negative-feedback cascade, canonical endocrine-modeling form) is the
+      physiological substrate BIRCA's "chronic burden" concept is a report-level abstraction of, not a claim
+      that replaces it.
+    what_this_does_not_mean: >
+      This is structural/literature CORROBORATION of the equation FORM only -- it does not validate BIRCA's
+      own specific scores, thresholds, or intervention rankings, does not upgrade BIRCA's claim tier or
+      eligibility gates, and does not constitute clinical evidence for any individual user. Same standard as
+      plausibility_vs_validation and mathematical_consistency_finding above.
   three_level_separation: [biological_mechanism, graph_dynamical_ontology, clinical_reporting_projection]
   required_reviewer_response: >
     "BIRCA does not claim that physiology is linear, static, or governed by fixed universal coefficients. The

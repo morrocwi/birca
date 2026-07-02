@@ -127,3 +127,48 @@ reproduces the bistability/hysteresis/critical-slowing-down the monograph's own 
 empirical evidence** and must never be cited as such; it does not substitute for, or get mixed into, the
 Tier 0-8 clinical evidence libraries above. See `spec/birca_universal_skill.yaml`
 → `dynamic_graph_boundary.mathematical_consistency_finding` for the full, scoped statement.
+
+## Cross-domain literature corroboration — physical AND mental health (independent published sources, not
+## BIRCA-derived)
+
+The mathematical FORM used by BIRCA's corrected repair-loop equation (a double-well/cusp potential with a
+restoring term) and its allostatic-burden concept are not ad hoc — the same structural forms appear
+independently, with real citations, in established quantitative physiology and affective-science /
+clinical-psychology literature. This is **structural corroboration of the equation FORM only** — it does
+**not** validate BIRCA's own specific scores, thresholds, or intervention rankings; the same
+`plausibility_vs_validation` standard in `spec/birca_universal_skill.yaml` applies. Verified (real numerical
+integration, `finite_diagnostic` tier) by the maintainer, code not shipped in this repo:
+
+- **Mood cusp / bistable affect** — van der Maas, H.L.J. et al. (2003), catastrophe/cusp model of
+  hysteresis applied to affect; independently uses the identical cusp potential `V(m)=m⁴/4 − m²/2 + hm`
+  that BIRCA's corrected repair equation uses, with control `h` read as life-stress minus support instead
+  of BIRCA's burden-minus-causal-safety.
+- **Affect "home base" (Ornstein-Uhlenbeck)** — Kuppens, P. et al. (2010), *Emotion*: mood reverts to an
+  individual baseline with characteristic variability — the same linear-relaxation form as BIRCA's
+  corrected causal-safety equation.
+- **Critical slowing down as an early-warning signal** — Scheffer, M. et al. (2009), *Nature*; van de
+  Leemput, I.A. et al. (2014), *PNAS*, applied to depression relapse: rising autocorrelation/variance near
+  a tipping point. Same phenomenon as BIRCA's claimed critical-slowing-down (monograph sec 3.5) — **honest
+  caveat: this specific early-warning signature is reported in that literature as mostly-not-novel /
+  weak-evidence for real-world clinical prediction**, not a strong validated early-warning tool; cited here
+  for structural correspondence only, not as proof of clinical utility.
+- **Symptom-network theory of psychopathology** — Borsboom, D. & Cramer, A.O.J. (2013), *Annual Review of
+  Clinical Psychology*; Cramer, A.O.J. et al. (2016): symptoms causally activate one another; strong
+  coupling sustains a self-reinforcing symptomatic state after a stressor is removed (multistability), weak
+  coupling returns to baseline. Structurally the same "strong coupling sustains, weak coupling clears"
+  pattern BIRCA's repair/burden framing describes for the biopsychosocial domain (Layer 0b). Requires an
+  added gradient-flow-closure assumption to map onto a potential-well form; flagged as such in the source
+  literature, not an intrinsic property of the raw network model.
+- **HPA axis (stress-hormone) dynamics** — a 3-node CRH→ACTH→cortisol negative-feedback cascade (canonical
+  form in the endocrine-modeling literature, e.g. Andersen-class HPA models) is the physiological substrate
+  most directly underlying "chronic burden"/allostatic load — cortisol dysregulation from sustained
+  activation without adequate negative feedback is the biological mechanism BIRCA's burden concept is a
+  report-level abstraction OF, not a claim that replaces it.
+- **Circadian rhythm** — a delayed-negative-transcriptional-feedback ~24h limit cycle (Goodwin-type,
+  Leloup–Goldbeter 1999 reduced form) underlies sleep/wake regulation, relevant background for any
+  biopsychosocial intake that touches sleep disruption.
+
+None of the above upgrades BIRCA's own claim tier, eligibility gates, or "report-level projection, not
+proven physiological law" framing. It is cited to show the equation forms BIRCA borrows are recognized,
+independently-published structures in physiology and affective/clinical-psychology science — not
+inventions unique to, or validated specifically for, this skill.

@@ -1,5 +1,42 @@
 # birca — changelog
 
+## v1.4.0 (2026-07-09) — cross-domain literature corroboration: physical AND mental health
+
+Per the maintainer's request to read research_universal_solver's health/cognitive equation work and pull
+out what's relevant to physical and mental health for birca -- while explicitly directed NOT to make any
+further changes inside research_universal_solver itself, this release cites the underlying PUBLISHED
+LITERATURE directly (not the sister-repo code) as independent structural corroboration for BIRCA's own
+equation forms and biopsychosocial framing:
+
+- **Mood cusp / bistable affect** (van der Maas et al. 2003) -- uses the identical cusp potential
+  `V(m)=m^4/4 - m^2/2 + hm` as BIRCA's corrected repair equation.
+- **Affect "home base" reversion** (Kuppens et al. 2010, *Emotion*) -- same linear-relaxation form as the
+  corrected causal-safety equation.
+- **Critical slowing down near a tipping point** (Scheffer et al. 2009, *Nature*; van de Leemput et al.
+  2014, *PNAS*, applied to depression relapse) -- same phenomenon as the monograph's claimed
+  critical-slowing-down, with the honest caveat (carried over from the source literature itself) that this
+  specific early-warning signature is reported as mostly-not-novel / weak real-world predictive evidence.
+- **Symptom-network theory of psychopathology** (Borsboom & Cramer 2013, *Annu Rev Clin Psychol*; Cramer et
+  al. 2016) -- structurally the same "strong coupling sustains, weak coupling clears" pattern as BIRCA's
+  biopsychosocial (Layer 0b) framing.
+- **HPA axis (CRH->ACTH->cortisol) stress-hormone dynamics** -- the physiological substrate BIRCA's
+  "chronic burden" concept is a report-level abstraction of.
+
+Added:
+- `spec/birca_universal_skill.yaml` -> new `dynamic_graph_boundary.cross_domain_literature_corroboration`
+  field (claim tier `finite_diagnostic`/`Dr`, with an explicit `what_this_does_not_mean` clause identical in
+  spirit to `mathematical_consistency_finding`).
+- `spec/EVIDENCE_SOURCES.md` -> new "Cross-domain literature corroboration" section citing all 5 findings
+  with real academic references, explicitly separated from the Tier 0-8 clinical evidence libraries.
+- `SYSTEM_PROMPT.md` -> one additional sentence in the required reviewer-response text pointing to this
+  corroboration if scientific status is challenged.
+
+**Explicitly NOT claimed:** this is structural corroboration of equation FORM only. It does not validate
+BIRCA's own specific scores, thresholds, or intervention rankings, does not upgrade BIRCA's claim tier or
+eligibility gates, and is not clinical evidence for any individual user -- same standard as
+`plausibility_vs_validation` and `mathematical_consistency_finding`. Verified: fresh reinstall confirms the
+new text extracts and renders correctly; no change to BIRCA's own safety mechanisms or depth gates.
+
 ## v1.3.0 (2026-07-09) — mathematical-consistency grounding connected (from research_universal_solver)
 
 Adds a scoped, honestly-tiered reference to a separate mathematical-consistency finding: a

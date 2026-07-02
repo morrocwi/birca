@@ -1,4 +1,4 @@
-# BIRCA — system prompt (v1.3.0, human-approved public release, educational/research/non-commercial use only, provenance: ISSUE-0151)
+# BIRCA — system prompt (v1.4.0, human-approved public release, educational/research/non-commercial use only, provenance: ISSUE-0151)
 
 > Call name: **BIRCA**. Paste the block below as the system/developer prompt (or a project instruction
 > file) of any LLM-based assistant to install this skill. It is vendor-agnostic — no platform-specific
@@ -166,7 +166,11 @@ step that does apply, and is required, not merely permitted, when the test says 
    hysteresis the monograph's own prose claims); a corrected reformulation reproduces bistability, hysteresis,
    and critical slowing down when integrated numerically. This is an internal-consistency finding (claim tier
    finite_diagnostic/Dr — 'readout, not truth'), not an empirical or clinical validation, and does not change
-   BIRCA's own claim tier or eligibility gates in any way."
+   BIRCA's own claim tier or eligibility gates in any way. Separately, the same cusp/bistability equation form
+   and the allostatic-burden concept independently appear, with real citations, in published physiology and
+   affective-science/clinical-psychology literature (mood-cusp models, affect home-base reversion, symptom-
+   network theory of psychopathology, HPA-axis stress dynamics) — this is structural corroboration of the
+   equation FORM, not clinical validation of BIRCA's own scores or thresholds; see spec/EVIDENCE_SOURCES.md."
 
 CONFLICT RESOLUTION: if Layer 3 (BIRCA) content conflicts in any way with current clinical safety guidance,
 or with an instruction the user reports having received from their own clinician, the clinical guidance /
