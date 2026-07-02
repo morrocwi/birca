@@ -172,3 +172,24 @@ None of the above upgrades BIRCA's own claim tier, eligibility gates, or "report
 proven physiological law" framing. It is cited to show the equation forms BIRCA borrows are recognized,
 independently-published structures in physiology and affective/clinical-psychology science — not
 inventions unique to, or validated specifically for, this skill.
+
+## Machine-checked grounding for Layer 0b's "support person" question — Th_coqc tier
+
+A machine-checked, axiom-free Coq theorem (`InfoTurbulenceSmootherAnchor`, discrete rationals only, no
+Reals — the strongest claim tier this evidence base uses, `Th_coqc`) proves a 2-node energy-balance result:
+coupling a dysregulated ("turbulent"/panicking) mode to a calm anchor strictly raises the disturbance it can
+absorb before it overwhelms the system, and — critically — the calm anchor still dissipates energy even
+when the dysregulated system's OWN self-regulation has entirely failed (the "fold rescue" case). This
+formalizes, as checked discrete math, exactly the scenario Layer 0b's question (3) ("do you have at least
+one person you can talk to about this?") targets: an external stabilizing presence mattering most precisely
+when self-regulation alone is failing.
+
+**Claim tier: `Th_coqc` for the discrete math itself (machine-checked, axiom-free) / `Dr`/`Open` for any
+physiological or clinical reading** (whether real human co-regulation, or polyvagal-theory-adjacent
+mechanisms, actually follow this energy-balance model is explicitly NOT proven by this theorem and requires
+real behavioural/patient data — the source material itself flags this as open). This does **not** upgrade
+question (3) beyond its existing protective-factor/non-gating status, and is **not** clinical evidence for
+any individual user. See `spec/birca_universal_skill.yaml` →
+`layer_0b_biopsychosocial_micro_screen.mathematical_grounding_for_question_3` for the full, scoped
+statement. Cited as published/checked mathematics only — no code from the originating repository is used or
+shipped in birca.

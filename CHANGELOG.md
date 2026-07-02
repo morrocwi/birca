@@ -1,5 +1,37 @@
 # birca — changelog
 
+## v1.5.0 (2026-07-09) — machine-checked (Th_coqc) grounding for Layer 0b's support-person question
+
+Per the maintainer's request to read about "turbulence-smoother-anchor" work in research_universal_solver
+and pull the relevant knowledge into the skill (while, per the standing instruction, making NO changes to
+research_universal_solver itself -- read-only investigation, citation only):
+
+Found `InfoTurbulenceSmootherAnchor` -- a machine-checked, axiom-free Coq theorem (discrete rationals only,
+no Reals; `Th_coqc` tier, the strongest claim tier this evidence base uses) that proves a 2-node
+energy-balance result: coupling a dysregulated ("turbulent"/panicking) mode to a calm anchor strictly
+raises the disturbance it can absorb before overwhelm, and -- critically -- the anchor still dissipates
+energy even when the dysregulated system's OWN self-regulation has entirely failed (the "fold rescue"
+case, v=0). This formalizes, as checked discrete math, exactly the scenario Layer 0b's protective-factor
+question (3) -- "do you have at least one person you can talk to about this?" -- targets: an external
+stabilizing presence mattering most precisely when self-regulation alone is failing.
+
+Added:
+- `spec/birca_universal_skill.yaml` -> new
+  `layer_0b_biopsychosocial_micro_screen.mathematical_grounding_for_question_3` field, claim tier
+  `[Th_coqc, Dr/Open]` -- `Th_coqc` for the discrete math itself (machine-checked, axiom-free); `Dr`/`Open`
+  explicitly for any physiological or clinical reading (whether real human co-regulation follows this
+  energy-balance model is NOT proven by this theorem and remains an open empirical question).
+- `spec/EVIDENCE_SOURCES.md` -> matching "Machine-checked grounding for Layer 0b's support person question"
+  section.
+- README.md validation-history row.
+
+**Explicitly NOT claimed:** this does not upgrade question (3) beyond its existing protective-factor/
+non-gating status, is not itself proof that real human co-regulation or polyvagal-theory-adjacent
+mechanisms work this way, and is not clinical evidence for any individual user. No code from the
+originating repository is used or shipped in birca -- only the published/checked mathematics is cited.
+Verified: yaml parses valid, fresh reinstall confirms no regression, no change to BIRCA's own safety
+mechanisms or depth gates.
+
 ## v1.4.0 (2026-07-09) — cross-domain literature corroboration: physical AND mental health
 
 Per the maintainer's request to read research_universal_solver's health/cognitive equation work and pull

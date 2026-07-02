@@ -1,7 +1,7 @@
 schema_version: birca_universal_skill.v1
 id: BIRCA
 name: "BIRCA — vendor-agnostic health-advisory skill (short call name: BIRCA)"
-version: 1.4.0
+version: 1.5.0
 generated_at: "2026-07-09"
 status: PUBLISHED_EDUCATIONAL_RESEARCH_USE_ONLY   # public release approved by rights holder; non-commercial (see LICENSE.md/LEGAL_DISCLAIMER.md); human two-reviewer clinical audit + cross-model validation still open, see README.md "What's still open"
 issue: ISSUE-0151
@@ -130,6 +130,30 @@ layer_0b_biopsychosocial_micro_screen:
     hopelessness, or not wanting to be here? (2) do you feel unsafe in any relationship right now? (3) do
     you have at least one person you can talk to about this? — (3) is a protective-factor question, not
     gating.
+  mathematical_grounding_for_question_3:
+    claim_tier: [Th_coqc, Dr/Open]   # Th_coqc for the discrete energy-balance math itself; Dr/Open for any physiological/clinical reading
+    source: "machine-checked, axiom-free Coq theorem (discrete rationals, no Reals): InfoTurbulenceSmootherAnchor (research_universal_solver formal/ stream) -- cited here as published/checked math, no code from that repo is used or shipped in birca"
+    finding: >
+      A 2-node energy-balance model (a 'panic' mode d = deviation from a calm anchor, injected turbulent
+      power T*d vs smoother dissipation (v+g)*d^2, where v = the panicking system's own damping and g = a
+      coupled calm anchor) is proven, machine-checked and axiom-free: (1) the anchor rescues (energy falls)
+      exactly when smoother dissipation >= turbulent injection; (2) sufficiently strong drive still
+      overwhelms it (an honest limit, not a claim the anchor always works); (3) coupling to a calm anchor
+      strictly raises the critical drive the system can absorb before it stops rescuing; (4) CRITICALLY --
+      even when the panicking system's OWN damping is entirely gone (v=0, i.e. its own self-regulation has
+      failed / critical slowing), the coupled calm anchor still dissipates energy (g*d^2 > 0) -- the anchor
+      rescues exactly where self-regulation alone has failed.
+    what_this_does_not_mean: >
+      This is a machine-checked DISCRETE MATH result (Th_coqc) about an abstract 2-node energy-balance
+      model -- it is NOT itself a claim that a real human "support person" physiologically or
+      psychologically functions this way (that reading -- co-regulation / polyvagal-theory-adjacent -- is
+      explicitly Dr/Open in the source, requiring real patient/behavioural data to validate, not proven by
+      this theorem). What it DOES support, honestly: question (3) is not an arbitrary or merely
+      "feel-good" addition -- it targets exactly the mechanism (an external calm/stabilizing presence) that
+      a rigorous, checked model shows can rescue a dysregulated system precisely when that system's own
+      regulation has failed, which is the scenario Layer 0b exists to catch. This does not change question
+      (3)'s status as protective-factor/non-gating, and does not upgrade BIRCA's own claim tier anywhere
+      else in this spec.
   resolution_rule: >
     If (1) or (2) is yes/ambiguous: route to the crisis/safety pathway, same discipline as Layer 1, do not
     proceed to Layer 2/3 this turn. If (1) and (2) are BOTH explicitly no: mark the biopsychosocial safety
