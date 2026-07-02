@@ -1,5 +1,40 @@
 # birca — changelog
 
+## v1.6.0 (2026-07-09) — autonomic nervous system + respiratory-control connectors
+
+Per the maintainer's request to extract physiological/chemical equations related to the autonomic nervous
+system, calm, and panic, and connect them to BIRCA's psychological grounding and to breathing-control
+physiology, this release adds a new set of connectors, each individually verified by real numerical
+integration (`finite_diagnostic`):
+
+- **Sympatho-vagal balance** (Berntson et al. 1991, *Psychophysiology*) -- same 2-node restoring structure
+  as the affect "home base" (Kuppens 2010) already cited; the physiological substrate under the
+  psychological relaxation form.
+- **Heart-rate variability / vagal tone** (Task Force of ESC/NASPE 1996, *Circulation*) and **respiratory
+  sinus arrhythmia** (Eckberg 1983) -- the measurable proxy for the "calm anchor" (the `g`-coupling in the
+  `InfoTurbulenceSmootherAnchor` theorem cited in v1.5.0).
+- **Baroreflex** (De Boer et al. 1987) -- a second, independent damped-relaxation restoring loop.
+- **Chemoreflex / ventilatory CO2 control loop** (Grodins 1954; Khoo 1991) -- the recognized physiological
+  mechanism behind panic-linked hyperventilation (Klein 1993's "false suffocation alarm" theory; Ley 1985's
+  hyperventilation theory of panic -- both independent, pre-existing clinical literature the connection is
+  drawn *to*, not derived *from*).
+- **Cardiorespiratory phase coupling** (Schafer et al. 1998, Kuramoto-type synchronization) -- the
+  documented mechanism behind paced/slow-breathing calming effects.
+- **Pre-Bötzinger complex** (Butera, Rinzel & Smith 1999, *J Neurophysiol*) -- the brainstem bursting
+  pacemaker respiration itself is built on.
+
+Added `spec/birca_universal_skill.yaml` -> `dynamic_graph_boundary.autonomic_respiratory_connectors` field
+(claim tier `[finite_diagnostic, Dr]`) and a matching `spec/EVIDENCE_SOURCES.md` section + README
+validation-history row.
+
+**Explicitly NOT claimed:** BIRCA has no ANS or respiratory state variables and does not model these systems
+directly; the panic-disorder clinical citations were not derived from or validated by this synthesis; this
+is not a recommendation that breathing exercises or HRV biofeedback are BIRCA interventions -- BIRCA remains
+an information-organizing skill, and Layer 3's actor/tool ladder still governs any such intervention in
+full. Verified: yaml parses valid, fresh reinstall confirms no regression, all cited models individually
+re-verified by direct execution before this release (sympathovagal, baroreflex, RSA, chemoreflex, lung
+mechanics, pre-Bötzinger all confirmed passing).
+
 ## v1.5.0 (2026-07-09) — machine-checked (Th_coqc) grounding for Layer 0b's support-person question
 
 Per the maintainer's request to read about "turbulence-smoother-anchor" work in research_universal_solver

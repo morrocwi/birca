@@ -1,7 +1,7 @@
 schema_version: birca_universal_skill.v1
 id: BIRCA
 name: "BIRCA — vendor-agnostic health-advisory skill (short call name: BIRCA)"
-version: 1.5.0
+version: 1.6.0
 generated_at: "2026-07-09"
 status: PUBLISHED_EDUCATIONAL_RESEARCH_USE_ONLY   # public release approved by rights holder; non-commercial (see LICENSE.md/LEGAL_DISCLAIMER.md); human two-reviewer clinical audit + cross-model validation still open, see README.md "What's still open"
 issue: ISSUE-0151
@@ -375,6 +375,46 @@ dynamic_graph_boundary:
       own specific scores, thresholds, or intervention rankings, does not upgrade BIRCA's claim tier or
       eligibility gates, and does not constitute clinical evidence for any individual user. Same standard as
       plausibility_vs_validation and mathematical_consistency_finding above.
+  autonomic_respiratory_connectors:
+    claim_tier: [finite_diagnostic, Dr]   # each model's own textbook behavior verified by real integration; cross-domain connection to BIRCA/psychological framing is Dr (structural reading), not clinical validation
+    scope: "autonomic nervous system (sympathetic/parasympathetic, baroreflex, chemoreflex) + respiratory control physiology, connecting the calm/panic axis to both the psychological equations in cross_domain_literature_corroboration above and to breathing-control physiology"
+    finding: >
+      Standard, independently-published autonomic and respiratory models (each verified by real numerical
+      integration, reproducing its own known textbook behavior) supply the physiological layer connecting
+      "calm" and "panic" to both BIRCA's psychological grounding and to breathing-control specifically:
+      (1) sympatho-vagal balance (Berntson et al. 1991, Psychophysiology) -- two branches (sympathetic,
+      parasympathetic) relaxing to a set autonomic tone via the same 2-node restoring-operator structure as
+      BIRCA's causal-safety equation and the affect "home base" (Kuppens 2010) cited above -- i.e. the
+      physiological substrate under the psychological relaxation form; (2) heart-rate variability / vagal
+      tone (Task Force of the ESC/NASPE 1996, Circulation -- the standard clinical HRV reference) and
+      respiratory sinus arrhythmia (Eckberg 1983) are the measurable proxy for the "calm anchor" (the
+      g-coupling in the InfoTurbulenceSmootherAnchor theorem above) -- higher vagally-mediated HRV is the
+      physiological readout of stronger calming/co-regulation capacity; (3) the baroreflex (De Boer et al.
+      1987) is a second, independent restoring loop (blood pressure -> heart period) of the identical
+      damped-relaxation form; (4) the CHEMOREFLEX / ventilatory-CO2 control loop (Grodins 1954; Khoo 1991)
+      is the specific physiological mechanism underlying the well-documented hyperventilation link in panic
+      (Klein 1993's "false suffocation alarm" theory; Ley 1985's hyperventilation theory of panic, both
+      independent of and predating this synthesis): panic-driven hyperventilation lowers PaCO2, and the
+      chemoreflex's own negative-feedback structure is what the loop is regulating -- BIRCA's own equations
+      do not model this loop, but this is the recognized physiological pathway the "panic" side of the
+      calm/panic axis operates through; (5) cardiorespiratory phase coupling (Schafer et al. 1998, a
+      Kuramoto-type synchronization) is the documented mechanism by which deliberate slow/paced breathing
+      shifts cardiac-respiratory coupling toward a calmer regime -- the physiological basis for why
+      breathing-pattern interventions are a recognized (if BIRCA-external) calming lever; (6) the
+      pre-Botzinger complex bursting pacemaker (Butera, Rinzel & Smith 1999, J Neurophysiol) is the
+      brainstem rhythm generator respiration itself is built on -- the root of the respiratory control
+      chain that (4) and (5) both sit downstream of.
+    what_this_does_not_mean: >
+      Every model above is independently verified (finite_diagnostic) to reproduce ITS OWN textbook
+      behavior by real integration -- this does NOT mean BIRCA's equations model the ANS or respiration
+      directly (BIRCA has no ANS/respiratory state variables), does NOT mean the panic-disorder clinical
+      citations (Klein 1993, Ley 1985) were derived from or validated by this synthesis (they are
+      independent, pre-existing clinical literature the physiological connection is drawn TO, not FROM),
+      and does NOT constitute a recommendation that breathing exercises or HRV biofeedback are BIRCA
+      interventions -- BIRCA is an information-organizing skill, not a treatment-delivery system, and
+      Layer 3's actor/tool ladder rules on any such intervention still apply in full (specialist-only
+      where the ladder requires it). This connects existing, separately-verified physiology to existing,
+      separately-cited psychology; it proves no new clinical claim.
   three_level_separation: [biological_mechanism, graph_dynamical_ontology, clinical_reporting_projection]
   required_reviewer_response: >
     "BIRCA does not claim that physiology is linear, static, or governed by fixed universal coefficients. The

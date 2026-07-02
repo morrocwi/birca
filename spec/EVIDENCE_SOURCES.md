@@ -193,3 +193,45 @@ any individual user. See `spec/birca_universal_skill.yaml` →
 `layer_0b_biopsychosocial_micro_screen.mathematical_grounding_for_question_3` for the full, scoped
 statement. Cited as published/checked mathematics only — no code from the originating repository is used or
 shipped in birca.
+
+## Autonomic nervous system + respiratory-control connectors (calm/panic physiology)
+
+Standard, independently-published autonomic and respiratory models — each individually verified by real
+numerical integration to reproduce its own known textbook behavior (`finite_diagnostic`) — connect the
+calm/panic axis to both the psychological equations above and to breathing-control physiology specifically:
+
+- **Sympatho-vagal balance** — Berntson, G.G. et al. (1991), *Psychophysiology*: two branches (sympathetic,
+  parasympathetic) relaxing to a set autonomic tone via the same 2-node restoring-operator structure as the
+  affect "home base" (Kuppens 2010) cited above — the physiological substrate under the psychological
+  relaxation form.
+- **Heart-rate variability / vagal tone** — Task Force of the European Society of Cardiology and the North
+  American Society of Pacing and Electrophysiology (1996), *Circulation* (the standard clinical HRV
+  reference), and **respiratory sinus arrhythmia** (Eckberg, D.L. 1983): the measurable proxy for the "calm
+  anchor" (the `g`-coupling in the `InfoTurbulenceSmootherAnchor` theorem above) — higher vagally-mediated
+  HRV is the physiological readout of stronger calming/co-regulation capacity.
+- **Baroreflex** — De Boer, R.W. et al. (1987): a second, independent restoring loop (blood pressure → heart
+  period) of the identical damped-relaxation form.
+- **Chemoreflex / ventilatory CO2 control loop** — Grodins, F.S. (1954); Khoo, M.C.K. (1991): the specific
+  physiological mechanism underlying the well-documented hyperventilation link in panic — Klein, D.F.
+  (1993)'s "false suffocation alarm" theory and Ley, R. (1985)'s hyperventilation theory of panic (both
+  independent of, and predating, this synthesis): panic-driven hyperventilation lowers PaCO₂, and the
+  chemoreflex's negative-feedback structure is what that loop is regulating. **BIRCA's own equations do not
+  model this loop** — this is cited as the recognized external physiological pathway the "panic" side of
+  the calm/panic axis operates through, not as a claim BIRCA itself represents it.
+- **Cardiorespiratory phase coupling** — Schafer, C. et al. (1998), a Kuramoto-type synchronization: the
+  documented mechanism by which deliberate slow/paced breathing shifts cardiac-respiratory coupling toward
+  a calmer regime — the physiological basis for why breathing-pattern interventions are a recognized (if
+  BIRCA-external) calming lever.
+- **Pre-Bötzinger complex** — Butera, R.J., Rinzel, J. & Smith, J.C. (1999), *J Neurophysiol*: the brainstem
+  bursting pacemaker respiration itself is built on — the root of the respiratory control chain the above
+  two items sit downstream of.
+
+**What this does NOT mean:** every model above is independently verified to reproduce its own textbook
+behavior — this does not mean BIRCA's equations model the ANS or respiration directly (BIRCA has no ANS/
+respiratory state variables), does not mean the panic-disorder clinical citations were derived from or
+validated by this synthesis (they are independent, pre-existing clinical literature the physiological
+connection is drawn *to*, not *from*), and does not constitute a recommendation that breathing exercises or
+HRV biofeedback are BIRCA interventions — BIRCA is an information-organizing skill, not a treatment-delivery
+system; Layer 3's actor/tool ladder still governs any such intervention in full. See
+`spec/birca_universal_skill.yaml` → `dynamic_graph_boundary.autonomic_respiratory_connectors` for the full,
+scoped statement.

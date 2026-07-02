@@ -13,7 +13,7 @@ synthesis of two source specifications by Yaoharee Lahtee (Open Civil Science In
 executable reference implementation (`birca_gates.py`) maintained in this project's source monorepo (see
 "Provenance" below).
 
-**Current version: v1.5.0.** Human-reviewed and approved for this public, educational/research-only,
+**Current version: v1.6.0.** Human-reviewed and approved for this public, educational/research-only,
 non-commercial release (see "Governance" below).
 Read `LEGAL_DISCLAIMER.md` in full before any deployment beyond your own local testing — several validation
 gates (cross-model testing, a human two-reviewer clinical-safety audit) remain open; see "What's still open."
@@ -35,11 +35,11 @@ For OpenAI, Gemini, or any other assistant, there is no CLI step — copy the fe
 
 | File | Role |
 |---|---|
-| `SYSTEM_PROMPT.md` | The actual portable skill (v1.5.0) — paste this into any LLM's system prompt |
+| `SYSTEM_PROMPT.md` | The actual portable skill (v1.6.0) — paste this into any LLM's system prompt |
 | `install.sh` | git-based installer; enforces the tagged-release policy; installs the CLAUDE.md pointer |
 | `LEGAL_DISCLAIMER.md` | Mandatory, must ship unmodified with every deployment |
 | `LICENSE.md` | Proposed license (CC BY-NC-SA 4.0 + mandatory-preservation condition) — pending ratification |
-| `CHANGELOG.md` | Full version history, v1.0.0 → v1.5.0 |
+| `CHANGELOG.md` | Full version history, v1.0.0 → v1.6.0 |
 | `INSTALL_CLAUDE.md` | Claude Code / Claude API / Claude Projects install steps |
 | `INSTALL_OPENAI.md` | Custom GPT / Assistants / Responses API install steps |
 | `INSTALL_GENERIC.md` | Any other LLM (Gemini, local models, LangChain, etc.) + release-pinning policy |
@@ -83,6 +83,7 @@ every claim below is backed by a real execution log in `spec/`, not an assertion
 | Mathematical-consistency grounding, v1.3.0 | Whether the repair-loop equations, as literally written in the source monograph, are internally consistent and reproduce the bistability/hysteresis pattern the monograph's own prose claims | **Found 3 fixable faults in the literal equations (dimensional inconsistency, unbounded causal-safety term, no bistability mechanism); a corrected reformulation reproduces bistability/hysteresis/critical-slowing-down, verified by real integration (6/6).** Claim tier `finite_diagnostic`/`Dr` — internal mathematical consistency only, **NOT clinical or empirical validation**. Source: `research_universal_solver` PR `#7` (not yet merged) — see `spec/birca_universal_skill.yaml` → `dynamic_graph_boundary.mathematical_consistency_finding` |
 | Cross-domain literature corroboration (physical + mental health), v1.4.0 | Whether BIRCA's equation forms (cusp/bistability, allostatic burden) and biopsychosocial framing match independently-published physiology and affective-science/clinical-psychology literature | **Yes, structurally.** Mood-cusp models (van der Maas 2003) use the identical cusp potential; affect "home base" reversion (Kuppens et al. 2010) matches the causal-safety form; symptom-network theory of psychopathology (Borsboom & Cramer 2013) matches the "strong coupling sustains, weak coupling clears" pattern; HPA-axis dynamics are the physiological substrate for "burden." **Structural corroboration of equation FORM only — NOT clinical validation of BIRCA's own scores** — see `spec/EVIDENCE_SOURCES.md` → "Cross-domain literature corroboration" |
 | Machine-checked grounding for Layer 0b's support-person question, v1.5.0 | Whether the "do you have someone to talk to" protective-factor question targets a mechanism with any rigorous mathematical basis | **Yes — a machine-checked, axiom-free Coq theorem** (`Th_coqc` tier, the strongest in this evidence base) proves a calm-anchor/turbulent-mode energy-balance model where the anchor still rescues even when the dysregulated system's OWN self-regulation has failed entirely — exactly the scenario Layer 0b targets. **`Th_coqc` for the discrete math; explicitly `Dr`/`Open` (unproven) for any real physiological/clinical reading** — see `spec/birca_universal_skill.yaml` → `layer_0b_biopsychosocial_micro_screen.mathematical_grounding_for_question_3` |
+| Autonomic nervous system + respiratory-control connectors, v1.6.0 | Whether standard ANS physiology (sympatho-vagal balance, baroreflex, chemoreflex) and respiratory-control models connect the calm/panic axis to BIRCA's psychological grounding and to breathing physiology | **Yes.** Sympatho-vagal balance (Berntson 1991) and HRV/RSA (Task Force 1996; Eckberg 1983) are the physiological substrate/proxy for the psychological "calm anchor" already cited; the chemoreflex CO2-ventilation loop (Grodins 1954; Khoo 1991) is the recognized physiological pathway behind panic-linked hyperventilation (Klein 1993; Ley 1985, independent clinical literature); cardiorespiratory Kuramoto coupling (Schafer 1998) is the documented mechanism behind paced-breathing calming effects. Each model individually verified by real integration. **Does NOT mean BIRCA models the ANS/respiration directly, and is NOT a treatment recommendation** — see `spec/EVIDENCE_SOURCES.md` → "Autonomic nervous system + respiratory-control connectors" |
 
 **What this does NOT claim:** cross-model (OpenAI/Gemini/local-model) validation has not been performed —
 every result above is Claude-only. A human two-reviewer audit has not happened. `human_pi` has not reviewed
