@@ -115,3 +115,15 @@ client for a generic system).
   to the safer, broader referral.
 - Every library call is READ-ONLY. Nothing in this skill writes to any external system, prescribes, or
   transmits identifiable patient data outbound to any of these libraries.
+
+## Theoretical/mathematical grounding (separate from clinical evidence above — internal-consistency tier)
+
+`research_universal_solver` (`src/anse_spine/solvers/birca_repair.py`, `health_atlas.py`; PR
+`morrocwi/research_universal_solver#7`, not yet merged) re-derives BIRCA's repair-loop dynamical objects as
+faces of that project's canonical spine equation, fixing 3 concrete faults in the source monograph's literal
+Eq(2)/Eq(4)/Eq(3-7) and verifying (by real numerical integration, not assertion) that the corrected form
+reproduces the bistability/hysteresis/critical-slowing-down the monograph's own prose claims. Claim tier:
+`finite_diagnostic`/`Dr` (internal mathematical consistency, readout-not-truth) — **this is not clinical or
+empirical evidence** and must never be cited as such; it does not substitute for, or get mixed into, the
+Tier 0-8 clinical evidence libraries above. See `spec/birca_universal_skill.yaml`
+→ `dynamic_graph_boundary.mathematical_consistency_finding` for the full, scoped statement.

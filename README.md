@@ -13,7 +13,7 @@ synthesis of two source specifications by Yaoharee Lahtee (Open Civil Science In
 executable reference implementation (`birca_gates.py`) maintained in this project's source monorepo (see
 "Provenance" below).
 
-**Current version: v1.2.1.** Human-reviewed and approved for this public, educational/research-only,
+**Current version: v1.3.0.** Human-reviewed and approved for this public, educational/research-only,
 non-commercial release (see "Governance" below).
 Read `LEGAL_DISCLAIMER.md` in full before any deployment beyond your own local testing — several validation
 gates (cross-model testing, a human two-reviewer clinical-safety audit) remain open; see "What's still open."
@@ -35,11 +35,11 @@ For OpenAI, Gemini, or any other assistant, there is no CLI step — copy the fe
 
 | File | Role |
 |---|---|
-| `SYSTEM_PROMPT.md` | The actual portable skill (v1.2.0) — paste this into any LLM's system prompt |
+| `SYSTEM_PROMPT.md` | The actual portable skill (v1.3.0) — paste this into any LLM's system prompt |
 | `install.sh` | git-based installer; enforces the tagged-release policy; installs the CLAUDE.md pointer |
 | `LEGAL_DISCLAIMER.md` | Mandatory, must ship unmodified with every deployment |
 | `LICENSE.md` | Proposed license (CC BY-NC-SA 4.0 + mandatory-preservation condition) — pending ratification |
-| `CHANGELOG.md` | Full version history, v1.0.0 → v1.2.0 |
+| `CHANGELOG.md` | Full version history, v1.0.0 → v1.3.0 |
 | `INSTALL_CLAUDE.md` | Claude Code / Claude API / Claude Projects install steps |
 | `INSTALL_OPENAI.md` | Custom GPT / Assistants / Responses API install steps |
 | `INSTALL_GENERIC.md` | Any other LLM (Gemini, local models, LangChain, etc.) + release-pinning policy |
@@ -80,6 +80,7 @@ every claim below is backed by a real execution log in `spec/`, not an assertion
 | Dimension-C natural-conversation spot-check (Addendum 4) | Same question, but with short, natural, non-exhaustive replies (no pre-scripted full-domain answers) — a harder, more realistic test | **More modest, explicitly hedged result**: Layer-0b fired proactively and resolved correctly on 3/3 cases, but only 1/3 reached full depth within a single natural follow-up turn — reported honestly as weaker than the scripted result, not smoothed into it |
 | Full regression, v1.1.0 (Layer-0b active) | Re-ran the ENTIRE 15-item + 100-item surface (115 test items, 137 model calls — some items are multi-turn/paired) | **0 systematic regressions.** The two most safety-critical mechanisms (critical-missing-data override, context-fit=0 hard cliff) both reconfirmed holding rigorously; emergency-routing timing unaffected by the new layer across 55 tested items |
 | Targeted fix verification, v1.2.0 | The 4 remaining known issues (permission-gating instead of delivering, inconsistent schema use, micro-screen over-triggering, a residual medication-leak risk) + 1 safety-anchor spot-check (A35) | **All 4 fixes verified by direct retest; the medication-leak fix (A09) is a prompt-level mitigation only** — 5/5 retests clean but a deterministic code-level guard (see `research/governance/sim/birca_gates.py`'s `_DOSE_DIRECTIVE_RE`) remains the recommended stronger defense for tool-calling-capable platforms, not yet implemented here — see `spec/V1_2_0_FIX_VERIFICATION_LOG.md` |
+| Mathematical-consistency grounding, v1.3.0 | Whether the repair-loop equations, as literally written in the source monograph, are internally consistent and reproduce the bistability/hysteresis pattern the monograph's own prose claims | **Found 3 fixable faults in the literal equations (dimensional inconsistency, unbounded causal-safety term, no bistability mechanism); a corrected reformulation reproduces bistability/hysteresis/critical-slowing-down, verified by real integration (6/6).** Claim tier `finite_diagnostic`/`Dr` — internal mathematical consistency only, **NOT clinical or empirical validation**. Source: `research_universal_solver` PR `#7` (not yet merged) — see `spec/birca_universal_skill.yaml` → `dynamic_graph_boundary.mathematical_consistency_finding` |
 
 **What this does NOT claim:** cross-model (OpenAI/Gemini/local-model) validation has not been performed —
 every result above is Claude-only. A human two-reviewer audit has not happened. `human_pi` has not reviewed

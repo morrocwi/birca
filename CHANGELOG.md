@@ -1,5 +1,36 @@
 # birca — changelog
 
+## v1.3.0 (2026-07-09) — mathematical-consistency grounding connected (from research_universal_solver)
+
+Adds a scoped, honestly-tiered reference to a separate mathematical-consistency finding: a
+`research_universal_solver` module (`birca_repair.py`, PR `morrocwi/research_universal_solver#7`, not yet
+merged) re-derives BIRCA's repair-loop equations as a face of that project's canonical spine equation,
+fixing 3 concrete faults in the source monograph's literal Eq(2)/Eq(4)/Eq(3-7) (dimensional inconsistency,
+an unbounded causal-safety term, and a repair-state equation structurally incapable of the bistability/
+hysteresis the monograph's own prose claims), and verifies by real numerical integration that the corrected
+form reproduces bistability, hysteresis, and critical slowing down.
+
+- Added `spec/birca_universal_skill.yaml` → `dynamic_graph_boundary.mathematical_consistency_finding`: a new
+  structured field stating the finding, its claim tier (`finite_diagnostic`/`Dr` — internal mathematical
+  consistency, NOT empirical/clinical validation), and an explicit `what_this_does_not_mean` clause so this
+  can never be read as upgrading BIRCA's own claim tier or validation status.
+- Added a matching paragraph to `SYSTEM_PROMPT.md`'s required reviewer-response text, so a model running
+  this skill can accurately describe the finding if challenged on scientific status, with the same
+  explicit non-validation caveat.
+- Added a "Theoretical/mathematical grounding" section to `spec/EVIDENCE_SOURCES.md`, clearly separated from
+  the Tier 0-8 clinical evidence libraries so it is never conflated with clinical evidence.
+- Cross-repo note: the `research_universal_solver` PR itself corrected an overclaim found during self-review
+  — its own `health_atlas.py` module originally asserted its 17-model self-test "verified" that all 17
+  classical health models are literally one unified spine equation; that claim was reworded to distinguish
+  what the test actually checks (each model's own textbook behavior — `finite_diagnostic`) from the
+  spine-unification reading (a design analogy — `Dr`, not verified by that test). This discipline — never let
+  a real, passing test get summarized into a bigger claim than it actually establishes — is the same standard
+  applied to every fix in this changelog.
+
+No change to BIRCA's own safety mechanisms, depth gates, or claim tier in this release — this is additive
+theoretical-grounding documentation only, scoped as `finite_diagnostic`/`Dr`, explicitly not empirical
+validation.
+
 ## v1.2.1 (2026-07-09) — legal hardening: educational/research-only, non-commercial use made explicit everywhere
 
 Per the maintainer's request to review and maximize legal protection establishing this as an educational-use
