@@ -1,5 +1,13 @@
 # BIRCA — license
 
+> **This repository, and everything in it, is published FOR EDUCATIONAL AND RESEARCH PURPOSES ONLY. IT IS
+> NOT LICENSED FOR ANY COMMERCIAL USE.** "Commercial use" means any use intended for or directed toward
+> commercial advantage or monetary compensation, in any form — selling access to it, embedding it (in whole
+> or in part, modified or unmodified) in a paid product or service, using it to generate advertising or
+> subscription revenue, offering it as part of a consulting/clinical/commercial deployment, or any other
+> revenue-generating use. No commercial use of any kind is licensed without separate, explicit, written
+> permission from the rights holder, obtained in advance.
+
 **Status: in effect for this repository.** This file sets the license for the `birca` universal skill
 package (`SYSTEM_PROMPT.md`, `spec/`, `INSTALL_*.md`, `LEGAL_DISCLAIMER.md`, `install.sh`, `README.md`, and
 everything else in this repo). Ratified by the rights holder (`human_pi`) when authorizing this repo's
@@ -23,15 +31,12 @@ In addition to the standard CC BY-NC-SA terms, redistribution under this license
    remove or weaken a gate.
 3. **Attribute** the canonical source: *Wellbeing from Informationism* (Lahtee, Yaoharee, 2026,
    SSRN:6794001) and this repository's `ISSUE-0151` provenance trail.
-4. **Commercial use requires separate permission** from the rights holder (`human_pi` / the Open Civil
-   Science Initiative) — this is the "NC" (non-commercial) clause. A commercial deployer must complete the
-   pre-deployment legal review checklist in `LEGAL_DISCLAIMER.md` and obtain that permission before any
-   revenue-linked use. This clause is *modeled on*, not proven by, a similar not-yet-ratified requirement
-   already drafted for one skill in this workspace — `cpq_skill/agenthub/BircaHealth_v0_1_0.yaml` states
-   that "any revenue-linked WHO-data (GHO/ICTRP non_commercial) use needs a human_pi-logged WHO permissions
-   request BEFORE deploy." That is a single per-skill approval-gate clause, not a repo-wide,
-   `DECISIONS.yaml`-ratified license policy — this document does not claim it as an "existing precedent,"
-   only as a reasonable analogous default pending `human_pi`'s own ratification of this license.
+4. **No commercial use without separate permission** from the rights holder (`human_pi` / the Open Civil
+   Science Initiative) — this is the "NC" (non-commercial) clause and it is a hard requirement, not a
+   suggestion. This repository exists to be studied, critiqued, and experimented with for education and
+   research; it is not offered as, and must not be turned into, a commercial product or paid service without
+   that separate written permission. A prospective commercial deployer must complete the pre-deployment
+   legal review checklist in `LEGAL_DISCLAIMER.md` and obtain that permission before any revenue-linked use.
 
 ## Why CC BY-NC-SA and not MIT/Apache
 

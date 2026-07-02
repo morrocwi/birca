@@ -1,5 +1,13 @@
 # BIRCA — mandatory legal & safety disclaimer (must ship unmodified with every install)
 
+> **FOR EDUCATIONAL AND RESEARCH PURPOSES ONLY. NOT FOR COMMERCIAL USE.** `birca` is published, in its
+> entirety, strictly as an educational and research artifact: a worked example of a safety-gated health-
+> information framework, offered for study, critique, and non-commercial experimentation. It is licensed
+> non-commercially (see `LICENSE.md`) and any commercial use of any kind — including embedding it in a paid
+> product or service, using it to generate revenue directly or indirectly, or deploying it inside a
+> commercial offering — is prohibited without separate, explicit written permission from the rights holder.
+> This educational/non-commercial framing is a core, load-bearing term of this release, not a footnote.
+
 > This text is REQUIRED on every derived material, every deployment, and every public-facing surface that
 > uses the `birca` skill. It is a synthesis of the disclaimers already mandated in the two source
 > specifications (`Wellbeing from Informationism` SSRN:6794001 §32, and the BIRCA v7.9 release, both by
@@ -43,7 +51,11 @@ generating or acting on a clinical risk score derived from this tool; using this
 surveillance-based, or punitive intervention against another person (including family members, employees, or
 students); deploying this tool in a regulated medical-device context (diagnosis support software, clinical
 decision support embedded in an EHR, etc.) without the jurisdiction-specific regulatory review that such
-deployment legally requires.
+deployment legally requires; **any commercial use** — selling access to it, bundling it into a paid product
+or service, using it (in whole or in part, modified or unmodified) inside any revenue-generating offering,
+or any other commercial exploitation — without separate, explicit written permission from the rights holder,
+per the non-commercial license in `LICENSE.md`; and any use, description, or deployment that presents this
+educational/research artifact as a finished, clinically validated, or commercially supported product.
 
 ## Scientific status
 
@@ -83,8 +95,9 @@ from use of this skill.
 
 ## Required footer for all derived outputs
 
-> *Theoretical framework only. Not medical advice. Not diagnosis. Not treatment. Not emergency guidance.
-> Consult qualified licensed professionals.*
+> *For educational and research purposes only, not for commercial use. Theoretical framework only. Not
+> medical advice. Not diagnosis. Not treatment. Not emergency guidance. Consult qualified licensed
+> professionals.*
 
 ## Attribution and provenance requirement
 
@@ -145,9 +158,10 @@ are the deploying party's responsibility, every time, for every jurisdiction of 
 
 ## Approved one-sentence description (safe for external use)
 
-> "BIRCA is an independent theoretical framework for organizing health information as a safety-gated,
-> context-bound report; it is not a medical service, clinical protocol, diagnostic tool, treatment system,
-> or substitute for qualified professional care."
+> "BIRCA is an independent theoretical framework, published for educational and research purposes only
+> (non-commercial), for organizing health information as a safety-gated, context-bound report; it is not a
+> medical service, clinical protocol, diagnostic tool, treatment system, commercial product, or substitute
+> for qualified professional care."
 
 Language that must **not** appear in any external description of `birca`: "this can help your chronic
 illness," "use this alongside medical care" (implies clinical pairing), "this explains the real cause of
@@ -163,7 +177,9 @@ either.
 
 ## Status of this package
 
-`status: DRAFT_NOT_YET_HUMAN_APPROVED`. This is an engineering draft prepared for review. It has not yet
-been ratified by `human_pi` (the accountable human principal in this workspace's governance model) and must
-not be represented as an approved, production-ready, or endorsed release until that review is recorded (see
-`ISSUE-0151` and `research/coordination/DECISIONS.yaml`).
+`status: v1.2.0, published for educational/research use only (non-commercial), public-release approved by
+the rights holder`. This does **not** mean every validation gate is closed: a human two-reviewer clinical-
+safety audit and cross-model (non-Claude) validation remain outstanding — see this repo's README.md "What's
+still open." This package must not be represented as a clinically validated, production-ready, commercially
+supported, or professionally endorsed product. Its public availability is for education, research, critique,
+and non-commercial experimentation only.

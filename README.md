@@ -1,5 +1,11 @@
 # birca — universal, vendor-agnostic install package
 
+> **FOR EDUCATIONAL AND RESEARCH PURPOSES ONLY. NOT FOR COMMERCIAL USE.** This repository is published as an
+> educational/research artifact under a non-commercial license (CC BY-NC-SA 4.0, see `LICENSE.md`). It is
+> not a medical product or service, and any commercial use — selling it, embedding it in a paid product,
+> or any other revenue-generating deployment — requires separate, explicit written permission from the
+> rights holder. See `LEGAL_DISCLAIMER.md` for the full terms; they are not optional reading.
+
 **Call name (always lowercase): `birca`.** A safety-gated, context-bound health-information skill,
 installable in one system prompt on Claude, OpenAI, or any other LLM assistant. Built from a faithful
 synthesis of two source specifications by Yaoharee Lahtee (Open Civil Science Initiative) — see
@@ -7,7 +13,8 @@ synthesis of two source specifications by Yaoharee Lahtee (Open Civil Science In
 executable reference implementation (`birca_gates.py`) maintained in this project's source monorepo (see
 "Provenance" below).
 
-**Current version: v1.2.0.** Human-reviewed and approved for this public release (see "Governance" below).
+**Current version: v1.2.1.** Human-reviewed and approved for this public, educational/research-only,
+non-commercial release (see "Governance" below).
 Read `LEGAL_DISCLAIMER.md` in full before any deployment beyond your own local testing — several validation
 gates (cross-model testing, a human two-reviewer clinical-safety audit) remain open; see "What's still open."
 

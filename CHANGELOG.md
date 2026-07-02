@@ -1,5 +1,29 @@
 # birca — changelog
 
+## v1.2.1 (2026-07-09) — legal hardening: educational/research-only, non-commercial use made explicit everywhere
+
+Per the maintainer's request to review and maximize legal protection establishing this as an educational-use
+artifact and to prohibit commercial use explicitly:
+
+- Added a prominent "FOR EDUCATIONAL AND RESEARCH PURPOSES ONLY. NOT FOR COMMERCIAL USE." banner to the top
+  of README.md, LEGAL_DISCLAIMER.md, and LICENSE.md.
+- Added the same framing to the mandatory Layer-2/3 disclaimer footer in SYSTEM_PROMPT.md itself, so it now
+  ships in every real model output that reaches that depth, not just in top-level repo documents.
+- Strengthened LICENSE.md's non-commercial ("NC") clause: added an explicit definition of "commercial use"
+  and removed stale "proposed, pending ratification" language now that the license is actually in effect for
+  this public repo.
+- Strengthened LEGAL_DISCLAIMER.md's "Prohibited uses" section to explicitly name commercial use (selling,
+  bundling into a paid product, any revenue-generating deployment) as prohibited without separate written
+  permission.
+- Updated stale `DRAFT_NOT_YET_HUMAN_APPROVED` status strings in SYSTEM_PROMPT.md, spec/birca_universal_skill.yaml,
+  and LEGAL_DISCLAIMER.md to accurately reflect the current public/non-commercial/educational-use-only
+  release status -- while still explicitly disclosing the validation gates that remain open (human
+  two-reviewer clinical-safety audit, cross-model validation) rather than letting the status update read as
+  "fully validated."
+
+No behavioral/safety-logic changes in this release -- purely legal/disclosure language. Verified by
+reinstalling and confirming the new footer text extracts and renders correctly.
+
 ## v1.2.0 (2026-07-09) — all 4 remaining known issues fixed and verified
 
 Per the human's request to fix everything remaining and bring out BIRCA's full potential, addressed the 4

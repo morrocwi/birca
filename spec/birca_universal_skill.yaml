@@ -1,11 +1,11 @@
 schema_version: birca_universal_skill.v1
 id: BIRCA
 name: "BIRCA — vendor-agnostic health-advisory skill (short call name: BIRCA)"
-version: 1.2.0
+version: 1.2.1
 generated_at: "2026-07-09"
-status: DRAFT_NOT_YET_HUMAN_APPROVED   # human_pi review required before production/public deployment
+status: PUBLISHED_EDUCATIONAL_RESEARCH_USE_ONLY   # public release approved by rights holder; non-commercial (see LICENSE.md/LEGAL_DISCLAIMER.md); human two-reviewer clinical audit + cross-model validation still open, see README.md "What's still open"
 issue: ISSUE-0151
-branch: feat/birca-universal-skill-v1
+branch: feat/birca-universal-skill-v1   # provenance: source monorepo branch this was drafted on before the standalone split
 
 # ---------------------------------------------------------------------------
 # PROVENANCE — this package is a faithful synthesis of two source specs.
@@ -389,3 +389,4 @@ version_history:
   - {version: "1.0.3", date: "2026-07-09", note: "Fixed A35 (100-item run finding): added an explicit language-agnostic prohibition on medication/dose/bystander-first-aid drug instructions in ANY response language, closing a Spanish-language aspirin-dosing leak the English/Thai-only original suite didn't catch. Retested A35 and A16 after the fix — see STRESS_TEST_100_RUN_LOG_PHASE1_CLAUDE.md addendum."}
   - {version: "1.1.0", date: "2026-07-09", note: "Implemented Layer-0b biopsychosocial safety micro-screen (§2b) for real in SYSTEM_PROMPT.md — previously only validated as a user-scripted test ('C01-C10 v3'), not built into the assistant's own proactive questioning. New minor version since this adds a mechanism, not just a bug patch. Pending a natural-conversation (unscripted) retest to confirm it reliably unlocks D4 in real use, not just when the tester pre-writes full-domain answers."}
   - {version: "1.2.0", date: "2026-07-09", note: "Fixed 4 remaining known issues from the full-regression pass: (1) C04 — Layer-3 now delivers unprompted once eligible, no permission-gate-behind-a-question; (2) C06/C08 — Layer-3 now mandates the labelled schema fields (BIRCA node/Context-fit/Actor-tool/Feedback marker/Escalation threshold), not just prose; (3) B30 — Layer-0b trigger tightened to exclude abstract/meta framework questions with no personal-health content; (4) A09 — added a mandatory pre-send self-check scanning for drug names/dosing verbs in any Layer-1 STOP response, as prompt-level defense-in-depth for a known ~1-in-4 stochastic risk (a deterministic code-level filter remains the recommended follow-up for tool-calling-capable platforms). Pending targeted retest of all 4 fixes plus a safety-anchor regression check before claiming these are verified."}
+  - {version: "1.2.1", date: "2026-07-09", note: "Legal hardening for the public standalone release: added a prominent 'for educational and research purposes only, not for commercial use' banner to README.md/LEGAL_DISCLAIMER.md/LICENSE.md and to the mandatory Layer-2/3 disclaimer footer text itself (so it now ships in every real output, not just top-level docs); strengthened LICENSE.md's non-commercial clause with an explicit definition of 'commercial use' and removed stale 'pending ratification' language now that the license is in effect; strengthened LEGAL_DISCLAIMER.md's 'Prohibited uses' section to explicitly name commercial use; updated status fields across SYSTEM_PROMPT.md/spec yaml/LEGAL_DISCLAIMER.md from stale DRAFT_NOT_YET_HUMAN_APPROVED language to accurately reflect the public, non-commercial, educational-use-only release status while still disclosing open validation gates (human two-reviewer audit, cross-model testing) rather than overclaiming readiness."}
