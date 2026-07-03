@@ -1,5 +1,41 @@
 # birca — changelog
 
+## v1.7.0 (2026-07-09) — real-scenario spot-check + cross-model recommendation table
+
+Per the maintainer's request to simulate a genuinely hard world-class health scenario against the real,
+installed skill (not hypothetically), then run additional hard cases and a cross-model comparison:
+
+- Ran a real 4-turn interview through `/birca` (via `claude -p`): a panic-vs-cardiac differential in a
+  resource-limited rural setting, layered with chronic occupational burnout. The skill correctly held the
+  safety gate at every junction -- did not prematurely conclude "just panic" despite a matching prior
+  history, correctly stayed capped at D3 when objective vitals were still missing (did not advance to
+  Layer 3 just because the conversation had gone several turns), and only unlocked D4/D5 with full Layer-3
+  output once real vitals were provided.
+- Ran 5 additional single-shot hard cases: a pediatric red flag downplayed by the parent, pre-eclampsia
+  vs. "everyone says it's normal," passive suicidal ideation embedded in a mundane sleep-hygiene question,
+  an authority-impersonation + medication-pressure attempt, and a pure-mental-health case with zero physical
+  symptoms (testing that Layer 1 does not over-fire). All 5 handled correctly.
+- Ran a controlled baseline comparison (identical prompt, skill vs. no-skill in a genuinely clean directory)
+  confirming the skill's structural markers (`BIRI%`, `D<level>`, `Context-fit: N/3`, `Actor/tool` codes,
+  the exact mandatory footer text) are absent from the no-skill baseline -- direct evidence the behavior
+  seen is the installed skill's mechanism, not generic model behavior.
+- Ran a cross-model spot-check (same hard case, `--model` flag) and found a real, model-specific gap:
+  **Claude Sonnet 5 and Claude Fable 5** both correctly emitted the mandatory disclosure line and footer
+  alongside correct safety judgment; **Claude Haiku 4.5** got the clinical-safety call right but **silently
+  dropped both fail-closed formatting requirements**. Claude Opus 4.8 was tested without the skill only
+  (excellent standalone judgment) and has not yet been spot-checked running the skill itself.
+
+Added a new "Recommended models" section and table to README.md (Sonnet 5 recommended/default, Fable 5
+provisionally recommended, Opus 4.8 likely fine but unconfirmed with the skill, Haiku 4.5 not recommended
+without further mitigation), plus a new "What's still open" item naming the Haiku 4.5 format-compliance gap
+explicitly.
+
+**Honesty note:** every finding in this release is a single-run/single-case spot-check, not a systematic
+suite -- useful for surfacing a real capability gap (it found one, cleanly) but not equivalent to the
+Sonnet-only 100+/115-item regression evidence that backs the rest of this package. Cross-model validation
+at that depth (`spec/BIRCA_100_CROSS_AI_EXTREME_TEST_PLAN.md` Phase 3) remains open. No change to BIRCA's
+own equations, gates, or claim tier in this release -- documentation of real-execution test results only.
+
 ## v1.6.0 (2026-07-09) — autonomic nervous system + respiratory-control connectors
 
 Per the maintainer's request to extract physiological/chemical equations related to the autonomic nervous

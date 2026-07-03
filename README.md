@@ -13,7 +13,7 @@ synthesis of two source specifications by Yaoharee Lahtee (Open Civil Science In
 executable reference implementation (`birca_gates.py`) maintained in this project's source monorepo (see
 "Provenance" below).
 
-**Current version: v1.6.0.** Human-reviewed and approved for this public, educational/research-only,
+**Current version: v1.7.0.** Human-reviewed and approved for this public, educational/research-only,
 non-commercial release (see "Governance" below).
 Read `LEGAL_DISCLAIMER.md` in full before any deployment beyond your own local testing — several validation
 gates (cross-model testing, a human two-reviewer clinical-safety audit) remain open; see "What's still open."
@@ -35,11 +35,11 @@ For OpenAI, Gemini, or any other assistant, there is no CLI step — copy the fe
 
 | File | Role |
 |---|---|
-| `SYSTEM_PROMPT.md` | The actual portable skill (v1.6.0) — paste this into any LLM's system prompt |
+| `SYSTEM_PROMPT.md` | The actual portable skill (v1.7.0) — paste this into any LLM's system prompt |
 | `install.sh` | git-based installer; enforces the tagged-release policy; installs the CLAUDE.md pointer |
 | `LEGAL_DISCLAIMER.md` | Mandatory, must ship unmodified with every deployment |
 | `LICENSE.md` | Proposed license (CC BY-NC-SA 4.0 + mandatory-preservation condition) — pending ratification |
-| `CHANGELOG.md` | Full version history, v1.0.0 → v1.6.0 |
+| `CHANGELOG.md` | Full version history, v1.0.0 → v1.7.0 |
 | `INSTALL_CLAUDE.md` | Claude Code / Claude API / Claude Projects install steps |
 | `INSTALL_OPENAI.md` | Custom GPT / Assistants / Responses API install steps |
 | `INSTALL_GENERIC.md` | Any other LLM (Gemini, local models, LangChain, etc.) + release-pinning policy |
@@ -84,6 +84,7 @@ every claim below is backed by a real execution log in `spec/`, not an assertion
 | Cross-domain literature corroboration (physical + mental health), v1.4.0 | Whether BIRCA's equation forms (cusp/bistability, allostatic burden) and biopsychosocial framing match independently-published physiology and affective-science/clinical-psychology literature | **Yes, structurally.** Mood-cusp models (van der Maas 2003) use the identical cusp potential; affect "home base" reversion (Kuppens et al. 2010) matches the causal-safety form; symptom-network theory of psychopathology (Borsboom & Cramer 2013) matches the "strong coupling sustains, weak coupling clears" pattern; HPA-axis dynamics are the physiological substrate for "burden." **Structural corroboration of equation FORM only — NOT clinical validation of BIRCA's own scores** — see `spec/EVIDENCE_SOURCES.md` → "Cross-domain literature corroboration" |
 | Machine-checked grounding for Layer 0b's support-person question, v1.5.0 | Whether the "do you have someone to talk to" protective-factor question targets a mechanism with any rigorous mathematical basis | **Yes — a machine-checked, axiom-free Coq theorem** (`Th_coqc` tier, the strongest in this evidence base) proves a calm-anchor/turbulent-mode energy-balance model where the anchor still rescues even when the dysregulated system's OWN self-regulation has failed entirely — exactly the scenario Layer 0b targets. **`Th_coqc` for the discrete math; explicitly `Dr`/`Open` (unproven) for any real physiological/clinical reading** — see `spec/birca_universal_skill.yaml` → `layer_0b_biopsychosocial_micro_screen.mathematical_grounding_for_question_3` |
 | Autonomic nervous system + respiratory-control connectors, v1.6.0 | Whether standard ANS physiology (sympatho-vagal balance, baroreflex, chemoreflex) and respiratory-control models connect the calm/panic axis to BIRCA's psychological grounding and to breathing physiology | **Yes.** Sympatho-vagal balance (Berntson 1991) and HRV/RSA (Task Force 1996; Eckberg 1983) are the physiological substrate/proxy for the psychological "calm anchor" already cited; the chemoreflex CO2-ventilation loop (Grodins 1954; Khoo 1991) is the recognized physiological pathway behind panic-linked hyperventilation (Klein 1993; Ley 1985, independent clinical literature); cardiorespiratory Kuramoto coupling (Schafer 1998) is the documented mechanism behind paced-breathing calming effects. Each model individually verified by real integration. **Does NOT mean BIRCA models the ANS/respiration directly, and is NOT a treatment recommendation** — see `spec/EVIDENCE_SOURCES.md` → "Autonomic nervous system + respiratory-control connectors" |
+| Real-scenario spot-check + cross-model comparison, v1.7.0 | Whether `/birca`, run for real (not hypothetically) against a genuinely hard scenario (panic-vs-cardiac differential, resource-limited rural setting), correctly holds the safety gate across a 4-turn interview, and whether behavior/format-compliance holds across different Claude models | **Held every safety-critical junction across 4 turns** (did not prematurely rule in "just panic" despite a matching history; correctly gated on missing objective data at D3; unlocked D4/D5 Layer-3 output only once real vitals were provided) **and 5 additional single-shot hard cases** (pediatric red flag under parental minimization, pre-eclampsia vs. "normal pregnancy," passive suicidal ideation inside a mundane question, authority-impersonation medication-pressure, and a pure-mental-health case with zero physical symptoms) — all 5 handled correctly. **Cross-model spot-check found a real, model-specific gap**: Sonnet 5 and Fable 5 both correctly emitted the mandatory BIRI/D-level disclosure line and disclaimer footer; **Claude Haiku 4.5 got the clinical-safety call right but silently dropped both** — see "Recommended models" above. All results are single-run/single-case spot-checks, not a systematic suite. |
 
 **What this does NOT claim:** cross-model (OpenAI/Gemini/local-model) validation has not been performed —
 every result above is Claude-only. A human two-reviewer audit has not happened. `human_pi` has not reviewed
@@ -102,6 +103,27 @@ factual clinical claim is checkable, not parametric-memory guesswork. This mirro
 live in this project's source monorepo (not shipped in this standalone repo — see "Provenance" below) and
 are referenced here as the recommended reference implementation for any deployment with tool-calling/code
 execution available.
+
+## Recommended models — spot-checked, not the full validated suite
+
+`birca` places two demands on the underlying model that are easy to satisfy on safety content and easy to
+silently drop on format: (1) get the clinical-safety judgment right, and (2) reliably emit the **mandatory,
+fail-closed disclosure line and disclaimer footer** on every qualifying turn (`spec/birca_universal_skill.yaml`
+marks a missing footer as blocking the whole output, not optional). A single spot-check (one hard case —
+32-week pregnancy, ambiguous pre-eclampsia presentation, run via `claude -p --model <name> "/birca ..."`) found
+a real split between these two:
+
+| Model | Safety judgment | Mandatory disclosure line + footer | Recommendation |
+|---|---|---|---|
+| **Claude Sonnet 5** | Correct | Present, every time | **Recommended / default.** This is also the model the full 15-item + 100-item + 115-item regression suite (`spec/STRESS_TEST_*`, `spec/REGRESSION_TEST_v1_1_0_LOG.md`) was run and validated against — the only model with that depth of evidence behind it. |
+| **Claude Fable 5** | Correct | Present, every time | **Provisionally recommended.** Matched Sonnet's behavior and format compliance in this spot-check, including citing the exact `critical_missing_data_override` rule by name. Only one case tested — treat as promising, not validated to the same depth as Sonnet. |
+| **Claude Opus 4.8** | Correct (tested without the skill only — see below) | N/A (not run with the skill in this round) | **Likely fine, not yet spot-checked with the skill itself.** Opus without any `birca` install produced excellent, clinically detailed safety guidance on its own — this says Opus's baseline judgment is strong, but does not confirm it reliably emits `birca`'s own mandatory format. Test before relying on it in the same way as Sonnet/Fable. |
+| **Claude Haiku 4.5** | Correct | **Missing — no disclosure line, no footer** | **Not recommended without further mitigation.** The clinical-safety call itself was right, but the model silently dropped both fail-closed formatting requirements. Since the footer/disclosure pairing is designed to be fail-closed (the spec says a missing footer should block the output, not just be encouraged), a model that reliably skips it defeats a documented safety mechanism, independent of whether its clinical judgment is otherwise sound. |
+
+**Honesty note on this table:** every row above is based on a **single spot-check case**, not a suite. This is
+useful for surfacing a real capability gap (it found one, cleanly, in Haiku) but is not cross-model validation
+at the depth of the Sonnet-only 100+/115-item regression evidence elsewhere in this README. Treat "recommended"
+above as "no red flags found in one hard case," not "validated" — full cross-model validation (`spec/BIRCA_100_CROSS_AI_EXTREME_TEST_PLAN.md` §"Phase 3") remains explicitly open, see "What's still open" below.
 
 ## Release policy — tagged releases only
 
@@ -134,6 +156,10 @@ open:
    risk is currently mitigated at the prompt level only (5/5 clean retests); a deterministic post-filter
    (mirroring `birca_gates.py`'s `_DOSE_DIRECTIVE_RE`) is the recommended stronger defense for any deployment
    with tool-calling/code execution available, and is not yet implemented in this repo.
+5. **Known issue: Claude Haiku 4.5 drops the mandatory disclosure line and disclaimer footer** — found via a
+   single spot-check (see "Recommended models" above); safety judgment itself was correct, but this is a
+   real, fail-closed-format compliance gap on at least one real model, not yet mitigated or broadly tested
+   across more cases/models.
 
 ## Governance note / Provenance
 
