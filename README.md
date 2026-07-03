@@ -1,13 +1,10 @@
 # birca — universal, vendor-agnostic install package
 
-> **This package now has a canonical public home: <https://github.com/morrocwi/birca> (tagged
-> `birca-v1.10.2`).** This directory remains as the historical development record (full test/fix history in
-> `spec/`) and is where future changes are first drafted, but installs/clones/issues for `birca` itself
-> should go through the public repo above, not this monorepo path.
-
-> **FOR EDUCATIONAL AND RESEARCH PURPOSES ONLY. NOT FOR COMMERCIAL USE.** Published as an educational/
-> research artifact under a non-commercial license (CC BY-NC-SA 4.0, see `LICENSE.md`). See
-> `LEGAL_DISCLAIMER.md` for the full terms.
+> **FOR EDUCATIONAL AND RESEARCH PURPOSES ONLY. NOT FOR COMMERCIAL USE.** This repository is published as an
+> educational/research artifact under a non-commercial license (CC BY-NC-SA 4.0, see `LICENSE.md`). It is
+> not a medical product or service, and any commercial use — selling it, embedding it in a paid product,
+> or any other revenue-generating deployment — requires separate, explicit written permission from the
+> rights holder. See `LEGAL_DISCLAIMER.md` for the full terms; they are not optional reading.
 
 **Call name (always lowercase): `birca`.** A safety-gated, context-bound health-information skill that helps
 organize a mind-body conversation (symptoms, medication context, biopsychosocial state) into a structured,
@@ -15,22 +12,21 @@ safety-screened report — installable in one system prompt on Claude, OpenAI, o
 does not diagnose, does not select or dose treatment, and does not replace a clinician or emergency
 services; see `LEGAL_DISCLAIMER.md` for the full, binding terms. Built from a faithful synthesis of two
 source specifications by Yaoharee Lahtee (Open Civil Science Initiative) — see
-`spec/birca_universal_skill.yaml` → `sources:` for full provenance — plus this repository's own executable
-safety-guard implementation.
+`spec/birca_universal_skill.yaml` → `sources:` for full provenance — plus safety-guard logic informed by an
+executable reference implementation (`birca_gates.py`) maintained in this project's source monorepo (see
+"Governance note / Provenance" below).
 
-**Current version: v1.10.2.** `human_pi` (the rights holder) approved *publishing this specific package
-publicly under a non-commercial license* (`DEC-birca-universal-skill-2026-0709`,
-`DEC-birca-standalone-public-release-2026-0709` in `research/coordination/DECISIONS.yaml`). **That is a
-narrower approval than a clinical-safety review** — no human two-reviewer clinical-safety audit has
-happened (see "What's still open" and the Governance note below). Read `LEGAL_DISCLAIMER.md` in full before
-any deployment beyond your own local testing — several validation gates (cross-model testing, the human
-two-reviewer clinical-safety audit) remain open.
+**Current version: v1.10.3.** `human_pi` (the rights holder) approved *publishing this specific package
+publicly under a non-commercial license* — a narrower, separate decision from a clinical-safety review,
+which has **not** happened (see "Governance note / Provenance" below).
+Read `LEGAL_DISCLAIMER.md` in full before any deployment beyond your own local testing — several validation
+gates (cross-model testing, a human two-reviewer clinical-safety audit) remain open; see "What's still open."
 
 ## Quick start
 
 ```bash
-git clone http://192.168.1.120:3000/anse/cpg.git
-cd cpg/products/birca-global-health/universal_skill
+git clone https://github.com/morrocwi/birca.git
+cd birca
 ./install.sh print                              # see the raw system prompt
 ./install.sh claude-code /path/to/your/project   # install as a Claude Code /birca slash command
 ```
@@ -54,12 +50,12 @@ to verify it (both direct function calls and a real MCP-protocol round-trip over
 
 | File | Role |
 |---|---|
-| `SYSTEM_PROMPT.md` | The actual portable skill (v1.10.2) — paste this into any LLM's system prompt |
+| `SYSTEM_PROMPT.md` | The actual portable skill (v1.10.3) — paste this into any LLM's system prompt |
 | `SKILL.md` | Anthropic-format native skill file (frontmatter `name`/`description` + summary) — points to `SYSTEM_PROMPT.md` as the single source of truth; enables native Claude Code skill discovery and skill-marketplace indexing (e.g. SkillsMP) |
 | `install.sh` | git-based installer; enforces the tagged-release policy; installs the CLAUDE.md pointer |
 | `LEGAL_DISCLAIMER.md` | Mandatory, must ship unmodified with every deployment |
 | `LICENSE.md` | Proposed license (CC BY-NC-SA 4.0 + mandatory-preservation condition) — pending ratification |
-| `CHANGELOG.md` | Full version history, v1.0.0 → v1.10.2 |
+| `CHANGELOG.md` | Full version history, v1.0.0 → v1.10.3 |
 | `INSTALL_CLAUDE.md` | Claude Code / Claude API / Claude Projects install steps |
 | `INSTALL_OPENAI.md` | Custom GPT / Assistants / Responses API install steps |
 | `INSTALL_GENERIC.md` | Any other LLM (Gemini, local models, LangChain, etc.) + release-pinning policy |
@@ -109,7 +105,8 @@ every claim below is backed by a real execution log in `spec/`, not an assertion
 | First real cross-vendor spot-check (GPT-5.4, GPT-5.5), v1.8.0 | Whether `/birca`'s system-prompt-injection install pattern (`INSTALL_OPENAI.md` Option C) actually works on a non-Claude model, on the same hard pre-eclampsia case, via `codex exec -m <name>` (ChatGPT auth) | **Both models correct on safety judgment and full format compliance** (BIRI%/D-level line and exact mandatory footer present). **Exceeded expectations**: both performed live web search and cited real sources (CDC, MedlinePlus, NICHD; GPT-5.5 also cited CDC's HEAR HER program) before answering, rather than relying on parametric memory — the first working demonstration of `spec/EVIDENCE_SOURCES.md`'s "anchor every clinical statement to a live source" rule on a non-Claude model. This is the first real (not hypothetical) OpenAI evidence this package has, though it is one case, not the 100-item Phase-3 suite — see "Recommended models" and "What's still open." |
 | MCP server + deterministic A09 guard, v1.9.0 | Whether birca can be installed as a real MCP server (zero copy-paste, any MCP-capable host) without the server itself calling any LLM, and whether the long-recommended "deterministic code-level guard" for the A09 medication-leak finding can actually be built and verified | **Yes on both.** `mcp_server/server.py` exposes a `birca_consult` prompt + 3 read-only resources + a `birca_check_safety` tool, verified by a real MCP-protocol round-trip (client subprocess over stdio, not just direct function calls) — `list_tools`/`list_resources`/`list_prompts`/`call_tool`/`read_resource`/`get_prompt` all confirmed working. The guard tool (`birca_safety_guard.py`) is regex-only (no LLM), and was tested against the exact historical A09 nuance (distinguishing a real leak from a correct self-referential refusal that quotes the declined suggestion) — 4/4 self-test plus 2 additional targeted edge cases (a hedged suggestion correctly still caught; the real historical refusal text correctly passed) all correct. **Narrow scope, stated plainly**: opt-in only, English-only term list, not spot-checked inside an actual MCP host session (Claude Desktop, etc.) yet — see "What's still open." |
 | `SKILL.md` spec compliance, v1.10.0 | Whether the added `SKILL.md` discovery file actually satisfies Anthropic's official Agent Skills format (frontmatter field limits) rather than just approximating it | **Verified against the live spec** (`support.claude.com/en/articles/12512198-creating-custom-skills`), not assumed: `name` (5 chars, max 64) and `description` (199 chars, max 200 — cut down from an initial 882-character draft) both directly measured to confirm compliance. Points to `SYSTEM_PROMPT.md` as the single source of truth rather than duplicating the instructions into a second file. |
-| Whole-package peer review, v1.10.1 | An independent, maintainer-requested peer review of package readiness as a whole (not just a diff): internal consistency across every doc, and correctness of `mcp_server/*.py` | **Found and confirmed 7 real issues, all fixed and re-tested.** `birca_safety_guard.py` had 5 confirmed gaps (brand names bypassed the guard entirely -- e.g. "Tylenol"/"EpiPen" matched nothing; missing dosing verbs "give"/"use"; an over-broad negation-cue list that wrongly excused real directives listing a drug "such as ibuprofen"; a negation window that bled across unrelated sentences; a fixed 60-char window that missed matches in realistic longer sentences) -- fixed by expanding the term lists and switching the verb/negation search to be scoped to the drug match's own sentence rather than a fixed character window. Self-test expanded 4 → 10 cases, all pass, plus one fix re-verified via a real MCP-protocol call (not just a direct function call). `server.py` and `install.sh` shared a fence-stripping bug (stripped every ```` ``` ```` line in the marked block, not just the outer pair) -- fixed in both, re-verified identical 203-line extraction. Also found an "approval scope" wording ambiguity across 4 files (unqualified "human-approved" language contradicting the package's own Governance note) -- reworded for precision, one status enum renamed. See `CHANGELOG.md`'s v1.10.1 entry for the full list. |
+| Whole-package peer review, v1.10.1 | An independent, maintainer-requested peer review of package readiness as a whole (not just a diff): internal consistency across every doc, and correctness of `mcp_server/*.py` | **Found and confirmed 7 real issues, all fixed and re-tested.** `birca_safety_guard.py` had 5 confirmed gaps (brand names bypassed the guard entirely -- e.g. "Tylenol"/"EpiPen" matched nothing; missing dosing verbs "give"/"use"; an over-broad negation-cue list that wrongly excused real directives listing a drug "such as ibuprofen"; a negation window that bled across unrelated sentences; a fixed 60-char window that missed matches in realistic longer sentences) -- fixed by expanding the term lists and switching the verb/negation search to be scoped to the drug match's own sentence rather than a fixed character window. Self-test expanded 4 → 10 cases, all pass, plus one fix re-verified via a real MCP-protocol call (not just a direct function call). `server.py` and `install.sh` shared a fence-stripping bug (stripped every ```` ``` ```` line in the marked block, not just the outer pair) -- fixed in both, re-verified identical 203-line extraction. |
+| Standalone-repo customization regression, v1.10.1–v1.10.2, fixed in v1.10.3 | Whether this public repo's own `README.md` had drifted from its standalone-specific wording after two versions of mirroring from the internal monorepo copy | **Yes, it had -- found and fixed.** A blind whole-file mirror in v1.10.1 overwrote this repo's own Quick Start clone URL, banner, and Governance note with the internal monorepo's wording (including a private LAN clone URL unreachable outside the maintainer's network, and references to internal-only file paths). Fixed by reconstructing this file from the last-known-good version and re-applying only the genuinely new content, rather than a blind copy. See `CHANGELOG.md`'s v1.10.3 entry. |
 
 **What this does NOT claim:** cross-model (OpenAI/Gemini/local-model) validation has not been performed —
 every result above is Claude-only. A human two-reviewer audit has not happened. `human_pi` has not reviewed
@@ -124,8 +121,10 @@ remaining before this package could honestly be called production-validated — 
 WHO/CDC/NICE/MedlinePlus, openFDA/DailyMed/RxNorm, ClinicalTrials.gov/WHO ICTRP, Cochrane/Europe PMC/
 Semantic Scholar/Crossref, SNOMED CT/LOINC/ICD-11/UMLS, GRADE, Retraction Watch, and more) so that every
 factual clinical claim is checkable, not parametric-memory guesswork. This mirrors the `evidence_integrity`
-/ `citation_resolvable` guards already implemented and tested in this repo's
-`research/governance/sim/birca_gates.py` and `birca_live_evidence.py`.
+/ `citation_resolvable` guards implemented and tested in `birca_gates.py` / `birca_live_evidence.py`, which
+live in this project's source monorepo (not shipped in this standalone repo — see "Provenance" below) and
+are referenced here as the recommended reference implementation for any deployment with tool-calling/code
+execution available.
 
 ## Recommended models — initial guidance from spot-checks, not the full validated suite
 
@@ -169,11 +168,15 @@ warning when you do. See `INSTALL_GENERIC.md` for the full rationale.
 ## What this package is not
 
 Not a medical device, not a diagnostic system, not a substitute for emergency services or licensed clinical
-judgment, not yet peer-reviewed, not yet legally reviewed for any jurisdiction, not yet approved by
-`human_pi`. Full detail in `LEGAL_DISCLAIMER.md` — read it before doing anything with this package beyond
-reading it.
+judgment, not yet peer-reviewed for clinical safety by a human panel, not yet legally reviewed for any
+specific jurisdiction. Full detail in `LEGAL_DISCLAIMER.md` — read it before doing anything with this package
+beyond reading it.
 
 ## What's still open before this can be called fully production-ready
+
+Publishing this repo does not mean every validation gate is closed — it means the maintainer judged the
+evidence in "Validation history" above sufficient to share the work openly, while these remain explicitly
+open:
 
 1. **Cross-model validation** (OpenAI/Gemini/local-model) — designed in `spec/BIRCA_100_CROSS_AI_EXTREME_TEST_PLAN.md`
    §"Phase 3." A single-case OpenAI spot-check (GPT-5.4, GPT-5.5, both correct + live-sourced) has now been
@@ -181,42 +184,35 @@ reading it.
    Gemini/local models remain completely untested.
 2. **A full 115-item regression specific to v1.2.0** — the 4 fixes in that version were verified individually
    plus one safety-anchor spot-check, not by re-running the entire suite again.
-3. **Human two-reviewer audit** — every test round to date has been AI-executed and AI-graded (by independent
-   agents reading the actual transcripts, not self-reporting) — this is real evidence, but it is not a
-   substitute for the human clinical-safety and human-factors review the source stress-test protocol calls
-   for.
-4. **`human_pi` review and ratification of the clinical-safety content specifically** — `human_pi` has
-   already reviewed and ratified the separate decisions to merge and to publish publicly under a
-   non-commercial license (see the Governance note below); what remains open is a human two-reviewer
-   clinical-safety review of the content itself, distinct from that publishing decision.
+3. **Human two-reviewer clinical-safety audit** — every test round to date has been AI-executed and AI-graded
+   (by independent agents reading the actual transcripts, not self-reporting) — this is real evidence, but it
+   is not a substitute for the human clinical-safety and human-factors review the source stress-test protocol
+   calls for.
+4. **A09's deterministic code-level guard is now available, but opt-in and narrow** —
+   `mcp_server/birca_check_safety` implements the deterministic post-filter recommended since v1.2.0,
+   verified by a real MCP-protocol round-trip. It only helps if the deploying host (a) uses the MCP server
+   install path and (b) actually calls the tool before sending; it is not wired into any deployment
+   automatically, only matches the literal English drug/verb list (does not catch non-English leaks like
+   the original A35 finding), and has not been spot-checked end-to-end inside an actual MCP host session
+   (Claude Desktop, etc.) — only at the protocol level via a direct client.
 5. **Known issue: Claude Haiku 4.5 drops the mandatory disclosure line and disclaimer footer** — found via a
    single spot-check (see "Recommended models" above); safety judgment itself was correct, but this is a
    real, fail-closed-format compliance gap on at least one real model, not yet mitigated or broadly tested
    across more cases/models.
-6. **A09's deterministic guard is now available, but opt-in and narrow** — `mcp_server/birca_check_safety`
-   implements the "deterministic code-level post-filter" recommended since v1.2.0, verified by a real
-   MCP-protocol round-trip. It only helps if the deploying host (a) uses the MCP server install path and
-   (b) actually calls the tool before sending; it is not wired into any deployment automatically, only
-   matches the literal English drug/verb list (does not catch non-English leaks like the original A35
-   finding), and has not been spot-checked end-to-end inside an actual MCP host session (Claude Desktop,
-   etc.) — only at the protocol level via a direct client.
 
-## Governance note (this workspace)
+## Governance note / Provenance
 
-This package was drafted end-to-end by an AI session under `ISSUE-0151` / branch
-`feat/birca-universal-skill-v1`, per the human's explicit, iterative requests (open the issue and branch;
-review the code; fix findings; run the 15-item and 100-item suites; add and validate the Layer-0b micro-
-screen; run a full regression; fix the remaining 4 issues; prepare for a PR; merge; go public). `human_pi`
-(the rights holder) has since explicitly reviewed and ratified two specific decisions in-session: merging
-this package to `main`, and publishing it publicly under a non-commercial license
-(`DEC-birca-universal-skill-2026-0709`, `DEC-birca-standalone-public-release-2026-0709` in
-`research/coordination/DECISIONS.yaml`) — this note was previously stale on that point (fixed in v1.10.1)
-and had not been updated after those approvals were granted.
-
-**What `human_pi` has NOT reviewed or ratified: the clinical-safety content itself.** No human two-reviewer
-clinical-safety audit (the review the source stress-test protocol calls for) has happened — every test round
-to date has been AI-executed and AI-graded. Per `cpq_skill/agenthub/BircaHealth_v0_1_0.yaml`'s
-`human_approval_required_for` list (`external_send_of_health_guidance`, `public_health_claim`, anything
-touching the advisory lock), that clinical-safety review remains a separate, still-open gate before this
-package could honestly be called clinically validated, independent of the public/license approval already
-granted — see `ISSUE-0151` / GitHub `morrocwi/cpg#87` for the tracking history.
+This package was drafted end-to-end by an AI session (Claude Code) in the maintainer's private ANSE.ASIA
+monorepo, under internal tracking `ISSUE-0151` / GitHub `morrocwi/cpg#87` / PR `morrocwi/cpg#88`, per the
+maintainer's explicit, iterative direction across one extended session: open the issue and branch; build a
+world-class installable skill; code-review and fix findings; stress-test with a real 15-item adversarial
+suite and a 100-item cross-dimension extreme suite; add and validate a biopsychosocial safety micro-screen
+(Layer 0b) after a differentiation gap was found; run a full 115-item regression; fix the remaining known
+issues; merge to `main`; and finally split this package out into its own public repository. The full,
+unabridged development and test history — every finding, every fix, every retest — is preserved in
+`spec/*.md` in this repo, and the decision to merge and the decision to publish this repo are both recorded
+as durable decision-ledger entries in the source monorepo (`research/coordination/DECISIONS.yaml`,
+`DEC-birca-universal-skill-2026-0709` and its public-release follow-up), explicitly scoped: approval to merge
+and approval to publish this repo are **not** the same thing as a claim that every validation gate above is
+closed. Anyone relying on this package for anything beyond personal experimentation should read
+`LEGAL_DISCLAIMER.md` and treat "What's still open" above as binding, not decorative.

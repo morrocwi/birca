@@ -1,5 +1,40 @@
 # birca — changelog
 
+## v1.10.3 (2026-07-09) — fix a real regression in the public repo's own README, caught by the maintainer
+
+The maintainer, following the install instructions from this dev copy's README, asked why the "Quick
+start" clone command pointed at a private LAN address (`http://192.168.1.120:3000/anse/cpg.git`) instead of
+the public repo. Investigation confirmed a real regression, not a misunderstanding: the v1.10.1 mirror step
+did a blind whole-file `cp` of `README.md` from this dev copy into the public standalone repo
+(`github.com/morrocwi/birca`), which **overwrote that repo's own standalone-specific content** with this
+dev copy's internal-monorepo wording. Confirmed by diffing every tagged version: `birca-v1.8.0` through
+`birca-v1.10.0` all had the correct public clone URL (`git clone https://github.com/morrocwi/birca.git`);
+`birca-v1.10.1` and `birca-v1.10.2` both had the broken internal LAN URL instead. The same blind copy also
+replaced the standalone repo's own opening banner and Governance note (which had already correctly
+distinguished "approved to merge/publish" from "clinical-safety reviewed" — the exact distinction the
+v1.10.1/v1.10.2 wording passes were separately trying to fix in *this* dev copy) with this dev copy's
+internal wording, including references to internal-only file paths (`cpq_skill/agenthub/...`,
+`research/governance/sim/birca_gates.py`) that don't exist as such in the standalone repo, and a
+now-nonsensical sentence reading "no AI session may make this repository... publicly visible... without
+that review" inside a repo that has already been public for 5+ versions.
+
+**Confirmed every other mirrored file was NOT affected** by diffing each one (`CHANGELOG.md`, `SKILL.md`,
+`SYSTEM_PROMPT.md`, `install.sh`, `spec/birca_universal_skill.yaml`, `mcp_server/README.md`) between
+`birca-v1.10.0` and `birca-v1.10.1` — all of those had already been edited via targeted `sed` substitutions
+with cross-references adapted per-repo, not blind copies, so their standalone-specific wording survived
+intact. Only `README.md` was mirrored wholesale, and only `README.md` regressed.
+
+**Fixed** by reconstructing the standalone repo's `README.md` from its last-known-good tagged version
+(`birca-v1.10.0`) and manually re-applying only the genuinely new, real content from v1.10.1/v1.10.2 (the
+peer-review validation-history row, version bumps) — not a blind copy. Added a new validation-history row
+documenting this regression and its fix. **Going forward, `README.md` is treated as a standalone-diverged
+file**: each repo keeps and edits its own version independently; the other files above remain safe to
+mirror directly, confirmed by diff not to have diverged.
+
+No change to BIRCA's own equations, gates, or claim tier. This is the third consecutive patch version
+addressing documentation-process issues (v1.10.1 code + wording, v1.10.2 one more wording paragraph, v1.10.3
+this mirroring-process regression) rather than the skill's own behavior.
+
 ## v1.10.2 (2026-07-09) — fix a stale Governance-note claim missed in the v1.10.1 wording pass
 
 The maintainer asked for a plain-language readiness summary. Re-reading README.md's Governance note to
