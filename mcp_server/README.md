@@ -73,7 +73,7 @@ clients expose this as a slash command or prompt picker) to load the skill, same
 ## Verify install
 
 ```bash
-python3 birca_safety_guard.py   # 10/10 self-test, exit 0
+python3 birca_safety_guard.py   # 20/20 self-test, exit 0
 ```
 
 Then run a full protocol round-trip (spins up the server as a real subprocess and talks
@@ -103,7 +103,7 @@ Expected: `tools: ['birca_check_safety']`, `resources: ['birca://spec', 'birca:/
 
 ## Status
 
-Same status as the rest of this package (`v1.10.1`, rights-holder-approved for public/educational/
+Same status as the rest of this package (`v1.10.4`, rights-holder-approved for public/educational/
 non-commercial release — see the package `README.md` Governance note for what that approval does and does
 not cover) — see the package `README.md` and `LEGAL_DISCLAIMER.md`. This is a
 new, additive install surface; it does not change any of birca's own safety mechanisms,

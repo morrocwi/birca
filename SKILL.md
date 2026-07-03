@@ -52,7 +52,7 @@ emergency services immediately — this skill's own Layer 1 does exactly that, i
 
 ## Status and governance
 
-`v1.10.3` (2026-07-09). `human_pi` (the rights holder) approved publishing this package publicly under a
+`v1.10.4` (2026-07-09). `human_pi` (the rights holder) approved publishing this package publicly under a
 non-commercial license — that is a separate, narrower approval from a clinical-safety review, which has
 **not** happened (no human two-reviewer audit yet). Full validation history, known open gaps (human
 two-reviewer clinical-safety audit, full cross-model suite, one known model-specific format-compliance

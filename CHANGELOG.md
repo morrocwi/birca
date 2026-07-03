@@ -1,5 +1,70 @@
 # birca — changelog
 
+## v1.10.4 (2026-07-09) — third peer-review round: 3 more safety-guard gaps, 2 server.py error-handling gaps, stale versions in 5 files
+
+A maintainer-requested full re-review after the v1.10.3 mirror-regression fix, run as 3 parallel finder
+angles (mirror-divergence check, mcp_server code deep-dive, doc-vs-code consistency sweep) plus verification.
+
+**Mirror-divergence check**: byte-diffed every file between the dev copy and the public repo. Confirmed
+`INSTALL_CLAUDE.md`, `INSTALL_GENERIC.md`, `INSTALL_OPENAI.md`, and `spec/EVIDENCE_SOURCES.md` are
+*intentionally* diverged per-repo (like `README.md`), correctly pointing at internal vs. public paths --
+not a bug. Every other file (`CHANGELOG.md`, `SKILL.md`, `SYSTEM_PROMPT.md`, `install.sh`,
+`spec/birca_universal_skill.yaml`, `mcp_server/*`) confirmed byte-identical. No new instance of the
+README-style mirror-overwrite bug found anywhere else.
+
+**Stale versions found and fixed (5 files)**: `INSTALL_CLAUDE.md`, `INSTALL_GENERIC.md`, and
+`INSTALL_OPENAI.md` (public repo) plus `LEGAL_DISCLAIMER.md` (both repos, identical) all still said
+"Status: v1.2.0" -- 8+ versions stale. `mcp_server/README.md` was stale at v1.10.1. All bumped to v1.10.4;
+the three INSTALL docs' wording also updated to the same "approval scope" precision established in
+README.md's Governance note (rights-holder approved *publishing*, not a clinical-safety review).
+
+**`mcp_server/birca_safety_guard.py` -- 3 more confirmed gaps, plus 1 more found while fixing them:**
+
+1. **Plural drug names bypassed the guard entirely.** `\baspirin\b` does not match inside "aspirins" (no
+   word boundary between "n" and "s", both word characters) -- `check_response("Give her two aspirins
+   now.")` returned zero matches, not even a weak one. Fixed by allowing an optional trailing `s?`.
+2. **Ordinary contractions were miscounted as quote marks.** `_is_quoted()`'s raw `.count("'")` treated
+   every apostrophe as a quote-parity flip, so two unrelated contractions in one sentence ("He'll tell you
+   to chew an aspirin now, it's the right call.") could satisfy the "quoted" check and wrongly downgrade a
+   real directive to a weak match. Fixed by excluding an apostrophe sitting directly between two letters
+   (a contraction) from quote-position counting.
+3. **Negation scope was not anchored to the same clause as the match.** The whole-sentence negation search
+   let a negation word in an unrelated earlier clause wrongly neutralize a later, genuinely directive
+   clause: "To avoid worsening the headache, take ibuprofen every six hours." and "Refusing to see a
+   doctor is risky, so take ibuprofen for now..." both wrongly passed as weak matches. Fixed by scoping the
+   negation search to the comma-bounded clause immediately before the match, not the whole sentence.
+   Deliberate, accepted trade-off: an unusual parenthetical aside split across commas ("I won't, under any
+   circumstances, recommend...") could now push a real negation out of scope -- for a safety guard, an
+   occasional false positive (unnecessary regenerate) is a far smaller cost than a false negative (a missed
+   real leak), so this trade favors the safer direction.
+4. **Gerund/inflected verb forms didn't match at all** (found while re-testing fix #3, not by the peer
+   review itself). "chewing", "giving", "using", "took", "given", "applied" all failed to match the
+   bare-infinitive-only verb list -- e.g. "You should be chewing an aspirin right now." was filed as a weak
+   match (no verb found) rather than a directive. Regular verbs are now matched with an optional trailing
+   suffix (`\w*`); "take"/"give"/"use" have irregular spellings (took/taken, gave/given, and "give"/"use"
+   drop their silent "e" before "-ing") and "apply"'s "y" changes to "i" before a suffix -- these are listed
+   as explicit irregular forms since a bare-stem suffix pattern can't reach them.
+
+Self-test expanded 10 → 20 cases (6 new cases for the 3 confirmed gaps plus 1 already-passing case that
+now passes for the *right* reason, and 6 new cases for the gerund/irregular-verb gap), all pass.
+
+**`mcp_server/server.py` -- 2 error-handling consistency gaps:**
+
+5. `_extract_system_prompt()`'s two `text.index()` marker lookups raised a bare, unhelpful
+   `ValueError: substring not found` if a marker was missing/renamed, instead of the deliberately-authored,
+   descriptive `RuntimeError` the same function already raises for its own fence-count and length checks.
+   Fixed by wrapping both lookups and re-raising in the same style.
+6. `get_spec()`, `get_evidence_sources()`, and `get_legal_disclaimer()` called `Path.read_text()` directly
+   with no existence check, unlike the careful guarding built for prompt extraction -- a missing/renamed
+   file would surface as a raw `FileNotFoundError` with no diagnostic context. Fixed by adding a shared
+   `_read_required()` helper that raises a descriptive `RuntimeError` naming the expected path.
+
+No change to BIRCA's own equations, gates, or claim tier. Fourth consecutive patch version in this
+process/quality-hardening arc (v1.10.1 code + wording, v1.10.2 one more wording paragraph, v1.10.3 the
+mirroring-process regression, v1.10.4 this third review round) -- the maintainer-requested peer-review
+discipline continues to surface real issues each round, most recently at a lower rate and severity than
+the first round, consistent with the package converging rather than churning.
+
 ## v1.10.3 (2026-07-09) — fix a real regression in the public repo's own README, caught by the maintainer
 
 The maintainer, following the install instructions from this dev copy's README, asked why the "Quick

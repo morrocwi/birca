@@ -39,6 +39,20 @@ _START_MARKER = "<!-- BIRCA_PROMPT_START -->"
 _END_MARKER = "<!-- BIRCA_PROMPT_END -->"
 
 
+def _read_required(path: Path) -> str:
+    """Read `path`, raising a descriptive RuntimeError (not a bare FileNotFoundError) if
+    it's missing -- a peer review found the resource handlers below called
+    Path.read_text() directly with no error handling, unlike _extract_system_prompt's
+    careful guarding, so a missing/renamed/moved file surfaced as a raw traceback with no
+    context about which file was expected where."""
+    if not path.is_file():
+        raise RuntimeError(
+            f"birca MCP server: expected file not found at {path} -- it may have been "
+            "moved, renamed, or deleted."
+        )
+    return path.read_text(encoding="utf-8")
+
+
 def _extract_system_prompt() -> str:
     """Extract the fenced instruction block from SYSTEM_PROMPT.md, the same
     marker-based method install.sh uses -- kept independent (no shared import) so this
@@ -50,9 +64,20 @@ def _extract_system_prompt() -> str:
     fence pair), but it would silently corrupt the extracted prompt the moment a future
     edit adds a nested fenced code example inside the marked block, with no error raised.
     """
-    text = (_SKILL_ROOT / "SYSTEM_PROMPT.md").read_text(encoding="utf-8")
-    start = text.index(_START_MARKER) + len(_START_MARKER)
-    end = text.index(_END_MARKER, start)
+    text = _read_required(_SKILL_ROOT / "SYSTEM_PROMPT.md")
+    try:
+        start = text.index(_START_MARKER) + len(_START_MARKER)
+        end = text.index(_END_MARKER, start)
+    except ValueError as exc:
+        # A peer review found these two lookups raised a bare, unhelpful
+        # "substring not found" ValueError if a marker was missing/renamed -- the more
+        # likely real-world break, and the opposite of the fence-count/length checks
+        # below, which already raise a descriptive RuntimeError for their own failure
+        # modes. Re-raised here in the same style for consistency.
+        raise RuntimeError(
+            "birca MCP server: could not find BIRCA_PROMPT_START/END markers in "
+            "SYSTEM_PROMPT.md -- they may be missing or renamed."
+        ) from exc
     block = text[start:end]
     lines = block.splitlines()
     fence_idxs = [i for i, ln in enumerate(lines) if ln.strip() == "```"]
@@ -100,17 +125,17 @@ def birca_consult() -> str:
 
 @mcp.resource("birca://spec", name="birca_spec", description="Machine-readable birca skill spec (birca_universal_skill.yaml)")
 def get_spec() -> str:
-    return (_SKILL_ROOT / "spec" / "birca_universal_skill.yaml").read_text(encoding="utf-8")
+    return _read_required(_SKILL_ROOT / "spec" / "birca_universal_skill.yaml")
 
 
 @mcp.resource("birca://evidence-sources", name="birca_evidence_sources", description="Required evidence libraries and grounding notes (EVIDENCE_SOURCES.md)")
 def get_evidence_sources() -> str:
-    return (_SKILL_ROOT / "spec" / "EVIDENCE_SOURCES.md").read_text(encoding="utf-8")
+    return _read_required(_SKILL_ROOT / "spec" / "EVIDENCE_SOURCES.md")
 
 
 @mcp.resource("birca://legal-disclaimer", name="birca_legal_disclaimer", description="Mandatory legal disclaimer -- must accompany every deployment (LEGAL_DISCLAIMER.md)")
 def get_legal_disclaimer() -> str:
-    return (_SKILL_ROOT / "LEGAL_DISCLAIMER.md").read_text(encoding="utf-8")
+    return _read_required(_SKILL_ROOT / "LEGAL_DISCLAIMER.md")
 
 
 @mcp.tool(
