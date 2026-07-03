@@ -6,10 +6,18 @@ Invocation name (always lowercase): **`birca`**
 (`SYSTEM_PROMPT.md`) plus a machine-readable spec (`spec/birca_universal_skill.yaml`) plus a required
 disclaimer (`LEGAL_DISCLAIMER.md`). To install on any system that accepts a system/developer prompt:
 
-1. `git clone http://192.168.1.120:3000/anse/cpg.git --branch <tag> --single-branch` (see **Release policy**
+1. `git clone https://github.com/morrocwi/birca.git --branch <tag> --single-branch` (see **Release policy**
    below — do not point at a moving branch).
-2. Load the fenced block inside `products/birca-global-health/universal_skill/SYSTEM_PROMPT.md` as that
-   system's system-level instruction / persona / character prompt.
+
+   **Note for AI agents running in sandboxed environments:** this step requires network access. If your
+   agent runs with restricted network permissions (a common default for CLI-agent sandboxes, e.g. Codex
+   CLI), this clone may fail first with a DNS/host-resolution error (e.g. "Could not resolve host") before
+   any install step runs -- a network-permission issue in the calling environment, not a bug in this
+   package. Allow/escalate network access for the clone command, then rerun it. Confirmed by a real report:
+   a Codex CLI sandbox failed exactly this way on first attempt, then installed successfully once network
+   access was granted.
+2. Load the fenced block inside `SYSTEM_PROMPT.md` as that system's system-level instruction / persona /
+   character prompt.
 3. Surface `LEGAL_DISCLAIMER.md`'s emergency notice and required footer somewhere the end user will actually
    see it (not just buried in the system prompt) — most platforms need this repeated as a UI banner too.
 4. Wire read-only calls to the libraries in `spec/EVIDENCE_SOURCES.md` if your framework supports tool/
@@ -34,13 +42,13 @@ trusting a local-model deployment.
 
 ## Release policy — pin a tag, never a moving branch
 
-**Only install a tagged release** (e.g. `birca-v1.0.0`), never the `main` or `feat/*` development branch, in
-any deployment beyond your own local testing. Reasons: (1) development branches change without notice — a
-production install could silently drift from the audited disclaimer text or safety rules; (2) this package
-is `DRAFT_NOT_YET_HUMAN_APPROVED` until a tagged, reviewed release exists; (3) pinning a tag makes the
-install auditable — you can always answer "which exact version is running" from the tag alone. `install.sh`
-enforces this: it refuses to run against an unreleased/untagged checkout unless you pass `--allow-draft`
-explicitly, and prints a loud warning when it does.
+**Only install a tagged release** (e.g. `birca-v1.10.5`), never the `main` development branch, in any
+deployment beyond your own local testing. Reasons: (1) the `main` branch changes without notice — a
+production install could silently drift from the audited disclaimer text or safety rules; (2) a human
+two-reviewer clinical-safety audit has not happened for any version yet (see README.md's "What's still
+open"); (3) pinning a tag makes the install auditable — you can always answer "which exact version is
+running" from the tag alone. `install.sh` enforces this: it refuses to run against an unreleased/untagged
+checkout unless you pass `--allow-draft` explicitly, and prints a loud warning when it does.
 
 ## Verify install
 
@@ -49,4 +57,4 @@ Missing:[...] · Next questions(<=7)` line, must run the safety screen before an
 with the disclaimer footer. If your model skips either, the instruction block was likely truncated or
 diluted by a longer competing system prompt — give `birca`'s block priority/precedence in your prompt stack.
 
-Status: v1.10.4. `human_pi` (the rights holder) approved publishing this package publicly under a non-commercial license -- a narrower, separate approval from a clinical-safety review. Human two-reviewer audit and cross-model validation remain open (see README "What's still open"). See `LEGAL_DISCLAIMER.md` before any real deployment.
+Status: v1.10.6. `human_pi` (the rights holder) approved publishing this package publicly under a non-commercial license -- a narrower, separate approval from a clinical-safety review. Human two-reviewer audit and cross-model validation remain open (see README "What's still open"). See `LEGAL_DISCLAIMER.md` before any real deployment.

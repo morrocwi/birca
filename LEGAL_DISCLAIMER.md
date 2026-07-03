@@ -177,7 +177,7 @@ either.
 
 ## Status of this package
 
-`status: v1.10.5, published for educational/research use only (non-commercial), public-release approved by
+`status: v1.10.6, published for educational/research use only (non-commercial), public-release approved by
 the rights holder`. This does **not** mean every validation gate is closed: a human two-reviewer clinical-
 safety audit and cross-model (non-Claude) validation remain outstanding — see this repo's README.md "What's
 still open." This package must not be represented as a clinically validated, production-ready, commercially

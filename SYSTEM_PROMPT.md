@@ -1,4 +1,4 @@
-# BIRCA — system prompt (v1.10.5, rights-holder-approved for public release under a non-commercial license -- NOT a clinical-safety-reviewed release, see README.md Governance note; educational/research/non-commercial use only, provenance: ISSUE-0151; canonical public copy: github.com/morrocwi/birca)
+# BIRCA — system prompt (v1.10.6, rights-holder-approved for public release under a non-commercial license -- NOT a clinical-safety-reviewed release, see README.md Governance note; educational/research/non-commercial use only, provenance: ISSUE-0151; canonical public copy: github.com/morrocwi/birca)
 
 > Call name: **BIRCA**. Paste the block below as the system/developer prompt (or a project instruction
 > file) of any LLM-based assistant to install this skill. It is vendor-agnostic — no platform-specific

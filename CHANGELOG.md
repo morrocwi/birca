@@ -1,5 +1,36 @@
 # birca — changelog
 
+## v1.10.6 (2026-07-09) — document a real sandboxed-install friction point; fix INSTALL_GENERIC.md's mirror gap
+
+An independent, unsolicited real-world report: a Codex CLI session (a different AI agent, not Claude Code)
+attempted to install this package in its own sandboxed environment. The sandbox's default network
+restrictions caused `git clone` to fail first with a DNS/host-resolution error ("Could not resolve host:
+github.com") before any install step could run. Once granted permission to escalate network access outside
+the sandbox, the clone and install completed successfully (to `~/.codex/skills/birca`), and the agent
+independently verified the correct commit hash and tag (`birca-v1.10.5`) matched what this package actually
+shipped -- a genuine, external, cross-agent confirmation of release integrity.
+
+**This is a real environment-friction point, not a bug in birca or `install.sh`** -- confirmed by the
+maintainer directly. Documented it explicitly for future AI agents:
+
+- Added a "Note for AI agents running in sandboxed environments" callout to `README.md`'s Quick Start,
+  explaining the DNS-resolution failure mode and the fix (allow/escalate network access, then retry).
+- Added the same note to `INSTALL_GENERIC.md`'s clone step (the doc most likely to be read by a non-Claude
+  agent framework attempting an install).
+
+**Also found and fixed while addressing this**: the standalone repo's own `INSTALL_GENERIC.md` had never
+actually been diverged from the dev copy at all, despite `INSTALL_CLAUDE.md` and `INSTALL_OPENAI.md`
+(the other two install docs) being correctly diverged since earlier versions. It still had: the internal
+LAN clone URL instead of `https://github.com/morrocwi/birca.git`; a stale internal monorepo file path in
+step 2 (`products/birca-global-health/universal_skill/SYSTEM_PROMPT.md` instead of just `SYSTEM_PROMPT.md`);
+and stale `DRAFT_NOT_YET_HUMAN_APPROVED`/`feat/*`-branch language in the Release Policy section. The v1.10.4
+mirror-divergence review had only checked this file's status line, not its full content, and missed all
+three. Fixed to match the other two install docs' already-correct divergence pattern.
+
+No change to BIRCA's own equations, gates, safety mechanisms, or claim tier. No code changes -- purely a
+real-world install report and its documentation, plus a fix to a documentation gap the report's
+investigation surfaced.
+
 ## v1.10.5 (2026-07-09) — first real MCP-host end-to-end test (Claude Code CLI); Claude Desktop untested
 
 Per the maintainer's request to test the MCP server in Claude Desktop for real: Claude Desktop is not
