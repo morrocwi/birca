@@ -1,5 +1,23 @@
 # birca — changelog
 
+## v1.7.1 (2026-07-09) — Opus 4.8 spot-checked WITH the skill; recommendation table completed
+
+v1.7.0 left one gap open: Claude Opus 4.8 had only been tested *without* the skill (excellent standalone
+judgment) and was marked "likely fine, not yet spot-checked with the skill itself." This release closes
+that gap: ran the identical hard case (32-week pregnancy, ambiguous pre-eclampsia) through `claude -p
+--model opus "/birca ..."` against the actually-installed skill.
+
+**Result: Opus 4.8 passed both checks** -- correctly identified the emergency and emitted the full mandatory
+BIRI/D-level disclosure line and disclaimer footer, matching Sonnet 5 and Fable 5's compliance level.
+
+Updated the "Recommended models" table (Opus 4.8 moved from "likely fine, unconfirmed" to "Recommended,"
+same caveat as Fable -- one case tested) and the v1.7.0 validation-history row to reflect the completed
+4-model comparison: **Sonnet 5, Fable 5, and Opus 4.8 all pass; Claude Haiku 4.5 remains the sole model with
+the known format-compliance gap** (correct safety judgment, missing mandatory disclosure/footer).
+
+No change to BIRCA's own equations, gates, or claim tier -- this closes out the model-comparison round
+started in v1.7.0 with one additional real spot-check, honestly reported.
+
 ## v1.7.0 (2026-07-09) — real-scenario spot-check + cross-model recommendation table
 
 Per the maintainer's request to simulate a genuinely hard world-class health scenario against the real,
