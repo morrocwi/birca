@@ -13,7 +13,7 @@ synthesis of two source specifications by Yaoharee Lahtee (Open Civil Science In
 executable reference implementation (`birca_gates.py`) maintained in this project's source monorepo (see
 "Provenance" below).
 
-**Current version: v1.8.0.** Human-reviewed and approved for this public, educational/research-only,
+**Current version: v1.9.0.** Human-reviewed and approved for this public, educational/research-only,
 non-commercial release (see "Governance" below).
 Read `LEGAL_DISCLAIMER.md` in full before any deployment beyond your own local testing — several validation
 gates (cross-model testing, a human two-reviewer clinical-safety audit) remain open; see "What's still open."
@@ -31,15 +31,26 @@ For OpenAI, Gemini, or any other assistant, there is no CLI step — copy the fe
 `SYSTEM_PROMPT.md` into that platform's system/developer prompt. See `INSTALL_OPENAI.md` /
 `INSTALL_GENERIC.md`.
 
+## Install option 3 — MCP server (any MCP-capable host, zero copy-paste)
+
+`mcp_server/` ships a real [MCP](https://modelcontextprotocol.io) server. It never calls any LLM or paid
+API itself — it only serves the skill prompt/spec as MCP primitives and runs a deterministic (regex, no
+model) safety check. Your MCP client's own already-configured model does the actual reasoning, exactly as
+with a copy-pasted prompt — this just removes the copy-pasting step and adds one new capability a plain
+copy-paste install doesn't have: a **deterministic, code-level pre-send check** for the residual
+medication-instruction-leak risk (finding A09, `spec/V1_2_0_FIX_VERIFICATION_LOG.md`), runnable by any
+tool-calling-capable MCP host. See `mcp_server/README.md` for full setup and the exact test commands used
+to verify it (both direct function calls and a real MCP-protocol round-trip over stdio).
+
 ## What's in this directory
 
 | File | Role |
 |---|---|
-| `SYSTEM_PROMPT.md` | The actual portable skill (v1.8.0) — paste this into any LLM's system prompt |
+| `SYSTEM_PROMPT.md` | The actual portable skill (v1.9.0) — paste this into any LLM's system prompt |
 | `install.sh` | git-based installer; enforces the tagged-release policy; installs the CLAUDE.md pointer |
 | `LEGAL_DISCLAIMER.md` | Mandatory, must ship unmodified with every deployment |
 | `LICENSE.md` | Proposed license (CC BY-NC-SA 4.0 + mandatory-preservation condition) — pending ratification |
-| `CHANGELOG.md` | Full version history, v1.0.0 → v1.8.0 |
+| `CHANGELOG.md` | Full version history, v1.0.0 → v1.9.0 |
 | `INSTALL_CLAUDE.md` | Claude Code / Claude API / Claude Projects install steps |
 | `INSTALL_OPENAI.md` | Custom GPT / Assistants / Responses API install steps |
 | `INSTALL_GENERIC.md` | Any other LLM (Gemini, local models, LangChain, etc.) + release-pinning policy |
@@ -52,6 +63,7 @@ For OpenAI, Gemini, or any other assistant, there is no CLI step — copy the fe
 | `spec/STRESS_TEST_100_RUN_LOG_PHASE1_CLAUDE.md` | 100-item suite results + 4 addenda (fixes, Dimension-C redesigns, Layer-0b validation) |
 | `spec/REGRESSION_TEST_v1_1_0_LOG.md` | Full 115-item (137-call) regression after Layer-0b: 0 systematic regressions |
 | `spec/V1_2_0_FIX_VERIFICATION_LOG.md` | Verification of the 4 fixes that produced v1.2.0 |
+| `mcp_server/` | MCP server install option (any MCP-capable host) — `server.py`, `birca_safety_guard.py` (deterministic A09 guard), `README.md` |
 
 ## The three-layer + intake-gate architecture, in one paragraph
 
@@ -86,6 +98,7 @@ every claim below is backed by a real execution log in `spec/`, not an assertion
 | Autonomic nervous system + respiratory-control connectors, v1.6.0 | Whether standard ANS physiology (sympatho-vagal balance, baroreflex, chemoreflex) and respiratory-control models connect the calm/panic axis to BIRCA's psychological grounding and to breathing physiology | **Yes.** Sympatho-vagal balance (Berntson 1991) and HRV/RSA (Task Force 1996; Eckberg 1983) are the physiological substrate/proxy for the psychological "calm anchor" already cited; the chemoreflex CO2-ventilation loop (Grodins 1954; Khoo 1991) is the recognized physiological pathway behind panic-linked hyperventilation (Klein 1993; Ley 1985, independent clinical literature); cardiorespiratory Kuramoto coupling (Schafer 1998) is the documented mechanism behind paced-breathing calming effects. Each model individually verified by real integration. **Does NOT mean BIRCA models the ANS/respiration directly, and is NOT a treatment recommendation** — see `spec/EVIDENCE_SOURCES.md` → "Autonomic nervous system + respiratory-control connectors" |
 | Real-scenario spot-check + cross-model comparison, v1.7.0–v1.7.1 | Whether `/birca`, run for real (not hypothetically) against a genuinely hard scenario (panic-vs-cardiac differential, resource-limited rural setting), correctly holds the safety gate across a 4-turn interview, and whether behavior/format-compliance holds across different Claude models | **Held every safety-critical junction across 4 turns** (did not prematurely rule in "just panic" despite a matching history; correctly gated on missing objective data at D3; unlocked D4/D5 Layer-3 output only once real vitals were provided) **and 5 additional single-shot hard cases** (pediatric red flag under parental minimization, pre-eclampsia vs. "normal pregnancy," passive suicidal ideation inside a mundane question, authority-impersonation medication-pressure, and a pure-mental-health case with zero physical symptoms) — all 5 handled correctly. **Cross-model spot-check across 4 models**: Sonnet 5, Fable 5, and Opus 4.8 all correctly emitted the mandatory BIRI/D-level disclosure line and disclaimer footer alongside correct safety judgment; **Claude Haiku 4.5 got the clinical-safety call right but silently dropped both** — see "Recommended models" above. All results are single-run/single-case spot-checks, not a systematic suite. |
 | First real cross-vendor spot-check (GPT-5.4, GPT-5.5), v1.8.0 | Whether `/birca`'s system-prompt-injection install pattern (`INSTALL_OPENAI.md` Option C) actually works on a non-Claude model, on the same hard pre-eclampsia case, via `codex exec -m <name>` (ChatGPT auth) | **Both models correct on safety judgment and full format compliance** (BIRI%/D-level line and exact mandatory footer present). **Exceeded expectations**: both performed live web search and cited real sources (CDC, MedlinePlus, NICHD; GPT-5.5 also cited CDC's HEAR HER program) before answering, rather than relying on parametric memory — the first working demonstration of `spec/EVIDENCE_SOURCES.md`'s "anchor every clinical statement to a live source" rule on a non-Claude model. This is the first real (not hypothetical) OpenAI evidence this package has, though it is one case, not the 100-item Phase-3 suite — see "Recommended models" and "What's still open." |
+| MCP server + deterministic A09 guard, v1.9.0 | Whether birca can be installed as a real MCP server (zero copy-paste, any MCP-capable host) without the server itself calling any LLM, and whether the long-recommended "deterministic code-level guard" for the A09 medication-leak finding can actually be built and verified | **Yes on both.** `mcp_server/server.py` exposes a `birca_consult` prompt + 3 read-only resources + a `birca_check_safety` tool, verified by a real MCP-protocol round-trip (client subprocess over stdio, not just direct function calls) — `list_tools`/`list_resources`/`list_prompts`/`call_tool`/`read_resource`/`get_prompt` all confirmed working. The guard tool (`birca_safety_guard.py`) is regex-only (no LLM), and was tested against the exact historical A09 nuance (distinguishing a real leak from a correct self-referential refusal that quotes the declined suggestion) — 4/4 self-test plus 2 additional targeted edge cases (a hedged suggestion correctly still caught; the real historical refusal text correctly passed) all correct. **Narrow scope, stated plainly**: opt-in only, English-only term list, not spot-checked inside an actual MCP host session (Claude Desktop, etc.) yet — see "What's still open." |
 
 **What this does NOT claim:** cross-model (OpenAI/Gemini/local-model) validation has not been performed —
 every result above is Claude-only. A human two-reviewer audit has not happened. `human_pi` has not reviewed
@@ -167,10 +180,13 @@ open:
    (by independent agents reading the actual transcripts, not self-reporting) — this is real evidence, but it
    is not a substitute for the human clinical-safety and human-factors review the source stress-test protocol
    calls for.
-4. **A09's deterministic code-level guard** — the residual ~1-in-4 stochastic medication-instruction leak
-   risk is currently mitigated at the prompt level only (5/5 clean retests); a deterministic post-filter
-   (mirroring `birca_gates.py`'s `_DOSE_DIRECTIVE_RE`) is the recommended stronger defense for any deployment
-   with tool-calling/code execution available, and is not yet implemented in this repo.
+4. **A09's deterministic code-level guard is now available, but opt-in and narrow** —
+   `mcp_server/birca_check_safety` implements the deterministic post-filter recommended since v1.2.0,
+   verified by a real MCP-protocol round-trip. It only helps if the deploying host (a) uses the MCP server
+   install path and (b) actually calls the tool before sending; it is not wired into any deployment
+   automatically, only matches the literal English drug/verb list (does not catch non-English leaks like
+   the original A35 finding), and has not been spot-checked end-to-end inside an actual MCP host session
+   (Claude Desktop, etc.) — only at the protocol level via a direct client.
 5. **Known issue: Claude Haiku 4.5 drops the mandatory disclosure line and disclaimer footer** — found via a
    single spot-check (see "Recommended models" above); safety judgment itself was correct, but this is a
    real, fail-closed-format compliance gap on at least one real model, not yet mitigated or broadly tested

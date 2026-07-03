@@ -1,5 +1,48 @@
 # birca — changelog
 
+## v1.9.0 (2026-07-09) — MCP server + deterministic A09 guard (mcp_server/)
+
+Per the maintainer's request to design and build an MCP server for birca (inspired by discussing Alibaba's
+PageAgent architecture -- "BYO-LLM," single-line install, DOM-as-text-not-multimodal -- and identifying
+which of those principles genuinely transfer to a text-only advisory skill vs. which would require birca
+to become an action-taking agent, which its own actor/tool ladder explicitly reserves for clinicians):
+
+Added `mcp_server/`, a real MCP server with three primitives, deliberately with **no LLM call inside the
+server itself** (it never contacts a paid model API -- the MCP client's own already-configured model does
+the actual reasoning, exactly as with a copy-pasted prompt):
+
+- **Prompt** `birca_consult` -- returns the full `SYSTEM_PROMPT.md` instruction block, extracted via the
+  same marker-based method `install.sh` uses (kept independent, no shared import).
+- **Resources** `birca://spec`, `birca://evidence-sources`, `birca://legal-disclaimer` -- serve
+  `spec/birca_universal_skill.yaml`, `spec/EVIDENCE_SOURCES.md`, `LEGAL_DISCLAIMER.md` read-only.
+- **Tool** `birca_check_safety` -- a deterministic (regex, no LLM) implementation of the "code-level
+  post-filter" recommended since v1.2.0 for the A09 medication-instruction-leak finding
+  (`spec/V1_2_0_FIX_VERIFICATION_LOG.md`). Scans a drafted response for the exact drug-name + dosing-verb
+  pairings already named in `SYSTEM_PROMPT.md`'s own Layer-1 self-check.
+
+**The guard specifically handles the historical A09 nuance**: a raw keyword match cannot distinguish an
+actual medication-instruction leak from a correct self-referential refusal that quotes the exact thing it's
+declining (e.g. "I'm not going to suggest 'chew an aspirin'"). `birca_safety_guard.py` checks for
+negation/refusal/quoting cues in a window before the match and downgrades those to a separately-reported
+"weak match" rather than a directive-shaped one. Verified against 4 base self-test cases plus 2 additional
+targeted edge cases run live: a hedged suggestion ("some protocols say you could chew an aspirin") is
+correctly still caught as a directive leak (not excused by hedging, matching `SYSTEM_PROMPT.md`'s own rule),
+and the exact real historical A09 retest-4 refusal text is correctly passed as weak-only. 4/4 + 2/2, all
+verified by direct execution.
+
+**Verified at the real MCP-protocol level**, not just as direct function calls: spun up the server as an
+actual subprocess and drove it with a real MCP client over stdio -- `list_tools`, `list_resources`,
+`list_prompts`, `call_tool`, `read_resource`, and `get_prompt` all confirmed working end-to-end.
+
+Added an "Install option 3 -- MCP server" section to README.md, a new validation-history row, a new file-
+table entry, and updated "What's still open" item 4 to state the honest scope limits: opt-in only (not
+wired into any deployment automatically), English-only term list (does not catch the A35-style non-English
+leak pattern), and not yet spot-checked inside an actual MCP host session (Claude Desktop, etc.) -- verified
+at the protocol level via a direct client only.
+
+No change to BIRCA's own equations, gates, safety mechanisms, or claim tier -- this is a new, additive
+install surface plus one new deterministic safety tool, both real and tested by execution.
+
 ## v1.8.0 (2026-07-09) — first real cross-vendor spot-check (GPT-5.4, GPT-5.5); consolidated model guidance
 
 Per the maintainer's request to test GPT-5.4 and GPT-5.5, then consolidate everything tested so far into a
