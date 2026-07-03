@@ -1,7 +1,7 @@
 schema_version: birca_universal_skill.v1
 id: BIRCA
 name: "BIRCA — vendor-agnostic health-advisory skill (short call name: BIRCA)"
-version: 1.9.0
+version: 1.10.0
 generated_at: "2026-07-09"
 status: PUBLISHED_EDUCATIONAL_RESEARCH_USE_ONLY   # public release approved by rights holder; non-commercial (see LICENSE.md/LEGAL_DISCLAIMER.md); human two-reviewer clinical audit + cross-model validation still open, see README.md "What's still open"
 issue: ISSUE-0151

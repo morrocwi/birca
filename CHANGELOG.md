@@ -1,5 +1,34 @@
 # birca — changelog
 
+## v1.10.0 (2026-07-09) — SKILL.md, spec-compliant per Anthropic's official format
+
+Per the maintainer's request to add a discovery surface for skill marketplaces (e.g. SkillsMP, which indexes
+public `SKILL.md` files via GitHub crawling, not manual submission) and native Claude Code skill discovery:
+
+Added `SKILL.md` at the repo root, following Anthropic's official Agent Skills format (verified against the
+live specification at `support.claude.com/en/articles/12512198-creating-custom-skills`, not assumed):
+
+- `name: birca` (5 chars, spec max 64).
+- `description`: rewritten from an initial 882-character draft down to 199 characters (spec max 200,
+  hard-verified by direct measurement) -- "Use for health, symptom, medication, or biopsychosocial
+  questions. Screens emergencies and self-harm risk first, organizes info via live clinical sources. Not
+  diagnostic, not for treatment selection." Kept the safety-critical "not diagnostic, not for treatment
+  selection" framing inside the character budget since that's the single highest-priority thing a skill
+  router needs to know before invoking it.
+- Body content points to `SYSTEM_PROMPT.md` (between its `BIRCA_PROMPT_START`/`END` markers) as the single
+  source of truth for the actual instructions, rather than duplicating the ~200-line prompt into a second
+  file that could drift out of sync -- the same reuse discipline already applied to `mcp_server/server.py`'s
+  prompt extraction.
+
+Added a `SKILL.md` file-table row and a note in README.md's "What's in this directory" section. Verified:
+frontmatter parses as valid YAML with both `name` and `description` confirmed within spec limits by direct
+length measurement (not eyeballing); `install.sh`'s existing extraction logic (which reads only
+`SYSTEM_PROMPT.md`, not `SKILL.md`) confirmed unaffected -- fresh reinstall still produces the identical
+203-line prompt.
+
+No change to BIRCA's own equations, gates, safety mechanisms, or claim tier -- this is a new discovery/
+metadata surface only.
+
 ## v1.9.0 (2026-07-09) — MCP server + deterministic A09 guard (mcp_server/)
 
 Per the maintainer's request to design and build an MCP server for birca (inspired by discussing Alibaba's

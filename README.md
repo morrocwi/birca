@@ -13,7 +13,7 @@ synthesis of two source specifications by Yaoharee Lahtee (Open Civil Science In
 executable reference implementation (`birca_gates.py`) maintained in this project's source monorepo (see
 "Provenance" below).
 
-**Current version: v1.9.0.** Human-reviewed and approved for this public, educational/research-only,
+**Current version: v1.10.0.** Human-reviewed and approved for this public, educational/research-only,
 non-commercial release (see "Governance" below).
 Read `LEGAL_DISCLAIMER.md` in full before any deployment beyond your own local testing — several validation
 gates (cross-model testing, a human two-reviewer clinical-safety audit) remain open; see "What's still open."
@@ -46,11 +46,12 @@ to verify it (both direct function calls and a real MCP-protocol round-trip over
 
 | File | Role |
 |---|---|
-| `SYSTEM_PROMPT.md` | The actual portable skill (v1.9.0) — paste this into any LLM's system prompt |
+| `SYSTEM_PROMPT.md` | The actual portable skill (v1.10.0) — paste this into any LLM's system prompt |
+| `SKILL.md` | Anthropic-format native skill file (frontmatter `name`/`description` + summary) — points to `SYSTEM_PROMPT.md` as the single source of truth; enables native Claude Code skill discovery and skill-marketplace indexing (e.g. SkillsMP) |
 | `install.sh` | git-based installer; enforces the tagged-release policy; installs the CLAUDE.md pointer |
 | `LEGAL_DISCLAIMER.md` | Mandatory, must ship unmodified with every deployment |
 | `LICENSE.md` | Proposed license (CC BY-NC-SA 4.0 + mandatory-preservation condition) — pending ratification |
-| `CHANGELOG.md` | Full version history, v1.0.0 → v1.9.0 |
+| `CHANGELOG.md` | Full version history, v1.0.0 → v1.10.0 |
 | `INSTALL_CLAUDE.md` | Claude Code / Claude API / Claude Projects install steps |
 | `INSTALL_OPENAI.md` | Custom GPT / Assistants / Responses API install steps |
 | `INSTALL_GENERIC.md` | Any other LLM (Gemini, local models, LangChain, etc.) + release-pinning policy |
@@ -99,6 +100,7 @@ every claim below is backed by a real execution log in `spec/`, not an assertion
 | Real-scenario spot-check + cross-model comparison, v1.7.0–v1.7.1 | Whether `/birca`, run for real (not hypothetically) against a genuinely hard scenario (panic-vs-cardiac differential, resource-limited rural setting), correctly holds the safety gate across a 4-turn interview, and whether behavior/format-compliance holds across different Claude models | **Held every safety-critical junction across 4 turns** (did not prematurely rule in "just panic" despite a matching history; correctly gated on missing objective data at D3; unlocked D4/D5 Layer-3 output only once real vitals were provided) **and 5 additional single-shot hard cases** (pediatric red flag under parental minimization, pre-eclampsia vs. "normal pregnancy," passive suicidal ideation inside a mundane question, authority-impersonation medication-pressure, and a pure-mental-health case with zero physical symptoms) — all 5 handled correctly. **Cross-model spot-check across 4 models**: Sonnet 5, Fable 5, and Opus 4.8 all correctly emitted the mandatory BIRI/D-level disclosure line and disclaimer footer alongside correct safety judgment; **Claude Haiku 4.5 got the clinical-safety call right but silently dropped both** — see "Recommended models" above. All results are single-run/single-case spot-checks, not a systematic suite. |
 | First real cross-vendor spot-check (GPT-5.4, GPT-5.5), v1.8.0 | Whether `/birca`'s system-prompt-injection install pattern (`INSTALL_OPENAI.md` Option C) actually works on a non-Claude model, on the same hard pre-eclampsia case, via `codex exec -m <name>` (ChatGPT auth) | **Both models correct on safety judgment and full format compliance** (BIRI%/D-level line and exact mandatory footer present). **Exceeded expectations**: both performed live web search and cited real sources (CDC, MedlinePlus, NICHD; GPT-5.5 also cited CDC's HEAR HER program) before answering, rather than relying on parametric memory — the first working demonstration of `spec/EVIDENCE_SOURCES.md`'s "anchor every clinical statement to a live source" rule on a non-Claude model. This is the first real (not hypothetical) OpenAI evidence this package has, though it is one case, not the 100-item Phase-3 suite — see "Recommended models" and "What's still open." |
 | MCP server + deterministic A09 guard, v1.9.0 | Whether birca can be installed as a real MCP server (zero copy-paste, any MCP-capable host) without the server itself calling any LLM, and whether the long-recommended "deterministic code-level guard" for the A09 medication-leak finding can actually be built and verified | **Yes on both.** `mcp_server/server.py` exposes a `birca_consult` prompt + 3 read-only resources + a `birca_check_safety` tool, verified by a real MCP-protocol round-trip (client subprocess over stdio, not just direct function calls) — `list_tools`/`list_resources`/`list_prompts`/`call_tool`/`read_resource`/`get_prompt` all confirmed working. The guard tool (`birca_safety_guard.py`) is regex-only (no LLM), and was tested against the exact historical A09 nuance (distinguishing a real leak from a correct self-referential refusal that quotes the declined suggestion) — 4/4 self-test plus 2 additional targeted edge cases (a hedged suggestion correctly still caught; the real historical refusal text correctly passed) all correct. **Narrow scope, stated plainly**: opt-in only, English-only term list, not spot-checked inside an actual MCP host session (Claude Desktop, etc.) yet — see "What's still open." |
+| `SKILL.md` spec compliance, v1.10.0 | Whether the added `SKILL.md` discovery file actually satisfies Anthropic's official Agent Skills format (frontmatter field limits) rather than just approximating it | **Verified against the live spec** (`support.claude.com/en/articles/12512198-creating-custom-skills`), not assumed: `name` (5 chars, max 64) and `description` (199 chars, max 200 — cut down from an initial 882-character draft) both directly measured to confirm compliance. Points to `SYSTEM_PROMPT.md` as the single source of truth rather than duplicating the instructions into a second file. |
 
 **What this does NOT claim:** cross-model (OpenAI/Gemini/local-model) validation has not been performed —
 every result above is Claude-only. A human two-reviewer audit has not happened. `human_pi` has not reviewed
