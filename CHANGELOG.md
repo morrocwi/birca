@@ -1,5 +1,44 @@
 # birca — changelog
 
+## v1.10.5 (2026-07-09) — first real MCP-host end-to-end test (Claude Code CLI); Claude Desktop untested
+
+Per the maintainer's request to test the MCP server in Claude Desktop for real: Claude Desktop is not
+installed on the Linux workstation this package is developed on, and has no official Linux build, so it
+could not be tested directly. Instead ran the closest genuinely real test available in this environment:
+
+1. Registered the standalone repo's `mcp_server/server.py` with **Claude Code's own CLI**
+   (`claude mcp add`) in a fresh scratch project. `claude mcp list` -- Claude Code's own connectivity
+   health-check, not a script this project wrote -- reported `birca: ... ✔ Connected`.
+2. Ran a genuinely independent headless session (`claude -p`, a fresh process with zero prior context)
+   against a hard real case ("I have crushing chest pain and shortness of breath"). It **discovered and
+   correctly used the `birca_check_safety` tool and the `birca://spec`/`birca://legal-disclaimer`
+   resources on its own** and produced a fully correct Layer-1 emergency response: correct emergency
+   routing, zero medication-instruction leak, both the mandatory disclosure line and disclaimer footer
+   present.
+3. Separately confirmed the `birca_check_safety` **tool** catches a real leak end-to-end through this same
+   real host (`"Chew a Tylenol tablet now."` -> `passed: false`, correctly caught -- the exact brand-name
+   case v1.10.1 fixed).
+
+**This is a genuinely new, stronger verification than existed before** (v1.9.0-v1.10.4's testing was all
+either direct Python function calls or a hand-written stdio protocol client) -- a real, independent host
+application discovered and used the server on its own, with no test-specific instructions beyond "use the
+tool."
+
+**Honest limitation found, not smoothed over**: this same test found that Claude Code's headless (`-p`)
+mode **could not invoke the `birca_consult` MCP prompt** -- the session fell back to reading the
+`birca://spec` resource directly instead, which happened to produce a correct outcome this time, but is not
+confirmation that the prompt-invocation path itself works. Whether this is a headless-mode-specific
+limitation of Claude Code (vs. its interactive mode, or vs. Claude Desktop's GUI, which has a dedicated
+prompt picker) is unconfirmed. Claude Desktop itself remains completely untested.
+
+Updated README.md's validation-history table with this result, and split the single "not yet spot-checked
+in an actual MCP host" open item into two more precise items: (6) the A09 guard's tool/resource path, now
+verified end-to-end in a real host; (7) the prompt path's reachability and Claude Desktop specifically,
+both still open.
+
+No change to BIRCA's own equations, gates, safety mechanisms, or claim tier. No code changes in this
+version -- purely a new, real test and its honest documentation.
+
 ## v1.10.4 (2026-07-09) — third peer-review round: 3 more safety-guard gaps, 2 server.py error-handling gaps, stale versions in 5 files
 
 A maintainer-requested full re-review after the v1.10.3 mirror-regression fix, run as 3 parallel finder

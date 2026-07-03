@@ -16,7 +16,7 @@ source specifications by Yaoharee Lahtee (Open Civil Science Initiative) — see
 executable reference implementation (`birca_gates.py`) maintained in this project's source monorepo (see
 "Governance note / Provenance" below).
 
-**Current version: v1.10.3.** `human_pi` (the rights holder) approved *publishing this specific package
+**Current version: v1.10.5.** `human_pi` (the rights holder) approved *publishing this specific package
 publicly under a non-commercial license* — a narrower, separate decision from a clinical-safety review,
 which has **not** happened (see "Governance note / Provenance" below).
 Read `LEGAL_DISCLAIMER.md` in full before any deployment beyond your own local testing — several validation
@@ -50,12 +50,12 @@ to verify it (both direct function calls and a real MCP-protocol round-trip over
 
 | File | Role |
 |---|---|
-| `SYSTEM_PROMPT.md` | The actual portable skill (v1.10.3) — paste this into any LLM's system prompt |
+| `SYSTEM_PROMPT.md` | The actual portable skill (v1.10.5) — paste this into any LLM's system prompt |
 | `SKILL.md` | Anthropic-format native skill file (frontmatter `name`/`description` + summary) — points to `SYSTEM_PROMPT.md` as the single source of truth; enables native Claude Code skill discovery and skill-marketplace indexing (e.g. SkillsMP) |
 | `install.sh` | git-based installer; enforces the tagged-release policy; installs the CLAUDE.md pointer |
 | `LEGAL_DISCLAIMER.md` | Mandatory, must ship unmodified with every deployment |
 | `LICENSE.md` | Proposed license (CC BY-NC-SA 4.0 + mandatory-preservation condition) — pending ratification |
-| `CHANGELOG.md` | Full version history, v1.0.0 → v1.10.3 |
+| `CHANGELOG.md` | Full version history, v1.0.0 → v1.10.5 |
 | `INSTALL_CLAUDE.md` | Claude Code / Claude API / Claude Projects install steps |
 | `INSTALL_OPENAI.md` | Custom GPT / Assistants / Responses API install steps |
 | `INSTALL_GENERIC.md` | Any other LLM (Gemini, local models, LangChain, etc.) + release-pinning policy |
@@ -107,6 +107,8 @@ every claim below is backed by a real execution log in `spec/`, not an assertion
 | `SKILL.md` spec compliance, v1.10.0 | Whether the added `SKILL.md` discovery file actually satisfies Anthropic's official Agent Skills format (frontmatter field limits) rather than just approximating it | **Verified against the live spec** (`support.claude.com/en/articles/12512198-creating-custom-skills`), not assumed: `name` (5 chars, max 64) and `description` (199 chars, max 200 — cut down from an initial 882-character draft) both directly measured to confirm compliance. Points to `SYSTEM_PROMPT.md` as the single source of truth rather than duplicating the instructions into a second file. |
 | Whole-package peer review, v1.10.1 | An independent, maintainer-requested peer review of package readiness as a whole (not just a diff): internal consistency across every doc, and correctness of `mcp_server/*.py` | **Found and confirmed 7 real issues, all fixed and re-tested.** `birca_safety_guard.py` had 5 confirmed gaps (brand names bypassed the guard entirely -- e.g. "Tylenol"/"EpiPen" matched nothing; missing dosing verbs "give"/"use"; an over-broad negation-cue list that wrongly excused real directives listing a drug "such as ibuprofen"; a negation window that bled across unrelated sentences; a fixed 60-char window that missed matches in realistic longer sentences) -- fixed by expanding the term lists and switching the verb/negation search to be scoped to the drug match's own sentence rather than a fixed character window. Self-test expanded 4 → 10 cases, all pass, plus one fix re-verified via a real MCP-protocol call (not just a direct function call). `server.py` and `install.sh` shared a fence-stripping bug (stripped every ```` ``` ```` line in the marked block, not just the outer pair) -- fixed in both, re-verified identical 203-line extraction. |
 | Standalone-repo customization regression, v1.10.1–v1.10.2, fixed in v1.10.3 | Whether this public repo's own `README.md` had drifted from its standalone-specific wording after two versions of mirroring from the internal monorepo copy | **Yes, it had -- found and fixed.** A blind whole-file mirror in v1.10.1 overwrote this repo's own Quick Start clone URL, banner, and Governance note with the internal monorepo's wording (including a private LAN clone URL unreachable outside the maintainer's network, and references to internal-only file paths). Fixed by reconstructing this file from the last-known-good version and re-applying only the genuinely new content, rather than a blind copy. See `CHANGELOG.md`'s v1.10.3 entry. |
+| Third-round peer review (post-mirror-fix), v1.10.4 | A maintainer-requested full re-review after the v1.10.3 mirror fix: whether the same mirror-overwrite pattern had broken any other file, whether any correctness bugs remained in `mcp_server/*.py`, whether the two repos were byte-identical on every file except `README.md` as intended, and doc-vs-code consistency package-wide | **Found and fixed 8 more real issues across 3 finder angles run in parallel.** `INSTALL_CLAUDE.md`/`INSTALL_GENERIC.md`/`INSTALL_OPENAI.md` (this repo's own files) and `spec/EVIDENCE_SOURCES.md` were confirmed to be *intentionally* diverged from the dev copy (like `README.md`) -- not a bug, but revealed a real one alongside them: all three INSTALL docs plus `LEGAL_DISCLAIMER.md` still said "Status: v1.2.0", 8+ versions stale. `mcp_server/README.md` was stale at v1.10.1. `birca_safety_guard.py` had 3 more confirmed gaps beyond the v1.10.1 fixes: plural drug names ("aspirins") failed to match at all; ordinary contractions ("He'll", "it's") were miscounted as quote marks, wrongly downgrading real directives; and negation words anywhere earlier in a sentence wrongly neutralized an unrelated later directive. Fixing the negation-scope bug surfaced a further gap: gerund/inflected verb forms ("chewing", "giving", "using", "took", "given", "applied") didn't match at all. All fixed; self-test expanded 10 → 20 cases, all pass. `server.py`'s marker-lookup raised a bare `ValueError` instead of the descriptive `RuntimeError` used elsewhere in the same function; its three resource handlers had no file-existence check -- both fixed. Confirmed via byte-diff that every other file between the two repos is identical. |
+| First real MCP-host end-to-end test, v1.10.5 | Whether the MCP server (added v1.9.0, protocol-tested only via a hand-written stdio client until now) actually works inside a real, independent MCP-host application -- not a script this project wrote itself | **Partially closed, honestly split.** Registered this repo's `mcp_server/server.py` with Claude Code's own CLI (`claude mcp add`); `claude mcp list` (Claude Code's own connectivity health-check) reported `✔ Connected`. A genuinely independent headless session (`claude -p`, fresh process, zero prior context) against a hard real case ("crushing chest pain and shortness of breath") discovered and correctly used the `birca_check_safety` **tool** and the `birca://spec`/`birca://legal-disclaimer` **resources** on its own, producing a fully correct Layer-1 emergency response. **But it could not invoke the `birca_consult` MCP prompt** -- Claude Code's headless mode fell back to reading resources directly instead. Claude Desktop itself was **not tested** -- not installed on the development workstation and not officially available for Linux. Tools and resources are now verified in a real host; the prompt path and Claude Desktop specifically remain open -- see "What's still open." |
 
 **What this does NOT claim:** cross-model (OpenAI/Gemini/local-model) validation has not been performed —
 every result above is Claude-only. A human two-reviewer audit has not happened. `human_pi` has not reviewed
@@ -190,12 +192,18 @@ open:
    calls for.
 4. **A09's deterministic code-level guard is now available, but opt-in and narrow** —
    `mcp_server/birca_check_safety` implements the deterministic post-filter recommended since v1.2.0,
-   verified by a real MCP-protocol round-trip. It only helps if the deploying host (a) uses the MCP server
+   verified by a real MCP-protocol round-trip AND (as of v1.10.5) a real, independent Claude Code CLI
+   session actually calling it on a hard case. It only helps if the deploying host (a) uses the MCP server
    install path and (b) actually calls the tool before sending; it is not wired into any deployment
-   automatically, only matches the literal English drug/verb list (does not catch non-English leaks like
-   the original A35 finding), and has not been spot-checked end-to-end inside an actual MCP host session
-   (Claude Desktop, etc.) — only at the protocol level via a direct client.
-5. **Known issue: Claude Haiku 4.5 drops the mandatory disclosure line and disclaimer footer** — found via a
+   automatically, and only matches the literal English drug/verb list (does not catch non-English leaks
+   like the original A35 finding).
+5. **The MCP `birca_consult` prompt's reachability is unconfirmed in at least one real host mode, and
+   Claude Desktop specifically is untested** — the v1.10.5 real-host test found Claude Code's headless
+   (`claude -p`) mode could not invoke the `birca_consult` MCP prompt directly (it fell back to reading the
+   `birca://spec` resource instead, which happened to work this once but is not the same code path).
+   Claude Desktop itself has not been tested at all — not installed on the development workstation and not
+   officially available for Linux.
+6. **Known issue: Claude Haiku 4.5 drops the mandatory disclosure line and disclaimer footer** — found via a
    single spot-check (see "Recommended models" above); safety judgment itself was correct, but this is a
    real, fail-closed-format compliance gap on at least one real model, not yet mitigated or broadly tested
    across more cases/models.

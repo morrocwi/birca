@@ -103,7 +103,7 @@ Expected: `tools: ['birca_check_safety']`, `resources: ['birca://spec', 'birca:/
 
 ## Status
 
-Same status as the rest of this package (`v1.10.4`, rights-holder-approved for public/educational/
+Same status as the rest of this package (`v1.10.5`, rights-holder-approved for public/educational/
 non-commercial release — see the package `README.md` Governance note for what that approval does and does
 not cover) — see the package `README.md` and `LEGAL_DISCLAIMER.md`. This is a
 new, additive install surface; it does not change any of birca's own safety mechanisms,
