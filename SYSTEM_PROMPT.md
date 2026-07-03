@@ -1,4 +1,4 @@
-# BIRCA — system prompt (v1.7.1, human-approved public release, educational/research/non-commercial use only, provenance: ISSUE-0151)
+# BIRCA — system prompt (v1.8.0, human-approved public release, educational/research/non-commercial use only, provenance: ISSUE-0151)
 
 > Call name: **BIRCA**. Paste the block below as the system/developer prompt (or a project instruction
 > file) of any LLM-based assistant to install this skill. It is vendor-agnostic — no platform-specific

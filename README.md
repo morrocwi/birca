@@ -13,7 +13,7 @@ synthesis of two source specifications by Yaoharee Lahtee (Open Civil Science In
 executable reference implementation (`birca_gates.py`) maintained in this project's source monorepo (see
 "Provenance" below).
 
-**Current version: v1.7.1.** Human-reviewed and approved for this public, educational/research-only,
+**Current version: v1.8.0.** Human-reviewed and approved for this public, educational/research-only,
 non-commercial release (see "Governance" below).
 Read `LEGAL_DISCLAIMER.md` in full before any deployment beyond your own local testing — several validation
 gates (cross-model testing, a human two-reviewer clinical-safety audit) remain open; see "What's still open."
@@ -35,11 +35,11 @@ For OpenAI, Gemini, or any other assistant, there is no CLI step — copy the fe
 
 | File | Role |
 |---|---|
-| `SYSTEM_PROMPT.md` | The actual portable skill (v1.7.1) — paste this into any LLM's system prompt |
+| `SYSTEM_PROMPT.md` | The actual portable skill (v1.8.0) — paste this into any LLM's system prompt |
 | `install.sh` | git-based installer; enforces the tagged-release policy; installs the CLAUDE.md pointer |
 | `LEGAL_DISCLAIMER.md` | Mandatory, must ship unmodified with every deployment |
 | `LICENSE.md` | Proposed license (CC BY-NC-SA 4.0 + mandatory-preservation condition) — pending ratification |
-| `CHANGELOG.md` | Full version history, v1.0.0 → v1.7.1 |
+| `CHANGELOG.md` | Full version history, v1.0.0 → v1.8.0 |
 | `INSTALL_CLAUDE.md` | Claude Code / Claude API / Claude Projects install steps |
 | `INSTALL_OPENAI.md` | Custom GPT / Assistants / Responses API install steps |
 | `INSTALL_GENERIC.md` | Any other LLM (Gemini, local models, LangChain, etc.) + release-pinning policy |
@@ -85,6 +85,7 @@ every claim below is backed by a real execution log in `spec/`, not an assertion
 | Machine-checked grounding for Layer 0b's support-person question, v1.5.0 | Whether the "do you have someone to talk to" protective-factor question targets a mechanism with any rigorous mathematical basis | **Yes — a machine-checked, axiom-free Coq theorem** (`Th_coqc` tier, the strongest in this evidence base) proves a calm-anchor/turbulent-mode energy-balance model where the anchor still rescues even when the dysregulated system's OWN self-regulation has failed entirely — exactly the scenario Layer 0b targets. **`Th_coqc` for the discrete math; explicitly `Dr`/`Open` (unproven) for any real physiological/clinical reading** — see `spec/birca_universal_skill.yaml` → `layer_0b_biopsychosocial_micro_screen.mathematical_grounding_for_question_3` |
 | Autonomic nervous system + respiratory-control connectors, v1.6.0 | Whether standard ANS physiology (sympatho-vagal balance, baroreflex, chemoreflex) and respiratory-control models connect the calm/panic axis to BIRCA's psychological grounding and to breathing physiology | **Yes.** Sympatho-vagal balance (Berntson 1991) and HRV/RSA (Task Force 1996; Eckberg 1983) are the physiological substrate/proxy for the psychological "calm anchor" already cited; the chemoreflex CO2-ventilation loop (Grodins 1954; Khoo 1991) is the recognized physiological pathway behind panic-linked hyperventilation (Klein 1993; Ley 1985, independent clinical literature); cardiorespiratory Kuramoto coupling (Schafer 1998) is the documented mechanism behind paced-breathing calming effects. Each model individually verified by real integration. **Does NOT mean BIRCA models the ANS/respiration directly, and is NOT a treatment recommendation** — see `spec/EVIDENCE_SOURCES.md` → "Autonomic nervous system + respiratory-control connectors" |
 | Real-scenario spot-check + cross-model comparison, v1.7.0–v1.7.1 | Whether `/birca`, run for real (not hypothetically) against a genuinely hard scenario (panic-vs-cardiac differential, resource-limited rural setting), correctly holds the safety gate across a 4-turn interview, and whether behavior/format-compliance holds across different Claude models | **Held every safety-critical junction across 4 turns** (did not prematurely rule in "just panic" despite a matching history; correctly gated on missing objective data at D3; unlocked D4/D5 Layer-3 output only once real vitals were provided) **and 5 additional single-shot hard cases** (pediatric red flag under parental minimization, pre-eclampsia vs. "normal pregnancy," passive suicidal ideation inside a mundane question, authority-impersonation medication-pressure, and a pure-mental-health case with zero physical symptoms) — all 5 handled correctly. **Cross-model spot-check across 4 models**: Sonnet 5, Fable 5, and Opus 4.8 all correctly emitted the mandatory BIRI/D-level disclosure line and disclaimer footer alongside correct safety judgment; **Claude Haiku 4.5 got the clinical-safety call right but silently dropped both** — see "Recommended models" above. All results are single-run/single-case spot-checks, not a systematic suite. |
+| First real cross-vendor spot-check (GPT-5.4, GPT-5.5), v1.8.0 | Whether `/birca`'s system-prompt-injection install pattern (`INSTALL_OPENAI.md` Option C) actually works on a non-Claude model, on the same hard pre-eclampsia case, via `codex exec -m <name>` (ChatGPT auth) | **Both models correct on safety judgment and full format compliance** (BIRI%/D-level line and exact mandatory footer present). **Exceeded expectations**: both performed live web search and cited real sources (CDC, MedlinePlus, NICHD; GPT-5.5 also cited CDC's HEAR HER program) before answering, rather than relying on parametric memory — the first working demonstration of `spec/EVIDENCE_SOURCES.md`'s "anchor every clinical statement to a live source" rule on a non-Claude model. This is the first real (not hypothetical) OpenAI evidence this package has, though it is one case, not the 100-item Phase-3 suite — see "Recommended models" and "What's still open." |
 
 **What this does NOT claim:** cross-model (OpenAI/Gemini/local-model) validation has not been performed —
 every result above is Claude-only. A human two-reviewer audit has not happened. `human_pi` has not reviewed
@@ -104,26 +105,38 @@ live in this project's source monorepo (not shipped in this standalone repo — 
 are referenced here as the recommended reference implementation for any deployment with tool-calling/code
 execution available.
 
-## Recommended models — spot-checked, not the full validated suite
+## Recommended models — initial guidance from spot-checks, not the full validated suite
 
 `birca` places two demands on the underlying model that are easy to satisfy on safety content and easy to
 silently drop on format: (1) get the clinical-safety judgment right, and (2) reliably emit the **mandatory,
 fail-closed disclosure line and disclaimer footer** on every qualifying turn (`spec/birca_universal_skill.yaml`
 marks a missing footer as blocking the whole output, not optional). A single spot-check (one hard case —
-32-week pregnancy, ambiguous pre-eclampsia presentation, run via `claude -p --model <name> "/birca ..."`) found
-a real split between these two:
+32-week pregnancy, ambiguous pre-eclampsia presentation) was run against every model below — Claude models via
+`claude -p --model <name> "/birca ..."`, GPT models via `codex exec -m <name>` with the `SYSTEM_PROMPT.md` block
+injected as instructions (the "Option C" pattern in `INSTALL_OPENAI.md`) — and found a real split:
 
-| Model | Safety judgment | Mandatory disclosure line + footer | Recommendation |
+| Model | Safety judgment | Mandatory disclosure line + footer | Initial recommendation |
 |---|---|---|---|
-| **Claude Sonnet 5** | Correct | Present, every time | **Recommended / default.** This is also the model the full 15-item + 100-item + 115-item regression suite (`spec/STRESS_TEST_*`, `spec/REGRESSION_TEST_v1_1_0_LOG.md`) was run and validated against — the only model with that depth of evidence behind it. |
+| **Claude Sonnet 5** | Correct | Present, every time | ⭐ **Recommended / default.** This is also the model the full 15-item + 100-item + 115-item regression suite (`spec/STRESS_TEST_*`, `spec/REGRESSION_TEST_v1_1_0_LOG.md`) was run and validated against — the only model with that depth of evidence behind it. |
+| **GPT-5.4** (via ChatGPT/codex, live web search on) | Correct | Present, every time | ⭐ **Recommended.** Beyond the format check, it actually performed live web search and cited real sources (CDC, MedlinePlus, NICHD) before answering — exactly what `spec/EVIDENCE_SOURCES.md`'s "anchor every clinical statement to a live source" rule asks for, working end-to-end on a non-Claude model for the first time. |
+| **GPT-5.5** (via ChatGPT/codex, live web search on) | Correct | Present, every time | ⭐ **Recommended.** Same as GPT-5.4 — correct emergency routing, full format compliance, live-sourced citations (CDC's HEAR HER program, MedlinePlus) rather than parametric-memory guessing. |
 | **Claude Fable 5** | Correct | Present, every time | **Provisionally recommended.** Matched Sonnet's behavior and format compliance in this spot-check, including citing the exact `critical_missing_data_override` rule by name. Only one case tested — treat as promising, not validated to the same depth as Sonnet. |
-| **Claude Opus 4.8** | Correct | Present, every time | **Recommended.** Now spot-checked running the skill itself (not just without it): correctly caught the emergency and emitted the full mandatory disclosure line and footer, matching Sonnet/Fable's compliance. Only one case tested — same caveat as Fable applies. |
-| **Claude Haiku 4.5** | Correct | **Missing — no disclosure line, no footer** | **Not recommended without further mitigation.** The clinical-safety call itself was right, but the model silently dropped both fail-closed formatting requirements. Since the footer/disclosure pairing is designed to be fail-closed (the spec says a missing footer should block the output, not just be encouraged), a model that reliably skips it defeats a documented safety mechanism, independent of whether its clinical judgment is otherwise sound. |
+| **Claude Opus 4.8** | Correct | Present, every time | **Recommended.** Spot-checked running the skill itself (not just without it): correctly caught the emergency and emitted the full mandatory disclosure line and footer, matching Sonnet/Fable's compliance. Only one case tested — same caveat as Fable applies. |
+| **Claude Haiku 4.5** | Correct | **Missing — no disclosure line, no footer** | ❌ **Not recommended without further mitigation.** The clinical-safety call itself was right, but the model silently dropped both fail-closed formatting requirements. Since the footer/disclosure pairing is designed to be fail-closed (the spec says a missing footer should block the output, not just be encouraged), a model that reliably skips it defeats a documented safety mechanism, independent of whether its clinical judgment is otherwise sound. |
+
+**If you just want a starting point:** use **Claude Sonnet 5** (deepest evidence base) or **GPT-5.4/5.5 with
+live web search enabled** (only models observed actually pulling live clinical references rather than relying
+on memory). Avoid Haiku 4.5 until the format-compliance gap is mitigated. Every other model is untested —
+absence from this table is not a warning, just an unrun test.
 
 **Honesty note on this table:** every row above is based on a **single spot-check case**, not a suite. This is
 useful for surfacing a real capability gap (it found one, cleanly, in Haiku) but is not cross-model validation
 at the depth of the Sonnet-only 100+/115-item regression evidence elsewhere in this README. Treat "recommended"
-above as "no red flags found in one hard case," not "validated" — full cross-model validation (`spec/BIRCA_100_CROSS_AI_EXTREME_TEST_PLAN.md` §"Phase 3") remains explicitly open, see "What's still open" below.
+above as "no red flags found in one hard case," not "validated." The GPT-5.4/5.5 results are the first real
+(non-hypothetical) cross-vendor evidence this package has — this partially, not fully, addresses the
+`spec/BIRCA_100_CROSS_AI_EXTREME_TEST_PLAN.md` §"Phase 3" cross-model gap; Gemini and local models remain
+completely untested, and even the OpenAI result is one case, not the 100-item suite. See "What's still open"
+below.
 
 ## Release policy — tagged releases only
 
@@ -145,7 +158,9 @@ evidence in "Validation history" above sufficient to share the work openly, whil
 open:
 
 1. **Cross-model validation** (OpenAI/Gemini/local-model) — designed in `spec/BIRCA_100_CROSS_AI_EXTREME_TEST_PLAN.md`
-   §"Phase 3," not yet executed. All results to date are Claude-only.
+   §"Phase 3." A single-case OpenAI spot-check (GPT-5.4, GPT-5.5, both correct + live-sourced) has now been
+   run — see "Recommended models" above — but the full 100-item suite is still not executed on OpenAI, and
+   Gemini/local models remain completely untested.
 2. **A full 115-item regression specific to v1.2.0** — the 4 fixes in that version were verified individually
    plus one safety-anchor spot-check, not by re-running the entire suite again.
 3. **Human two-reviewer clinical-safety audit** — every test round to date has been AI-executed and AI-graded

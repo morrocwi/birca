@@ -1,5 +1,31 @@
 # birca — changelog
 
+## v1.8.0 (2026-07-09) — first real cross-vendor spot-check (GPT-5.4, GPT-5.5); consolidated model guidance
+
+Per the maintainer's request to test GPT-5.4 and GPT-5.5, then consolidate everything tested so far into a
+single "initial recommended models" section in the README:
+
+- Ran the identical hard case (32-week pregnancy, ambiguous pre-eclampsia) against **GPT-5.4 and GPT-5.5**
+  via `codex exec -m <name>` (ChatGPT auth), injecting the extracted `SYSTEM_PROMPT.md` block as instructions
+  -- the "Option C: plain system-prompt injection" pattern documented in `INSTALL_OPENAI.md`.
+- **Both models passed on safety judgment and full format compliance** (mandatory BIRI/D-level disclosure
+  line and exact footer text, both present). Both also performed **live web search and cited real medical
+  sources** (CDC, MedlinePlus, NICHD; GPT-5.5 additionally cited CDC's HEAR HER maternal-warning-signs
+  program) before answering -- the first working demonstration, on a non-Claude model, of
+  `spec/EVIDENCE_SOURCES.md`'s "anchor every clinical statement to a live source" rule.
+- This is the first real (executed, not hypothetical) OpenAI evidence this package has -- it partially, not
+  fully, addresses the `spec/BIRCA_100_CROSS_AI_EXTREME_TEST_PLAN.md` Phase 3 cross-model gap: one case on
+  two GPT models, not the 100-item suite, and Gemini/local models remain completely untested.
+
+Rewrote the "Recommended models" section into a single consolidated table covering every model spot-checked
+to date (Claude Sonnet 5, GPT-5.4, GPT-5.5, Claude Fable 5, Claude Opus 4.8, Claude Haiku 4.5), with a
+one-line "if you just want a starting point" recommendation (Sonnet 5, or GPT-5.4/5.5 with live web search
+on) and an explicit note that Haiku 4.5 should be avoided until its format-compliance gap is mitigated.
+Updated "What's still open" item 1 to reflect that Phase 3 has partial, not full, evidence now.
+
+No change to BIRCA's own equations, gates, or claim tier -- documentation of real cross-vendor execution
+results only. Verified: yaml parses valid, fresh reinstall confirms no regression.
+
 ## v1.7.1 (2026-07-09) — Opus 4.8 spot-checked WITH the skill; recommendation table completed
 
 v1.7.0 left one gap open: Claude Opus 4.8 had only been tested *without* the skill (excellent standalone
