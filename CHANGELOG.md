@@ -1,5 +1,17 @@
 # birca — changelog
 
+## v1.10.2 (2026-07-09) — fix a stale Governance-note claim missed in the v1.10.1 wording pass
+
+The maintainer asked for a plain-language readiness summary. Re-reading README.md's Governance note to
+answer honestly surfaced one paragraph the v1.10.1 "approval scope" wording pass missed: it still said,
+unqualified, "It has **not** been reviewed or ratified by `human_pi`... no AI session may make this
+repository... publicly visible... without that review" -- factually stale, since `human_pi` had already
+explicitly ratified merging and public release (the same two decisions cited two paragraphs above it, in
+the "Current version" line). Reworded to state plainly what *was* ratified (the merge and public/license
+release decisions, both cited by their DEC IDs) versus what remains open (a human two-reviewer
+clinical-safety review of the content itself, which is a separate, still-open gate). Also updated "What's
+still open" item 4 to match. No other content changed.
+
 ## v1.10.1 (2026-07-09) — peer-review fixes: safety-guard gaps, fence-stripping bug, approval-scope wording
 
 A maintainer-requested peer review (two independent finder passes + verification, covering the whole

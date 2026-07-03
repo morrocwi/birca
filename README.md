@@ -1,7 +1,7 @@
 # birca — universal, vendor-agnostic install package
 
 > **This package now has a canonical public home: <https://github.com/morrocwi/birca> (tagged
-> `birca-v1.10.1`).** This directory remains as the historical development record (full test/fix history in
+> `birca-v1.10.2`).** This directory remains as the historical development record (full test/fix history in
 > `spec/`) and is where future changes are first drafted, but installs/clones/issues for `birca` itself
 > should go through the public repo above, not this monorepo path.
 
@@ -18,7 +18,7 @@ source specifications by Yaoharee Lahtee (Open Civil Science Initiative) — see
 `spec/birca_universal_skill.yaml` → `sources:` for full provenance — plus this repository's own executable
 safety-guard implementation.
 
-**Current version: v1.10.1.** `human_pi` (the rights holder) approved *publishing this specific package
+**Current version: v1.10.2.** `human_pi` (the rights holder) approved *publishing this specific package
 publicly under a non-commercial license* (`DEC-birca-universal-skill-2026-0709`,
 `DEC-birca-standalone-public-release-2026-0709` in `research/coordination/DECISIONS.yaml`). **That is a
 narrower approval than a clinical-safety review** — no human two-reviewer clinical-safety audit has
@@ -54,12 +54,12 @@ to verify it (both direct function calls and a real MCP-protocol round-trip over
 
 | File | Role |
 |---|---|
-| `SYSTEM_PROMPT.md` | The actual portable skill (v1.10.1) — paste this into any LLM's system prompt |
+| `SYSTEM_PROMPT.md` | The actual portable skill (v1.10.2) — paste this into any LLM's system prompt |
 | `SKILL.md` | Anthropic-format native skill file (frontmatter `name`/`description` + summary) — points to `SYSTEM_PROMPT.md` as the single source of truth; enables native Claude Code skill discovery and skill-marketplace indexing (e.g. SkillsMP) |
 | `install.sh` | git-based installer; enforces the tagged-release policy; installs the CLAUDE.md pointer |
 | `LEGAL_DISCLAIMER.md` | Mandatory, must ship unmodified with every deployment |
 | `LICENSE.md` | Proposed license (CC BY-NC-SA 4.0 + mandatory-preservation condition) — pending ratification |
-| `CHANGELOG.md` | Full version history, v1.0.0 → v1.10.1 |
+| `CHANGELOG.md` | Full version history, v1.0.0 → v1.10.2 |
 | `INSTALL_CLAUDE.md` | Claude Code / Claude API / Claude Projects install steps |
 | `INSTALL_OPENAI.md` | Custom GPT / Assistants / Responses API install steps |
 | `INSTALL_GENERIC.md` | Any other LLM (Gemini, local models, LangChain, etc.) + release-pinning policy |
@@ -185,8 +185,10 @@ reading it.
    agents reading the actual transcripts, not self-reporting) — this is real evidence, but it is not a
    substitute for the human clinical-safety and human-factors review the source stress-test protocol calls
    for.
-4. **`human_pi` review and ratification** — required before any tag, any public visibility, or any claim that
-   this package is "approved" — see the Governance note below.
+4. **`human_pi` review and ratification of the clinical-safety content specifically** — `human_pi` has
+   already reviewed and ratified the separate decisions to merge and to publish publicly under a
+   non-commercial license (see the Governance note below); what remains open is a human two-reviewer
+   clinical-safety review of the content itself, distinct from that publishing decision.
 5. **Known issue: Claude Haiku 4.5 drops the mandatory disclosure line and disclaimer footer** — found via a
    single spot-check (see "Recommended models" above); safety judgment itself was correct, but this is a
    real, fail-closed-format compliance gap on at least one real model, not yet mitigated or broadly tested
@@ -204,8 +206,17 @@ reading it.
 This package was drafted end-to-end by an AI session under `ISSUE-0151` / branch
 `feat/birca-universal-skill-v1`, per the human's explicit, iterative requests (open the issue and branch;
 review the code; fix findings; run the 15-item and 100-item suites; add and validate the Layer-0b micro-
-screen; run a full regression; fix the remaining 4 issues; prepare for a PR). It has **not** been reviewed or
-ratified by `human_pi`. Per `cpq_skill/agenthub/BircaHealth_v0_1_0.yaml`'s `human_approval_required_for` list
-(`external_send_of_health_guidance`, `public_health_claim`, anything touching the advisory lock), no AI
-session may make this repository, this directory, or a public release of it publicly visible, or represent
-it as approved, without that review — see `ISSUE-0151` / GitHub `morrocwi/cpg#87` for the tracking history.
+screen; run a full regression; fix the remaining 4 issues; prepare for a PR; merge; go public). `human_pi`
+(the rights holder) has since explicitly reviewed and ratified two specific decisions in-session: merging
+this package to `main`, and publishing it publicly under a non-commercial license
+(`DEC-birca-universal-skill-2026-0709`, `DEC-birca-standalone-public-release-2026-0709` in
+`research/coordination/DECISIONS.yaml`) — this note was previously stale on that point (fixed in v1.10.1)
+and had not been updated after those approvals were granted.
+
+**What `human_pi` has NOT reviewed or ratified: the clinical-safety content itself.** No human two-reviewer
+clinical-safety audit (the review the source stress-test protocol calls for) has happened — every test round
+to date has been AI-executed and AI-graded. Per `cpq_skill/agenthub/BircaHealth_v0_1_0.yaml`'s
+`human_approval_required_for` list (`external_send_of_health_guidance`, `public_health_claim`, anything
+touching the advisory lock), that clinical-safety review remains a separate, still-open gate before this
+package could honestly be called clinically validated, independent of the public/license approval already
+granted — see `ISSUE-0151` / GitHub `morrocwi/cpg#87` for the tracking history.
