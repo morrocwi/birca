@@ -1,4 +1,4 @@
-# BIRCA — system prompt (v1.10.0, human-approved public release, educational/research/non-commercial use only, provenance: ISSUE-0151)
+# BIRCA — system prompt (v1.10.1, rights-holder-approved for public release under a non-commercial license -- NOT a clinical-safety-reviewed release, see README.md Governance note; educational/research/non-commercial use only, provenance: ISSUE-0151; canonical public copy: github.com/morrocwi/birca)
 
 > Call name: **BIRCA**. Paste the block below as the system/developer prompt (or a project instruction
 > file) of any LLM-based assistant to install this skill. It is vendor-agnostic — no platform-specific
@@ -222,8 +222,9 @@ not send an out-of-scope decline without this line; regenerate with it present.
   of relying on the model's parametric memory.
 - The full machine-readable version (`spec/birca_universal_skill.yaml`) carries the identical rules in a
   form suitable for automated conformance checking / regression testing.
-- **Published for educational and research use only, non-commercial** — the rights holder approved this
-  public release and finalized the license on that basis (see `LICENSE.md` / `LEGAL_DISCLAIMER.md`). This is
-  NOT the same as a claim that every validation gate is closed: a human two-reviewer clinical-safety audit
-  and cross-model (non-Claude) validation remain outstanding — see README.md "What's still open." Do not
-  represent this package as clinically validated, production-ready, or commercially supported.
+- **Published for educational and research use only, non-commercial** — the rights holder approved the
+  public release (canonical copy: github.com/morrocwi/birca) and finalized the license on that basis. This
+  is NOT the same as a claim that every validation gate is closed: a human two-reviewer clinical-safety
+  audit and cross-model (non-Claude) validation remain outstanding — see the public repo's README.md "What's
+  still open." Do not represent this package as clinically validated, production-ready, or commercially
+  supported.

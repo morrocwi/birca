@@ -42,13 +42,29 @@ _END_MARKER = "<!-- BIRCA_PROMPT_END -->"
 def _extract_system_prompt() -> str:
     """Extract the fenced instruction block from SYSTEM_PROMPT.md, the same
     marker-based method install.sh uses -- kept independent (no shared import) so this
-    server has no dependency on install.sh's shell logic."""
+    server has no dependency on install.sh's shell logic.
+
+    Strips only the OUTER fence pair (the first and last '```' line in the marked
+    block), not every line that happens to read '```'. A peer review found the original
+    version stripped every such line -- harmless today (SYSTEM_PROMPT.md has exactly one
+    fence pair), but it would silently corrupt the extracted prompt the moment a future
+    edit adds a nested fenced code example inside the marked block, with no error raised.
+    """
     text = (_SKILL_ROOT / "SYSTEM_PROMPT.md").read_text(encoding="utf-8")
     start = text.index(_START_MARKER) + len(_START_MARKER)
     end = text.index(_END_MARKER, start)
     block = text[start:end]
-    lines = [ln for ln in block.splitlines() if ln.strip() != "```"]
-    extracted = "\n".join(lines).strip("\n")
+    lines = block.splitlines()
+    fence_idxs = [i for i, ln in enumerate(lines) if ln.strip() == "```"]
+    if len(fence_idxs) < 2:
+        raise RuntimeError(
+            "birca MCP server: expected an opening and closing ``` fence inside the "
+            f"BIRCA_PROMPT_START/END block, found {len(fence_idxs)} -- markers may be "
+            "missing or renamed."
+        )
+    first, last = fence_idxs[0], fence_idxs[-1]
+    inner_lines = lines[first + 1:last]
+    extracted = "\n".join(inner_lines).strip("\n")
     if len(extracted.splitlines()) < 20:
         raise RuntimeError(
             "birca MCP server: extracted SYSTEM_PROMPT.md block is suspiciously short "

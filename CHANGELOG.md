@@ -1,5 +1,70 @@
 # birca — changelog
 
+## v1.10.1 (2026-07-09) — peer-review fixes: safety-guard gaps, fence-stripping bug, approval-scope wording
+
+A maintainer-requested peer review (two independent finder passes + verification, covering the whole
+package's readiness, not just the latest diff) found and confirmed real issues, all fixed and re-tested here:
+
+**`mcp_server/birca_safety_guard.py` -- 5 confirmed gaps in the deterministic A09 guard, all fixed:**
+
+1. **Brand names bypassed the guard entirely.** `_DRUG_NAMES` only listed generic/INN names; common brand
+   names (Tylenol, Panadol, Advil, Motrin, Nurofen, EpiPen) matched nothing, so e.g. `check_response("Chew
+   a Tylenol tablet now.")` returned `passed=True` with zero matches. Fixed by adding brand names to the list.
+2. **Missing dosing verbs.** `_DOSING_VERBS` omitted "give" (common in pediatric dosing, e.g. "Give her
+   200mg of ibuprofen...") and "use" (the natural verb for a device like an EpiPen), so those sentences
+   were filed as weak matches instead of directive matches. Fixed by adding both verbs.
+3. **Over-broad negation cues wrongly excused real directives.** The original negation-cue list included
+   generic list-introducing phrases ("such as", "for example", "including things like") that also appear in
+   a genuine directive listing a drug as an example ("take a pain reliever such as ibuprofen") -- these
+   phrases are removed from the negation-cue list; only genuine refusal/negation words trigger a downgrade
+   now, with quoting handled as a separate, narrower check (see #5).
+4. **Negation could "bleed" across sentences.** The 100-char negation window was not bounded to a sentence,
+   so a refusal about an earlier, unrelated topic ("I will not recommend any medication for that. Anyway,
+   chew an aspirin now.") wrongly downgraded a later, genuinely directive sentence. Fixed by scoping the
+   negation/verb search to the drug match's own sentence (split on `.!?`), not a fixed character window.
+5. **Fixed 60-char window missed matches in realistic longer sentences.** A verb more than ~60 characters
+   from the drug name (a normal distance in a real clinical-style sentence with qualifying clauses) was
+   never found, filing the match as weak instead of directive. Fixed by the same sentence-scoping change as
+   #4 -- the search window now grows with the sentence instead of a fixed character count.
+
+Quote-detection (for a genuinely quoted, declined example) was kept as an independent check
+(`_is_quoted()`), separate from the negation-cue check, since quoting is a narrower and different signal
+than a list-introducing phrase.
+
+Self-test expanded from 4 to 10 cases (added one case per fix above, run live, all pass): `10/10 passed`.
+
+**`mcp_server/server.py` + `install.sh` -- shared fence-stripping bug, both fixed:**
+
+6. `_extract_system_prompt()` (and install.sh's equivalent `awk` script) stripped every line matching
+   ```` ``` ```` inside the marked block, not just the outer opening/closing fence pair. Harmless today
+   (`SYSTEM_PROMPT.md` has exactly one fence pair), but the first future edit adding a nested fenced code
+   example inside the block would have those inner fence lines silently deleted from the served prompt, with
+   no error raised. Fixed in both places to buffer the block and remove only the first and last fence line;
+   re-verified fresh installs and the MCP server's `birca_consult()` both still produce the identical
+   203-line extracted prompt.
+
+**Documentation -- an "approval scope" ambiguity, found across four files, all reworded:**
+
+7. `SYSTEM_PROMPT.md`'s header, `SKILL.md`'s status line, `README.md`'s opening version line, and
+   `cpq_skill/INDEX_SKILLS.yaml`'s `status:` field all used unqualified "human-approved" / "human-reviewed"
+   language that could be read as "the clinical-safety content has been human-reviewed" -- directly
+   contradicting the same package's own Governance note and "What's still open" item stating a human
+   two-reviewer clinical-safety audit has **not** happened. Reworded all four to explicitly scope what was
+   approved (`human_pi`, the rights holder, approved *publishing this package publicly under a
+   non-commercial license* -- a narrower, separate decision from a clinical-safety review). Renamed
+   `INDEX_SKILLS.yaml`'s status enum from `PUBLISHED_HUMAN_APPROVED_STANDALONE` to
+   `PUBLISHED_RELEASE_APPROVED_STANDALONE` for the same reason (only reference to this enum value in the
+   repo, confirmed via grep before renaming). `SKILL.md`'s version line was also found stale at v1.9.0 (one
+   version behind everywhere else) and corrected.
+
+Also added a promotional one-line description to `README.md`'s opening paragraph ("helps organize a
+mind-body conversation... into a structured, safety-screened report") paired immediately with the existing
+"does not diagnose... does not replace a clinician" language, at the maintainer's request to keep marketing
+language and legal disclaimers adjacent rather than separated.
+
+No change to BIRCA's own equations, Layer 1-3 gates, or claim tier -- this release is entirely bug fixes and
+documentation-accuracy corrections surfaced by the peer review.
+
 ## v1.10.0 (2026-07-09) — SKILL.md, spec-compliant per Anthropic's official format
 
 Per the maintainer's request to add a discovery surface for skill marketplaces (e.g. SkillsMP, which indexes
@@ -64,7 +129,7 @@ actual subprocess and drove it with a real MCP client over stdio -- `list_tools`
 `list_prompts`, `call_tool`, `read_resource`, and `get_prompt` all confirmed working end-to-end.
 
 Added an "Install option 3 -- MCP server" section to README.md, a new validation-history row, a new file-
-table entry, and updated "What's still open" item 4 to state the honest scope limits: opt-in only (not
+table entry, and a new "What's still open" item (6) stating the honest scope limits: opt-in only (not
 wired into any deployment automatically), English-only term list (does not catch the A35-style non-English
 leak pattern), and not yet spot-checked inside an actual MCP host session (Claude Desktop, etc.) -- verified
 at the protocol level via a direct client only.
@@ -105,15 +170,15 @@ judgment) and was marked "likely fine, not yet spot-checked with the skill itsel
 that gap: ran the identical hard case (32-week pregnancy, ambiguous pre-eclampsia) through `claude -p
 --model opus "/birca ..."` against the actually-installed skill.
 
-**Result: Opus 4.8 passed both checks** -- correctly identified the emergency and emitted the full mandatory
+**Result: Opus 4.8 passed both checks** — correctly identified the emergency and emitted the full mandatory
 BIRI/D-level disclosure line and disclaimer footer, matching Sonnet 5 and Fable 5's compliance level.
 
 Updated the "Recommended models" table (Opus 4.8 moved from "likely fine, unconfirmed" to "Recommended,"
-same caveat as Fable -- one case tested) and the v1.7.0 validation-history row to reflect the completed
+same caveat as Fable — one case tested) and the v1.7.0 validation-history row to reflect the completed
 4-model comparison: **Sonnet 5, Fable 5, and Opus 4.8 all pass; Claude Haiku 4.5 remains the sole model with
 the known format-compliance gap** (correct safety judgment, missing mandatory disclosure/footer).
 
-No change to BIRCA's own equations, gates, or claim tier -- this closes out the model-comparison round
+No change to BIRCA's own equations, gates, or claim tier — this closes out the model-comparison round
 started in v1.7.0 with one additional real spot-check, honestly reported.
 
 ## v1.7.0 (2026-07-09) — real-scenario spot-check + cross-model recommendation table
@@ -123,7 +188,7 @@ installed skill (not hypothetically), then run additional hard cases and a cross
 
 - Ran a real 4-turn interview through `/birca` (via `claude -p`): a panic-vs-cardiac differential in a
   resource-limited rural setting, layered with chronic occupational burnout. The skill correctly held the
-  safety gate at every junction -- did not prematurely conclude "just panic" despite a matching prior
+  safety gate at every junction — did not prematurely conclude "just panic" despite a matching prior
   history, correctly stayed capped at D3 when objective vitals were still missing (did not advance to
   Layer 3 just because the conversation had gone several turns), and only unlocked D4/D5 with full Layer-3
   output once real vitals were provided.
@@ -147,7 +212,7 @@ without further mitigation), plus a new "What's still open" item naming the Haik
 explicitly.
 
 **Honesty note:** every finding in this release is a single-run/single-case spot-check, not a systematic
-suite -- useful for surfacing a real capability gap (it found one, cleanly) but not equivalent to the
+suite — useful for surfacing a real capability gap (it found one, cleanly) but not equivalent to the
 Sonnet-only 100+/115-item regression evidence that backs the rest of this package. Cross-model validation
 at that depth (`spec/BIRCA_100_CROSS_AI_EXTREME_TEST_PLAN.md` Phase 3) remains open. No change to BIRCA's
 own equations, gates, or claim tier in this release -- documentation of real-execution test results only.
@@ -290,15 +355,15 @@ validation.
 ## v1.2.1 (2026-07-09) — legal hardening: educational/research-only, non-commercial use made explicit everywhere
 
 Per the maintainer's request to review and maximize legal protection establishing this as an educational-use
-artifact and to prohibit commercial use explicitly:
+artifact and to prohibit commercial use explicitly. Released standalone at github.com/morrocwi/birca
+(tag `birca-v1.2.1`); mirrored back into this monorepo copy for historical-record consistency.
 
 - Added a prominent "FOR EDUCATIONAL AND RESEARCH PURPOSES ONLY. NOT FOR COMMERCIAL USE." banner to the top
   of README.md, LEGAL_DISCLAIMER.md, and LICENSE.md.
 - Added the same framing to the mandatory Layer-2/3 disclaimer footer in SYSTEM_PROMPT.md itself, so it now
   ships in every real model output that reaches that depth, not just in top-level repo documents.
 - Strengthened LICENSE.md's non-commercial ("NC") clause: added an explicit definition of "commercial use"
-  and removed stale "proposed, pending ratification" language now that the license is actually in effect for
-  this public repo.
+  and removed stale "proposed, pending ratification" language now that the license is actually in effect.
 - Strengthened LEGAL_DISCLAIMER.md's "Prohibited uses" section to explicitly name commercial use (selling,
   bundling into a paid product, any revenue-generating deployment) as prohibited without separate written
   permission.

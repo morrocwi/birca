@@ -43,14 +43,32 @@ else
   fi
 fi
 
-# extract_prompt: pulls the instruction block between explicit markers in SYSTEM_PROMPT.md, not by
-# blindly counting ``` fences — robust even if a future edit adds another fenced code example elsewhere
-# in the file. Fails loudly (non-zero exit, message on stderr) if the markers are missing/renamed and the
-# extraction comes back empty or suspiciously short, instead of silently installing an empty skill.
+# extract_prompt: pulls the instruction block between explicit markers in SYSTEM_PROMPT.md. Strips only
+# the OUTER fence pair (the first and last standalone ``` line inside the marked block), not every line
+# that happens to read ```` ``` ```` — a peer review found the original version stripped every such line,
+# which would silently corrupt the extracted prompt the moment a future edit adds a nested fenced code
+# example inside the marked block. Buffers the marked block, then removes only the first/last fence index.
+# Fails loudly (non-zero exit, message on stderr) if the markers are missing/renamed and the extraction
+# comes back empty or suspiciously short, instead of silently installing an empty skill.
 extract_prompt() {
   local out
-  out="$(awk '/<!-- BIRCA_PROMPT_START -->/{f=1; next} /<!-- BIRCA_PROMPT_END -->/{f=0} f && /^```$/{next} f' \
-    "$HERE/SYSTEM_PROMPT.md")"
+  out="$(awk '
+    /<!-- BIRCA_PROMPT_START -->/{f=1; next}
+    /<!-- BIRCA_PROMPT_END -->/{f=0}
+    f{buf[n++]=$0}
+    END{
+      first=-1; last=-1
+      for(i=0;i<n;i++){
+        if(buf[i] ~ /^```$/){
+          if(first==-1) first=i
+          last=i
+        }
+      }
+      for(i=0;i<n;i++){
+        if(i==first || i==last) continue
+        print buf[i]
+      }
+    }' "$HERE/SYSTEM_PROMPT.md")"
   local line_count
   line_count="$(printf '%s\n' "$out" | wc -l)"
   if [[ -z "$out" || "$line_count" -lt 20 ]]; then
