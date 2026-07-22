@@ -1,0 +1,19 @@
+{
+  "task_id": "standalone-demo-001",
+  "tenant_id": "tenant-araya",
+  "actor_id": "admin-001",
+  "intent": "retrieve",
+  "target": "retrieve_current_legal_nikah_price",
+  "query": "What is the current Legal Nikah no guest package price?",
+  "required_fact_keys": [
+    "legal_nikah_price"
+  ],
+  "permission_scope": [
+    "knowledge:read"
+  ],
+  "as_of": "2026-07-22T00:00:00Z",
+  "context": {
+    "top_k": 16
+  },
+  "max_latency_ms": 3000
+}

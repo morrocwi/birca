@@ -1,0 +1,39 @@
+{
+  "version": "0.5.0",
+  "standalone_python_syntax": true,
+  "standard_library_only": true,
+  "selftest_return_code": 0,
+  "demo_return_code": 0,
+  "benchmark_return_code": 0,
+  "selftest_result": {
+    "version": "0.5.0",
+    "total": 14,
+    "passed": 14,
+    "failed": 0,
+    "passed_tests": [
+      "authoritative_current_selected",
+      "same_trust_conflict_unresolved",
+      "permission_filter_unresolved",
+      "model_receipt_created",
+      "claim_citation_passes",
+      "claim_without_citation_fails",
+      "claim_wrong_value_fails",
+      "runtime_pass_and_cache_hit",
+      "tenant_isolation",
+      "model_version_invalidates_cache",
+      "broken_model_runtime_fails",
+      "exact_quotient_controls",
+      "sampled_transition_controls",
+      "payload_erasure_keeps_audit"
+    ],
+    "failures": []
+  },
+  "source_lineage_commit": "f7aa4ca3cf6a81172bbd2f2c9a3ae92f3ecd075f",
+  "known_boundary": [
+    "offline structured model is deterministic reference behavior, not a generative LLM",
+    "generic HTTP adapter requires a compatible external endpoint",
+    "token counts are local estimates unless an external adapter supplies provider receipts",
+    "pattern-based injection quarantine is not complete prompt-injection protection",
+    "benchmark is a synthetic finite local fixture"
+  ]
+}

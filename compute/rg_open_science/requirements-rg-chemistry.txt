@@ -1,0 +1,8 @@
+# RG Open-Science Standalone v3.0 — chemistry profile
+# Review platform-specific packages such as RDKit, Vina, Meeko and Open Babel.
+
+rdkit
+biopython>=1.83
+MDAnalysis>=2.7
+meeko
+vina

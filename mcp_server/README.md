@@ -17,6 +17,10 @@ that plain copy-paste installs don't have.
 | Resource | `birca://evidence-sources` | `spec/EVIDENCE_SOURCES.md` (required evidence libraries). |
 | Resource | `birca://legal-disclaimer` | `LEGAL_DISCLAIMER.md` (mandatory, must accompany every deployment). |
 | Tool | `birca_check_safety` | Deterministic (no LLM) regex check for drug-name + dosing-verb directive pairings, per `birca_safety_guard.py`. Only useful on a tool-calling-capable host — see below. |
+| Tool | `birca_math_consistency_check` | **v5.0.0.** Runs the vendored BIRCA repair-equation solvers (`../compute/birca_math/`) and reports pass/fail — live-verifies the claim `spec/birca_universal_skill.yaml`'s `mathematical_consistency_finding` states in prose. `finite_diagnostic` tier. |
+| Tool | `birca_evidence_quotient_check` | **v5.0.0.** Code-level citation validator via the vendored RG_QOR runtime (`../compute/rg_qor/`) — given claims + evidence items, returns any uncited/mismatched-value defects. |
+| Tool | `birca_drug_food_lane_plan` | **v5.0.0.** Runs the vendored RG Open-Science drug-food-disease compiler's `workflow-plan` (`../compute/rg_open_science/`). Research-mode only — see that package's own `forbidden_outputs`. |
+| Tool | `birca_docking_admission` | **v5.0.0.** Re-docks an externally-sourced, already-known ligand into its own crystal binding site via AutoDock Vina (`../compute/docking/`) — a docking-software accuracy check, PASS/FAIL/UNRESOLVED + RMSD. Requires a `vina`-capable environment. |
 
 ## Why the `birca_check_safety` tool exists
 
@@ -98,15 +102,31 @@ asyncio.run(main())
 "
 ```
 
-Expected: `tools: ['birca_check_safety']`, `resources: ['birca://spec', 'birca://evidence-sources',
-'birca://legal-disclaimer']`, `prompts: ['birca_consult']`.
+Expected (v5.0.0): `tools: ['birca_check_safety', 'birca_math_consistency_check',
+'birca_evidence_quotient_check', 'birca_drug_food_lane_plan', 'birca_docking_admission']`,
+`resources: ['birca://spec', 'birca://evidence-sources', 'birca://legal-disclaimer']`,
+`prompts: ['birca_consult']` — this exact round-trip (including two live tool calls,
+`birca_math_consistency_check` and `birca_evidence_quotient_check`, both over real MCP
+stdio, not direct function calls) was run and confirmed working during the v5.0.0
+integration.
+
+The four `v5.0.0` compute tools need `../compute/`'s own dependencies (numpy/scipy/sympy/
+networkx for the math check; nothing extra for the evidence-quotient check beyond the
+standard library; a `vina`-capable environment for docking admission — see
+`../compute/README.md`). `birca_check_safety` alone still needs nothing beyond this
+directory's own `requirements.txt`.
 
 ## Status
 
-Same status as the rest of this package (`v1.10.6`, rights-holder-approved for public/educational/
+Same status as the rest of this package (`v5.0.0`, rights-holder-approved for public/educational/
 non-commercial release — see the package `README.md` Governance note for what that approval does and does
-not cover) — see the package `README.md` and `LEGAL_DISCLAIMER.md`. This is a
-new, additive install surface; it does not change any of birca's own safety mechanisms,
+not cover) — see the package `README.md` and `LEGAL_DISCLAIMER.md`. **The original rights-holder
+approval predates the v5.0.0 compute layer and did not evaluate it** — the compute tools add real,
+runnable code (including, for `birca_drug_food_lane_plan`'s underlying package, a data-adapter
+contract that is network-disabled by default but designed to be network-capable) — this plausibly
+changes the risk/legal posture enough to warrant its own review before relying on it beyond local
+testing, distinct from the original prompt-only publish approval. Chat-layer additions (`birca_check_safety`)
+remain unchanged in scope from v1.9.0: additive, does not change any of birca's own safety mechanisms,
 depth gates, or claim tier. Not yet spot-checked end-to-end inside an actual Claude
 Desktop / other MCP host session (verified here at the protocol level only, via a direct
 stdio client) — treat as an additional, real, but narrowly-scoped verification, not a

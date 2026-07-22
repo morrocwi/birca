@@ -1,7 +1,7 @@
 schema_version: birca_universal_skill.v1
 id: BIRCA
 name: "BIRCA — vendor-agnostic health-advisory skill (short call name: BIRCA)"
-version: 1.10.6
+version: 5.0.0
 generated_at: "2026-07-09"
 status: PUBLISHED_EDUCATIONAL_RESEARCH_USE_ONLY   # public release approved by rights holder; non-commercial (see LICENSE.md/LEGAL_DISCLAIMER.md); canonical public copy github.com/morrocwi/birca; human two-reviewer clinical audit + cross-model validation still open
 issue: ISSUE-0151
@@ -327,7 +327,7 @@ dynamic_graph_boundary:
     review, inter-rater reliability, outcome tracking, safety testing, and bias/equity testing.
   mathematical_consistency_finding:
     claim_tier: [finite_diagnostic, Dr]   # NOT clinical/empirical validation -- readout-not-truth
-    source: "research_universal_solver, src/anse_spine/solvers/birca_repair.py (PR morrocwi/research_universal_solver#7, NOT YET MERGED as of this writing -- treat as pending, not ratified)"
+    source: "research_universal_solver, src/anse_spine/solvers/birca_repair.py and health_atlas.py (PR morrocwi/research_universal_solver#7, MERGED; formalized as 7 discrete axiom-free Coq files in PR #8, also MERGED -- both confirmed via `gh pr view`). Vendored, unmodified, into this repo's own compute/birca_math/ (v5.0.0) -- see compute/birca_math/PROVENANCE.md and the live-runnable birca_math_consistency_check MCP tool."
     finding: >
       The repair-loop dynamical objects (telegraph burden Eq 2, causal-safety Eq 4, repair-state Eq 3-7) as
       literally written in the source monograph have 3 concrete, fixable faults: (1) Eq(2)'s source term is
@@ -507,3 +507,6 @@ version_history:
   - {version: "1.1.0", date: "2026-07-09", note: "Implemented Layer-0b biopsychosocial safety micro-screen (§2b) for real in SYSTEM_PROMPT.md — previously only validated as a user-scripted test ('C01-C10 v3'), not built into the assistant's own proactive questioning. New minor version since this adds a mechanism, not just a bug patch. Pending a natural-conversation (unscripted) retest to confirm it reliably unlocks D4 in real use, not just when the tester pre-writes full-domain answers."}
   - {version: "1.2.0", date: "2026-07-09", note: "Fixed 4 remaining known issues from the full-regression pass: (1) C04 — Layer-3 now delivers unprompted once eligible, no permission-gate-behind-a-question; (2) C06/C08 — Layer-3 now mandates the labelled schema fields (BIRCA node/Context-fit/Actor-tool/Feedback marker/Escalation threshold), not just prose; (3) B30 — Layer-0b trigger tightened to exclude abstract/meta framework questions with no personal-health content; (4) A09 — added a mandatory pre-send self-check scanning for drug names/dosing verbs in any Layer-1 STOP response, as prompt-level defense-in-depth for a known ~1-in-4 stochastic risk (a deterministic code-level filter remains the recommended follow-up for tool-calling-capable platforms). Pending targeted retest of all 4 fixes plus a safety-anchor regression check before claiming these are verified."}
   - {version: "1.2.1", date: "2026-07-09", note: "Legal hardening for the public standalone release (github.com/morrocwi/birca): added a prominent 'for educational and research purposes only, not for commercial use' banner to README.md/LEGAL_DISCLAIMER.md/LICENSE.md and to the mandatory Layer-2/3 disclaimer footer text itself (ships in every real output, not just top-level docs); strengthened LICENSE.md's non-commercial clause with an explicit definition of 'commercial use'; strengthened LEGAL_DISCLAIMER.md's 'Prohibited uses' section to explicitly name commercial use; updated stale DRAFT_NOT_YET_HUMAN_APPROVED status fields to accurately reflect the public/non-commercial/educational-use-only release while still disclosing open validation gates (human two-reviewer audit, cross-model testing). Mirrored from the canonical public repo back into this monorepo's historical development copy."}
+  # NOTE: entries 1.3.0-1.10.6 are not individually listed here -- see CHANGELOG.md for that full linear
+  # history. This list resumes at the next version to actually touch this field.
+  - {version: "5.0.0", date: "2026-07-22", note: "Deliberate product-generation version jump (not a numbering error, not skipped releases -- see CHANGELOG.md's v5.0.0 entry). Added a new, additive compute/ layer (BIRCA math solvers, RG_QOR evidence-quotient runtime, RG Open-Science drug-food-lane compiler, a docking admission bridge) as 4 new MCP tools; chat layer unchanged in mechanism. Corrected this field's stale 'PR#7 not yet merged' claim -- both PR#7 and PR#8 (Coq formalization) confirmed MERGED."}
