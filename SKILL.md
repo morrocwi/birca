@@ -52,12 +52,14 @@ emergency services immediately — this skill's own Layer 1 does exactly that, i
 
 ## Status and governance
 
-`v1.10.6` (2026-07-09). `human_pi` (the rights holder) approved publishing this package publicly under a
+`v5.0.0` (2026-07-22). `human_pi` (the rights holder) approved publishing this package publicly under a
 non-commercial license — that is a separate, narrower approval from a clinical-safety review, which has
-**not** happened (no human two-reviewer audit yet). Full validation history, known open gaps (human
-two-reviewer clinical-safety audit, full cross-model suite, one known model-specific format-compliance
-issue), and legal terms are in this repository's `README.md`, `CHANGELOG.md`, and `LEGAL_DISCLAIMER.md` —
-read `LEGAL_DISCLAIMER.md` in full before any deployment beyond
+**not** happened (no human two-reviewer audit yet). v5.0.0 adds a new, additive `compute/` layer
+(research-grade Python tools, network-disabled by default) that the original approval did not evaluate —
+see `CHANGELOG.md`'s v5.0.0 entry. Full validation history, known open gaps (human two-reviewer
+clinical-safety audit, full cross-model suite, one known model-specific format-compliance issue, and a
+fresh safety/legal review for the compute layer), and legal terms are in this repository's `README.md`,
+`CHANGELOG.md`, and `LEGAL_DISCLAIMER.md` — read `LEGAL_DISCLAIMER.md` in full before any deployment beyond
 personal testing.
 
 ## Provenance

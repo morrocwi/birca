@@ -1,1 +1,10 @@
 mcp>=1.28.0
+
+# Base install above is enough for the chat-layer tools (birca_consult, resources,
+# birca_check_safety) and for the two lightweight v5.0.0 compute tools
+# (birca_evidence_quotient_check needs nothing extra; birca_drug_food_lane_plan needs
+# ../compute/rg_open_science/requirements-rg-core.txt). birca_math_consistency_check needs
+# numpy/scipy/sympy/networkx, and birca_docking_admission needs a vina-capable environment
+# (AutoDock Vina + Open Babel + RDKit + Meeko) -- see ../compute/README.md for the full,
+# per-tool dependency breakdown. Nothing here is required unless you actually call those
+# specific compute tools.

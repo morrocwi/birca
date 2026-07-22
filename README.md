@@ -16,9 +16,12 @@ source specifications by Yaoharee Lahtee (Open Civil Science Initiative) — see
 executable reference implementation (`birca_gates.py`) maintained in this project's source monorepo (see
 "Governance note / Provenance" below).
 
-**Current version: v1.10.6.** `human_pi` (the rights holder) approved *publishing this specific package
+**Current version: v5.0.0.** `human_pi` (the rights holder) approved *publishing this specific package
 publicly under a non-commercial license* — a narrower, separate decision from a clinical-safety review,
-which has **not** happened (see "Governance note / Provenance" below).
+which has **not** happened (see "Governance note / Provenance" below). v5.0.0 adds a new, additive
+`compute/` layer (research-grade Python tools, network disabled by default — see "What's in this directory"
+and the v5.0.0 CHANGELOG entry) that the original publish approval did not evaluate; a fresh review is
+recommended before any deployment that relies on it.
 Read `LEGAL_DISCLAIMER.md` in full before any deployment beyond your own local testing — several validation
 gates (cross-model testing, a human two-reviewer clinical-safety audit) remain open; see "What's still open."
 
@@ -58,12 +61,12 @@ to verify it (both direct function calls and a real MCP-protocol round-trip over
 
 | File | Role |
 |---|---|
-| `SYSTEM_PROMPT.md` | The actual portable skill (v1.10.6) — paste this into any LLM's system prompt |
+| `SYSTEM_PROMPT.md` | The actual portable skill (v5.0.0) — paste this into any LLM's system prompt |
 | `SKILL.md` | Anthropic-format native skill file (frontmatter `name`/`description` + summary) — points to `SYSTEM_PROMPT.md` as the single source of truth; enables native Claude Code skill discovery and skill-marketplace indexing (e.g. SkillsMP) |
 | `install.sh` | git-based installer; enforces the tagged-release policy; installs the CLAUDE.md pointer |
 | `LEGAL_DISCLAIMER.md` | Mandatory, must ship unmodified with every deployment |
 | `LICENSE.md` | Proposed license (CC BY-NC-SA 4.0 + mandatory-preservation condition) — pending ratification |
-| `CHANGELOG.md` | Full version history, v1.0.0 → v1.10.6 |
+| `CHANGELOG.md` | Full version history, v1.0.0 → v5.0.0 |
 | `INSTALL_CLAUDE.md` | Claude Code / Claude API / Claude Projects install steps |
 | `INSTALL_OPENAI.md` | Custom GPT / Assistants / Responses API install steps |
 | `INSTALL_GENERIC.md` | Any other LLM (Gemini, local models, LangChain, etc.) + release-pinning policy |
@@ -76,7 +79,8 @@ to verify it (both direct function calls and a real MCP-protocol round-trip over
 | `spec/STRESS_TEST_100_RUN_LOG_PHASE1_CLAUDE.md` | 100-item suite results + 4 addenda (fixes, Dimension-C redesigns, Layer-0b validation) |
 | `spec/REGRESSION_TEST_v1_1_0_LOG.md` | Full 115-item (137-call) regression after Layer-0b: 0 systematic regressions |
 | `spec/V1_2_0_FIX_VERIFICATION_LOG.md` | Verification of the 4 fixes that produced v1.2.0 |
-| `mcp_server/` | MCP server install option (any MCP-capable host) — `server.py`, `birca_safety_guard.py` (deterministic A09 guard), `README.md` |
+| `mcp_server/` | MCP server install option (any MCP-capable host) — `server.py` (chat-layer tools + v5.0.0 compute-layer tools), `birca_safety_guard.py` (deterministic A09 guard), `birca_compute_bridge.py`, `birca_evidence_bridge.py`, `README.md` |
+| `compute/` | **New in v5.0.0.** Vendored, independently-runnable research tools, invoked only via the MCP compute tools above — never mandatory, never part of the chat layer's own flow. See `compute/README.md`. Network disabled by default in every vendored package. |
 
 ## The three-layer + intake-gate architecture, in one paragraph
 
@@ -105,7 +109,7 @@ every claim below is backed by a real execution log in `spec/`, not an assertion
 | Dimension-C natural-conversation spot-check (Addendum 4) | Same question, but with short, natural, non-exhaustive replies (no pre-scripted full-domain answers) — a harder, more realistic test | **More modest, explicitly hedged result**: Layer-0b fired proactively and resolved correctly on 3/3 cases, but only 1/3 reached full depth within a single natural follow-up turn — reported honestly as weaker than the scripted result, not smoothed into it |
 | Full regression, v1.1.0 (Layer-0b active) | Re-ran the ENTIRE 15-item + 100-item surface (115 test items, 137 model calls — some items are multi-turn/paired) | **0 systematic regressions.** The two most safety-critical mechanisms (critical-missing-data override, context-fit=0 hard cliff) both reconfirmed holding rigorously; emergency-routing timing unaffected by the new layer across 55 tested items |
 | Targeted fix verification, v1.2.0 | The 4 remaining known issues (permission-gating instead of delivering, inconsistent schema use, micro-screen over-triggering, a residual medication-leak risk) + 1 safety-anchor spot-check (A35) | **All 4 fixes verified by direct retest; the medication-leak fix (A09) is a prompt-level mitigation only** — 5/5 retests clean but a deterministic code-level guard (see `research/governance/sim/birca_gates.py`'s `_DOSE_DIRECTIVE_RE`) remains the recommended stronger defense for tool-calling-capable platforms, not yet implemented here — see `spec/V1_2_0_FIX_VERIFICATION_LOG.md` |
-| Mathematical-consistency grounding, v1.3.0 | Whether the repair-loop equations, as literally written in the source monograph, are internally consistent and reproduce the bistability/hysteresis pattern the monograph's own prose claims | **Found 3 fixable faults in the literal equations (dimensional inconsistency, unbounded causal-safety term, no bistability mechanism); a corrected reformulation reproduces bistability/hysteresis/critical-slowing-down, verified by real integration (6/6).** Claim tier `finite_diagnostic`/`Dr` — internal mathematical consistency only, **NOT clinical or empirical validation**. Source: `research_universal_solver` PR `#7` (not yet merged) — see `spec/birca_universal_skill.yaml` → `dynamic_graph_boundary.mathematical_consistency_finding` |
+| Mathematical-consistency grounding, v1.3.0 | Whether the repair-loop equations, as literally written in the source monograph, are internally consistent and reproduce the bistability/hysteresis pattern the monograph's own prose claims | **Found 3 fixable faults in the literal equations (dimensional inconsistency, unbounded causal-safety term, no bistability mechanism); a corrected reformulation reproduces bistability/hysteresis/critical-slowing-down, verified by real integration (6/6).** Claim tier `finite_diagnostic`/`Dr` — internal mathematical consistency only, **NOT clinical or empirical validation**. Source: `research_universal_solver` PR `#7`, **MERGED** (formalized as 7 Coq files in PR `#8`, also **MERGED**) — see `spec/birca_universal_skill.yaml` → `dynamic_graph_boundary.mathematical_consistency_finding` |
 | Cross-domain literature corroboration (physical + mental health), v1.4.0 | Whether BIRCA's equation forms (cusp/bistability, allostatic burden) and biopsychosocial framing match independently-published physiology and affective-science/clinical-psychology literature | **Yes, structurally.** Mood-cusp models (van der Maas 2003) use the identical cusp potential; affect "home base" reversion (Kuppens et al. 2010) matches the causal-safety form; symptom-network theory of psychopathology (Borsboom & Cramer 2013) matches the "strong coupling sustains, weak coupling clears" pattern; HPA-axis dynamics are the physiological substrate for "burden." **Structural corroboration of equation FORM only — NOT clinical validation of BIRCA's own scores** — see `spec/EVIDENCE_SOURCES.md` → "Cross-domain literature corroboration" |
 | Machine-checked grounding for Layer 0b's support-person question, v1.5.0 | Whether the "do you have someone to talk to" protective-factor question targets a mechanism with any rigorous mathematical basis | **Yes — a machine-checked, axiom-free Coq theorem** (`Th_coqc` tier, the strongest in this evidence base) proves a calm-anchor/turbulent-mode energy-balance model where the anchor still rescues even when the dysregulated system's OWN self-regulation has failed entirely — exactly the scenario Layer 0b targets. **`Th_coqc` for the discrete math; explicitly `Dr`/`Open` (unproven) for any real physiological/clinical reading** — see `spec/birca_universal_skill.yaml` → `layer_0b_biopsychosocial_micro_screen.mathematical_grounding_for_question_3` |
 | Autonomic nervous system + respiratory-control connectors, v1.6.0 | Whether standard ANS physiology (sympatho-vagal balance, baroreflex, chemoreflex) and respiratory-control models connect the calm/panic axis to BIRCA's psychological grounding and to breathing physiology | **Yes.** Sympatho-vagal balance (Berntson 1991) and HRV/RSA (Task Force 1996; Eckberg 1983) are the physiological substrate/proxy for the psychological "calm anchor" already cited; the chemoreflex CO2-ventilation loop (Grodins 1954; Khoo 1991) is the recognized physiological pathway behind panic-linked hyperventilation (Klein 1993; Ley 1985, independent clinical literature); cardiorespiratory Kuramoto coupling (Schafer 1998) is the documented mechanism behind paced-breathing calming effects. Each model individually verified by real integration. **Does NOT mean BIRCA models the ANS/respiration directly, and is NOT a treatment recommendation** — see `spec/EVIDENCE_SOURCES.md` → "Autonomic nervous system + respiratory-control connectors" |

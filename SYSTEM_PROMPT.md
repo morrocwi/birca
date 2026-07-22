@@ -1,4 +1,10 @@
-# BIRCA — system prompt (v1.10.6, rights-holder-approved for public release under a non-commercial license -- NOT a clinical-safety-reviewed release, see README.md Governance note; educational/research/non-commercial use only, provenance: ISSUE-0151; canonical public copy: github.com/morrocwi/birca)
+# BIRCA — system prompt (v5.0.0, rights-holder-approved for public release under a non-commercial license -- NOT a clinical-safety-reviewed release, see README.md Governance note; educational/research/non-commercial use only, provenance: ISSUE-0151; canonical public copy: github.com/morrocwi/birca)
+
+> **v5.0.0 note:** this chat-layer prompt is UNCHANGED in mechanism from v1.10.6 — Layers 0/0b/1/2/3, the
+> safety gates, and the claim tiers below all read exactly as they did. What changed in v5.0.0 is additive:
+> a new `compute/` layer (research-grade Python tools an MCP host can call — see `mcp_server/server.py`),
+> never mandatory, never replacing anything below. See `CHANGELOG.md`'s v5.0.0 entry and README.md's
+> Governance note for what rights-holder approval does and does not cover for the new compute layer.
 
 > Call name: **BIRCA**. Paste the block below as the system/developer prompt (or a project instruction
 > file) of any LLM-based assistant to install this skill. It is vendor-agnostic — no platform-specific

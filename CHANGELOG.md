@@ -1,5 +1,84 @@
 # birca — changelog
 
+## v5.0.0 (2026-07-22) — new additive compute layer (math/evidence/drug-food/docking tools); corrects a stale PR-merge claim
+
+**Versioning note, read first:** this jumps from `v1.10.6` straight to `v5.0.0` — a deliberate
+product-generation naming choice by the rights holder (`human_pi`), not a numbering error and not 4
+skipped releases. Everything below v1.10.6 in this file is the linear history of the chat-layer prompt
+package; v5.0.0 is the point where a second, additive layer (compute) was merged alongside it under one
+repo and one version line going forward.
+
+**The chat layer (`SYSTEM_PROMPT.md`, `spec/`) is UNCHANGED IN MECHANISM.** Layers 0/0b/1/2/3, the depth
+gate, the out-of-scope-decline rule, and every claim tier read exactly as they did in v1.10.6. Nothing in
+this release alters birca's own safety mechanisms or what it will or won't say to an end user.
+
+### Added — `compute/`, a new top-level directory, plus 4 new MCP tools
+
+Four vendored, independently-runnable research packages, each retaining its own explicit claim tier and
+scope boundary, wired in as new tools on `mcp_server/server.py` (additive only — `birca_consult` and
+`birca_check_safety` are unchanged):
+
+- **`compute/birca_math/`** (`birca_repair.py`, `health_atlas.py`) — vendored, unmodified, from
+  `research_universal_solver`'s merged PR #7. Re-verified in this repo by direct execution:
+  `birca_repair.py` 6/6 PASS, `health_atlas.py` 17/17 PASS (real `scipy` integration, not asserted). New
+  MCP tool: `birca_math_consistency_check`. See `compute/birca_math/PROVENANCE.md`.
+- **`compute/rg_qor/`** (`RG_QOR_v0.5.0_STANDALONE.py`) — an offline, standard-library-only
+  evidence-quotient/claim-citation-validation runtime from the `readout_genesis` family. Re-verified:
+  `selftest` 14/14 PASS. New MCP tools: `birca_evidence_quotient_check` (a genuine citation-consistency
+  checker — given claims and evidence items, flags uncited claims, citations pointing at nonexistent
+  evidence, and claims whose value doesn't match their own citation) and a `run_qor_selftest()` health-check
+  helper. Full TaskCard-driven retrieval/tenant-store integration is explicitly NOT implemented — see the
+  module's own docstring; only the citation-consistency check is wired in, to avoid overclaiming an
+  integration this package was not given a real evidence corpus/task-card contract for.
+- **`compute/rg_open_science/`** (`RG_OPEN_SCIENCE_DRUG_FOOD_LANE_STANDALONE_v3.0`) — a research-only
+  drug/food/disease lane compiler with an open-science tool registry, data-adapter contracts (network
+  disabled by default), and workflow DAGs. Confirmed to fully supersede an earlier v2.0 package (structural
+  diff: every v2.0 section is present verbatim in v3.0, plus more) — only v3.0 is vendored. Re-verified:
+  `validate`, `list-tools`, `dependency-check`, `workflow-plan`, and `adapter-template` all executed
+  successfully. New MCP tool: `birca_drug_food_lane_plan` — strictly research-mode, never surfaced in an
+  individual health-intake turn, returns no dosing/SMILES/synthesis routes/docking-ready coordinates (see
+  the package's own `forbidden_outputs`).
+- **`compute/docking/`** (`docking_admission.py`, new code written for this integration, not vendored) — a
+  thin wrapper around a local AutoDock Vina install implementing `rg_open_science`'s
+  `docking_execution: ADMISSION_ONLY_UNTIL_EXTERNAL_STRUCTURES_PASS` contract: re-docks an
+  externally-sourced, already-known ligand (a real RCSB PDB entry + its own 3-letter ligand code) back into
+  its own crystal binding site and reports PASS/FAIL/UNRESOLVED vs. RMSD to the real experimental pose.
+  Verified against two real cases: `1HVR`+`XK2` (HIV protease, designed inhibitor) → **PASS**, RMSD 0.58 Å;
+  `4A9J`+`TYL` (paracetamol vs. a bromodomain that is not its real pharmacological target) → **FAIL**
+  (correctly), RMSD 2.26 Å. New MCP tool: `birca_docking_admission`. Two real bugs were caught and fixed
+  during this verification, not shipped silently: (1) an early draft restricted the receptor extraction to
+  a single chain, which breaks multi-chain biological assemblies (1HVR's HIV-protease homodimer needs both
+  chains A+B to form the real pocket — single-chain extraction gave a wrong, weaker result until fixed); (2)
+  `Vina.write_poses()` can write fewer pose models than requested, which silently corrupted downstream RMSD
+  extraction past the last real model until the code was changed to count actual `MODEL` records instead of
+  trusting the requested pose count.
+
+### Fixed — a stale claim, found during this integration
+
+`spec/birca_universal_skill.yaml`'s `mathematical_consistency_finding` field (added in v1.3.0) stated PR
+`morrocwi/research_universal_solver#7` was "NOT YET MERGED... treat as pending, not ratified." Confirmed via
+`gh pr view` that PR #7 **is merged**, and that its equations are additionally formalized as 7 discrete,
+axiom-free Coq files in PR #8 (also merged, not previously mentioned anywhere in this repo's own spec).
+Corrected in `spec/birca_universal_skill.yaml`, `spec/EVIDENCE_SOURCES.md`, and `README.md`'s validation-history
+table. (Historical CHANGELOG entries below, e.g. the original v1.3.0 entry, are left as the accurate record
+of what was true when they were written — only the current-state docs were stale and needed correcting.)
+
+### Open items (explicitly not resolved by this release — do not read v5.0.0 as closing these)
+
+- **A fresh safety/legal review is recommended for the compute layer specifically.** The original
+  `human_pi` publish approval (see "Governance note" in `README.md`) evaluated a static, prompt-only
+  package. v5.0.0 adds real, runnable code — including a data-adapter contract
+  (`compute/rg_open_science/.env.example`, `RG_NETWORK_ENABLED=false` by default) that is disabled today
+  but designed to be network-capable. This plausibly changes the risk/legal posture enough to warrant its
+  own sign-off, distinct from and in addition to the still-open human two-reviewer clinical-safety audit
+  and cross-model validation gates carried forward from earlier versions.
+- License: `compute/` inherits the same CC BY-NC-SA 4.0 + mandatory-disclaimer terms as the rest of this
+  repo (same rights holder, same non-commercial/educational posture, per explicit instruction) — `LICENSE.md`
+  itself was not modified.
+- Formal Coq files backing `birca_math/` (`research_universal_solver`'s `formal/Info*_attempt.v`, PR #8)
+  were not re-verified for current CI/`Th_coqc` status as part of this release — that repo's own
+  `make verify-attempts` is the authoritative check if this claim is cited going forward.
+
 ## v1.10.6 (2026-07-09) — document a real sandboxed-install friction point; fix INSTALL_GENERIC.md's mirror gap
 
 An independent, unsolicited real-world report: a Codex CLI session (a different AI agent, not Claude Code)

@@ -64,4 +64,4 @@ Ask: `/birca I've had a mild headache for 3 days, no other symptoms.` — the re
 end with the required disclaimer footer. If either is missing, the install is incomplete — recheck that the
 full `SYSTEM_PROMPT.md` block (not a truncated copy) was loaded.
 
-Status: v1.10.6. `human_pi` (the rights holder) approved publishing this package publicly under a non-commercial license -- a narrower, separate approval from a clinical-safety review. Human two-reviewer audit and cross-model validation remain open (see README "What's still open"). See `LEGAL_DISCLAIMER.md` before any real deployment.
+Status: v5.0.0. `human_pi` (the rights holder) approved publishing this package publicly under a non-commercial license -- a narrower, separate approval from a clinical-safety review. Human two-reviewer audit and cross-model validation remain open (see README "What's still open"). See `LEGAL_DISCLAIMER.md` before any real deployment.

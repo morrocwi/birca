@@ -48,4 +48,4 @@ Same check as the Claude install: ask a mild, non-emergency symptom question and
 with the `BIRI % · D<level>` disclosure line and ends with the disclaimer footer. If web browsing/function
 tools are off, the model should say explicitly that it cannot verify current guidance rather than guessing.
 
-Status: v1.10.6. `human_pi` (the rights holder) approved publishing this package publicly under a non-commercial license -- a narrower, separate approval from a clinical-safety review. Human two-reviewer audit and cross-model validation remain open (see README "What's still open"). See `LEGAL_DISCLAIMER.md` before any real deployment.
+Status: v5.0.0. `human_pi` (the rights holder) approved publishing this package publicly under a non-commercial license -- a narrower, separate approval from a clinical-safety review. Human two-reviewer audit and cross-model validation remain open (see README "What's still open"). See `LEGAL_DISCLAIMER.md` before any real deployment.

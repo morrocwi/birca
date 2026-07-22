@@ -1,0 +1,115 @@
+document:
+  id: RG-QOR-STANDALONE
+  title: Readout Genesis Query-Relative Quotient Runtime Standalone
+  version: 0.5.0
+  release_status: EXECUTABLE_SINGLE_FILE_REFERENCE
+  generated_date: "2026-07-22"
+  implementation:
+    language: Python
+    files_required: 1
+    external_dependencies: []
+    network_required_for_default_mode: false
+    standard_library_only: true
+
+source_lineage:
+  repository: morrocwi/readout_genesis
+  pinned_commit: f7aa4ca3cf6a81172bbd2f2c9a3ae92f3ecd075f
+
+claim_boundary:
+  tier: EXACT_WITHIN_STANDALONE_REFERENCE_IMPLEMENTATION
+  established:
+    - single-file runtime executes offline
+    - query-relative Evidence Quotient is implemented
+    - tenant permission effective-date revision and trust gates are implemented
+    - retrieved instruction injection quarantine is implemented
+    - structured model output and model receipts are implemented
+    - claim extraction and citation validation are implemented
+    - source model prompt tenant and actor scoped cache is implemented
+    - exact and sampled quotient controls are implemented
+  not_established:
+    - production safety certification
+    - complete prompt injection resistance
+    - universal planning optimality
+    - universal superiority over other RAG systems
+    - provider billing-token equivalence
+  forbidden_claims:
+    - universally_safe
+    - mathematically_optimal
+    - production_proven
+    - complete_injection_defense
+
+standalone_pipeline:
+  - TaskCard validation
+  - tenant permission and effective-date filtering
+  - query-relative Evidence Quotient
+  - same-trust conflict abstention
+  - retrieved-instruction quarantine
+  - structured prompt construction
+  - offline or generic HTTP JSON model adapter
+  - structured Claim extraction
+  - citation-to-evidence validation
+  - bounded claim classification
+  - verified certificate cache
+  - append-only audit envelope
+
+model_receipt:
+  required:
+    - adapter_id
+    - model_id
+    - model_version
+    - prompt_template_version
+    - input_hash
+    - output_hash
+    - input_token_estimate
+    - output_token_estimate
+    - token_estimator
+    - latency_ms
+  token_warning: local estimates are not provider billing tokens
+
+verification:
+  exact:
+    finite_quotient_commutation: implemented
+  contract:
+    claim_citation_value_match: implemented
+  sampled:
+    stochastic_transition_total_variation: implemented
+    claim_tier: FINITE_SAMPLED_DIAGNOSTIC
+
+default_model:
+  adapter: offline_structured
+  deterministic: true
+  network: false
+
+optional_model:
+  adapter: generic_http_json
+  request_contract:
+    model: string
+    input: structured_prompt_object
+  response_contract:
+    answer: string
+    claims:
+      - claim_id: string
+        fact_key: string
+        value: any
+        citations: [evidence_id]
+
+commands:
+  selftest: python RG_QOR_v0.5.0_STANDALONE.py selftest
+  demo: python RG_QOR_v0.5.0_STANDALONE.py demo
+  benchmark: python RG_QOR_v0.5.0_STANDALONE.py benchmark --runs 300
+  write_demo_task: python RG_QOR_v0.5.0_STANDALONE.py write-demo-task demo_task.json
+  run_task: python RG_QOR_v0.5.0_STANDALONE.py run demo_task.json
+
+remaining_frontier:
+  P1:
+    - persistent SQL evidence and cache adapters
+    - real embedding/vector adapter
+    - hardened model sandbox and content security policy
+    - provider-specific exact token receipts
+  P2:
+    - automatic workflow discovery
+    - confidence intervals for sampled defects
+    - durable distributed event store
+  P3:
+    - distributed transactions
+    - full transport and holonomy runtime
