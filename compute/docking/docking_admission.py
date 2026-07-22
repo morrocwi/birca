@@ -34,7 +34,9 @@ install vina meeko` inside that env.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -161,6 +163,29 @@ def _run(cmd: list[str], **kw) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, capture_output=True, text=True, check=True, **kw)
 
 
+@contextlib.contextmanager
+def _suppress_native_stdout():
+    """The `vina` package's C++ extension writes its progress text (grid computation,
+    docking progress bar, energy tables) directly to the OS-level file descriptor 1, not
+    Python's `sys.stdout` object -- so `contextlib.redirect_stdout` alone does not catch
+    it. When this module is called from an MCP server (stdio transport), that stray text
+    corrupts the JSON-RPC message stream on the SAME file descriptor the protocol uses,
+    which a real end-to-end MCP test caught (empagliflozin-vs-SGLT2 docking produced
+    "Failed to parse JSONRPC message" errors even though the underlying docking result
+    was still correct). Fix: dup2 fd 1 to /dev/null for the duration of the native calls,
+    then restore the real stdout fd."""
+    stdout_fd = sys.stdout.fileno()
+    saved_fd = os.dup(stdout_fd)
+    devnull_fd = os.open(os.devnull, os.O_WRONLY)
+    try:
+        os.dup2(devnull_fd, stdout_fd)
+        yield
+    finally:
+        os.dup2(saved_fd, stdout_fd)
+        os.close(devnull_fd)
+        os.close(saved_fd)
+
+
 def dock_reference_ligand(
     pdb_id: str,
     ligand_code: str,
@@ -252,15 +277,16 @@ def dock_reference_ligand(
 
             cx, cy, cz = _ligand_centroid(ligand_ref_pdb)
 
-            v = Vina(sf_name="vina")
-            v.set_receptor(str(receptor_pdbqt))
-            v.set_ligand_from_file(str(ligand_pdbqt))
-            v.compute_vina_maps(center=[cx, cy, cz], box_size=[box_size, box_size, box_size])
-            v.dock(exhaustiveness=exhaustiveness, n_poses=n_poses)
+            with _suppress_native_stdout():
+                v = Vina(sf_name="vina")
+                v.set_receptor(str(receptor_pdbqt))
+                v.set_ligand_from_file(str(ligand_pdbqt))
+                v.compute_vina_maps(center=[cx, cy, cz], box_size=[box_size, box_size, box_size])
+                v.dock(exhaustiveness=exhaustiveness, n_poses=n_poses)
 
-            docked_out = workdir / "docked_out.pdbqt"
-            v.write_poses(str(docked_out), n_poses=n_poses, overwrite=True)
-            energies = v.energies(n_poses=n_poses)
+                docked_out = workdir / "docked_out.pdbqt"
+                v.write_poses(str(docked_out), n_poses=n_poses, overwrite=True)
+                energies = v.energies(n_poses=n_poses)
             best_affinity = float(energies[0][0])
 
             # Vina's write_poses() can write FEWER models than n_poses requested (it only
