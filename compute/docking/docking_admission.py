@@ -35,16 +35,51 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.error
 import urllib.request
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 RCSB_DOWNLOAD_URL = "https://files.rcsb.org/download/{pdb_id}.pdb"
 RMSD_PASS_THRESHOLD_ANGSTROM = 2.0
+
+# Real RCSB PDB entry IDs are exactly 4 characters: a digit followed by 3 alphanumerics
+# (e.g. "1HVR", "4A9J"). PDB chemical-component (ligand) codes are 1-3 alphanumerics.
+# Validating BOTH strictly, before either is used in a file path or URL, closes a path-
+# traversal hole a code review found: an unvalidated pdb_id like "../../../etc/passwd"
+# would otherwise land directly in a local file path (`workdir / f"{pdb_id.lower()}.pdb"`).
+_PDB_ID_RE = re.compile(r"^[0-9][A-Za-z0-9]{3}$")
+_LIGAND_CODE_RE = re.compile(r"^[A-Za-z0-9]{1,3}$")
+_CHAIN_RE = re.compile(r"^[A-Za-z0-9]{1,4}$")
+
+
+class InvalidIdentifierError(ValueError):
+    """Raised when pdb_id/ligand_code/chain fails the strict external-identifier format
+    check -- never caused by a real RCSB PDB entry, only by malformed or malicious input."""
+
+
+def _validate_identifiers(pdb_id: str, ligand_code: str, ligand_chain: str,
+                           receptor_chains: "set[str] | None") -> None:
+    if not _PDB_ID_RE.match(pdb_id):
+        raise InvalidIdentifierError(
+            f"pdb_id {pdb_id!r} is not a valid RCSB PDB entry ID (expected 4 characters: "
+            "a digit followed by 3 alphanumerics, e.g. '1HVR')"
+        )
+    if not _LIGAND_CODE_RE.match(ligand_code):
+        raise InvalidIdentifierError(
+            f"ligand_code {ligand_code!r} is not a valid PDB chemical-component code "
+            "(expected 1-3 alphanumeric characters, e.g. 'XK2')"
+        )
+    if not _CHAIN_RE.match(ligand_chain):
+        raise InvalidIdentifierError(f"ligand_chain {ligand_chain!r} is not a valid chain ID")
+    for c in (receptor_chains or ()):
+        if not _CHAIN_RE.match(c):
+            raise InvalidIdentifierError(f"receptor chain {c!r} is not a valid chain ID")
 
 
 @dataclass
@@ -149,15 +184,25 @@ def dock_reference_ligand(
     is confirmed to sit within a chain subset. Nothing here is generated -- both receptor
     and ligand come from the named external record.
     """
-    _require_tool("obabel")
-    _require_tool("obrms")
+    _validate_identifiers(pdb_id, ligand_code, ligand_chain, receptor_chains)
+
     try:
+        _require_tool("obabel")
+        _require_tool("obrms")
         from vina import Vina
     except ImportError as exc:
-        raise RuntimeError(
-            "docking_admission: the 'vina' Python package is not installed in this "
-            "environment -- see compute/rg_open_science/requirements-rg-chemistry.txt"
-        ) from exc
+        return DockingAdmissionResult(
+            verdict="UNRESOLVED", pdb_id=pdb_id, ligand_code=ligand_code, chain=ligand_chain,
+            reason=(
+                "the 'vina' Python package is not installed in this environment -- see "
+                "compute/rg_open_science/requirements-rg-chemistry.txt"
+            ),
+        )
+    except RuntimeError as exc:
+        return DockingAdmissionResult(
+            verdict="UNRESOLVED", pdb_id=pdb_id, ligand_code=ligand_code, chain=ligand_chain,
+            reason=str(exc),
+        )
 
     own_tmp = workdir is None
     workdir = workdir or Path(tempfile.mkdtemp(prefix="birca_docking_"))
@@ -165,7 +210,13 @@ def dock_reference_ligand(
 
     try:
         raw_pdb = workdir / f"{pdb_id.lower()}.pdb"
-        _download_pdb(pdb_id, raw_pdb)
+        try:
+            _download_pdb(pdb_id, raw_pdb)
+        except (urllib.error.URLError, OSError) as exc:
+            return DockingAdmissionResult(
+                verdict="UNRESOLVED", pdb_id=pdb_id, ligand_code=ligand_code, chain=ligand_chain,
+                reason=f"could not download {pdb_id} from RCSB: {exc}",
+            )
 
         receptor_pdb = workdir / "receptor_only.pdb"
         n_receptor_atoms = _extract_receptor_atoms(raw_pdb, receptor_chains, receptor_pdb)
@@ -187,56 +238,65 @@ def dock_reference_ligand(
                 ),
             )
 
-        receptor_pdbqt = workdir / "receptor.pdbqt"
-        _run(["obabel", str(receptor_pdb), "-O", str(receptor_pdbqt), "-xr",
-              "--partialcharge", "gasteiger"])
+        try:
+            receptor_pdbqt = workdir / "receptor.pdbqt"
+            _run(["obabel", str(receptor_pdb), "-O", str(receptor_pdbqt), "-xr",
+                  "--partialcharge", "gasteiger"])
 
-        ligand_pdbqt = workdir / "ligand_ref.pdbqt"
-        _run(["obabel", str(ligand_ref_pdb), "-O", str(ligand_pdbqt),
-              "--partialcharge", "gasteiger"])
+            ligand_pdbqt = workdir / "ligand_ref.pdbqt"
+            _run(["obabel", str(ligand_ref_pdb), "-O", str(ligand_pdbqt),
+                  "--partialcharge", "gasteiger"])
 
-        ligand_sdf = workdir / "ligand_ref.sdf"
-        _run(["obabel", str(ligand_ref_pdb), "-O", str(ligand_sdf)])
+            ligand_sdf = workdir / "ligand_ref.sdf"
+            _run(["obabel", str(ligand_ref_pdb), "-O", str(ligand_sdf)])
 
-        cx, cy, cz = _ligand_centroid(ligand_ref_pdb)
+            cx, cy, cz = _ligand_centroid(ligand_ref_pdb)
 
-        v = Vina(sf_name="vina")
-        v.set_receptor(str(receptor_pdbqt))
-        v.set_ligand_from_file(str(ligand_pdbqt))
-        v.compute_vina_maps(center=[cx, cy, cz], box_size=[box_size, box_size, box_size])
-        v.dock(exhaustiveness=exhaustiveness, n_poses=n_poses)
+            v = Vina(sf_name="vina")
+            v.set_receptor(str(receptor_pdbqt))
+            v.set_ligand_from_file(str(ligand_pdbqt))
+            v.compute_vina_maps(center=[cx, cy, cz], box_size=[box_size, box_size, box_size])
+            v.dock(exhaustiveness=exhaustiveness, n_poses=n_poses)
 
-        docked_out = workdir / "docked_out.pdbqt"
-        v.write_poses(str(docked_out), n_poses=n_poses, overwrite=True)
-        energies = v.energies(n_poses=n_poses)
-        best_affinity = float(energies[0][0])
+            docked_out = workdir / "docked_out.pdbqt"
+            v.write_poses(str(docked_out), n_poses=n_poses, overwrite=True)
+            energies = v.energies(n_poses=n_poses)
+            best_affinity = float(energies[0][0])
 
-        # Vina's write_poses() can write FEWER models than n_poses requested (it only
-        # writes distinct poses it actually found) -- count real MODEL blocks rather than
-        # trusting n_poses, or obabel/obrms silently fail past the last real model.
-        n_written = sum(
-            1 for ln in docked_out.read_text().splitlines() if ln.startswith("MODEL")
-        )
-        if n_written == 0:
+            # Vina's write_poses() can write FEWER models than n_poses requested (it only
+            # writes distinct poses it actually found) -- count real MODEL blocks rather
+            # than trusting n_poses, or obabel/obrms silently fail past the last real model.
+            n_written = sum(
+                1 for ln in docked_out.read_text().splitlines() if ln.startswith("MODEL")
+            )
+            if n_written == 0:
+                return DockingAdmissionResult(
+                    verdict="UNRESOLVED", pdb_id=pdb_id, ligand_code=ligand_code, chain=ligand_chain,
+                    reason="Vina wrote zero pose models -- docking likely failed silently",
+                )
+
+            rmsds: list[float] = []
+            for i in range(1, n_written + 1):
+                pose_pdb = workdir / f"pose_{i}.pdb"
+                _run(["obabel", str(docked_out), "-O", str(pose_pdb), "-f", str(i), "-l", str(i)])
+                out = _run(["obrms", str(ligand_sdf), str(pose_pdb)]).stdout.strip()
+                # obrms prints: "RMSD ref:test <value>"
+                rmsds.append(float(out.split()[-1]))
+        except subprocess.CalledProcessError as exc:
             return DockingAdmissionResult(
                 verdict="UNRESOLVED", pdb_id=pdb_id, ligand_code=ligand_code, chain=ligand_chain,
-                reason="Vina wrote zero pose models -- docking likely failed silently",
+                reason=(
+                    f"a docking-pipeline subprocess failed ({exc.cmd[0]}, exit "
+                    f"{exc.returncode}): {(exc.stderr or '').strip()[:300]}"
+                ),
             )
-
-        rmsds: list[float] = []
-        for i in range(1, n_written + 1):
-            pose_pdb = workdir / f"pose_{i}.pdb"
-            _run(["obabel", str(docked_out), "-O", str(pose_pdb), "-f", str(i), "-l", str(i)])
-            out = _run(["obrms", str(ligand_sdf), str(pose_pdb)]).stdout.strip()
-            # obrms prints: "RMSD ref:test <value>"
-            rmsds.append(float(out.split()[-1]))
 
         best_rmsd = min(rmsds)
         verdict = "PASS" if best_rmsd < RMSD_PASS_THRESHOLD_ANGSTROM else "FAIL"
         reason = (
             f"best re-docked pose RMSD {best_rmsd:.2f} A "
             f"({'<' if verdict == 'PASS' else '>='} {RMSD_PASS_THRESHOLD_ANGSTROM} A threshold) "
-            f"across {n_poses} poses"
+            f"across {n_written} poses"
         )
         return DockingAdmissionResult(
             verdict=verdict, pdb_id=pdb_id, ligand_code=ligand_code, chain=ligand_chain,
@@ -267,12 +327,16 @@ def main(argv: list[str] | None = None) -> int:
 
     receptor_chains = set(args.receptor_chains.split(",")) if args.receptor_chains else None
     workdir = Path(tempfile.mkdtemp(prefix="birca_docking_")) if args.keep_workdir else None
-    result = dock_reference_ligand(
-        pdb_id=args.pdb_id, ligand_code=args.ligand_code, ligand_chain=args.ligand_chain,
-        receptor_chains=receptor_chains,
-        box_size=args.box_size, exhaustiveness=args.exhaustiveness, n_poses=args.n_poses,
-        workdir=workdir,
-    )
+    try:
+        result = dock_reference_ligand(
+            pdb_id=args.pdb_id, ligand_code=args.ligand_code, ligand_chain=args.ligand_chain,
+            receptor_chains=receptor_chains,
+            box_size=args.box_size, exhaustiveness=args.exhaustiveness, n_poses=args.n_poses,
+            workdir=workdir,
+        )
+    except InvalidIdentifierError as exc:
+        print(json.dumps({"verdict": "UNRESOLVED", "reason": str(exc)}, indent=2))
+        return 1
     print(json.dumps(result.to_dict(), indent=2))
     if args.keep_workdir:
         print(f"# workdir kept at: {workdir}", file=sys.stderr)

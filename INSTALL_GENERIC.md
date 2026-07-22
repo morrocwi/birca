@@ -57,4 +57,4 @@ Missing:[...] · Next questions(<=7)` line, must run the safety screen before an
 with the disclaimer footer. If your model skips either, the instruction block was likely truncated or
 diluted by a longer competing system prompt — give `birca`'s block priority/precedence in your prompt stack.
 
-Status: v1.10.6. `human_pi` (the rights holder) approved publishing this package publicly under a non-commercial license -- a narrower, separate approval from a clinical-safety review. Human two-reviewer audit and cross-model validation remain open (see README "What's still open"). See `LEGAL_DISCLAIMER.md` before any real deployment.
+Status: v5.0.0. `human_pi` (the rights holder) approved publishing this package publicly under a non-commercial license -- a narrower, separate approval from a clinical-safety review. Human two-reviewer audit and cross-model validation remain open (see README "What's still open"). See `LEGAL_DISCLAIMER.md` before any real deployment.

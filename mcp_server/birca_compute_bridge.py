@@ -94,7 +94,7 @@ def birca_docking_admission(pdb_id: str, ligand_code: str, ligand_chain: str = "
     """
     sys.path.insert(0, str(_COMPUTE / "docking"))
     try:
-        from docking_admission import dock_reference_ligand
+        from docking_admission import InvalidIdentifierError, dock_reference_ligand
     except ImportError as exc:
         return {
             "verdict": "UNRESOLVED",
@@ -103,7 +103,10 @@ def birca_docking_admission(pdb_id: str, ligand_code: str, ligand_chain: str = "
                 f"'vina' Python package or Open Babel in this environment ({exc})"
             ),
         }
-    result = dock_reference_ligand(pdb_id=pdb_id, ligand_code=ligand_code, ligand_chain=ligand_chain)
+    try:
+        result = dock_reference_ligand(pdb_id=pdb_id, ligand_code=ligand_code, ligand_chain=ligand_chain)
+    except InvalidIdentifierError as exc:
+        return {"verdict": "UNRESOLVED", "reason": str(exc)}
     return result.to_dict()
 
 

@@ -177,9 +177,11 @@ either.
 
 ## Status of this package
 
-`status: v1.10.6, published for educational/research use only (non-commercial), public-release approved by
+`status: v5.0.0, published for educational/research use only (non-commercial), public-release approved by
 the rights holder`. This does **not** mean every validation gate is closed: a human two-reviewer clinical-
-safety audit and cross-model (non-Claude) validation remain outstanding — see this repo's README.md "What's
+safety audit and cross-model (non-Claude) validation remain outstanding — and v5.0.0's new `compute/` layer
+specifically has not itself been evaluated by the original publish approval (see CHANGELOG.md's v5.0.0
+entry) — see this repo's README.md "What's
 still open." This package must not be represented as a clinically validated, production-ready, commercially
 supported, or professionally endorsed product. Its public availability is for education, research, critique,
 and non-commercial experimentation only.
