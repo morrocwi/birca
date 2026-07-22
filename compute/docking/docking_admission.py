@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import ctypes
 import json
 import os
 import re
@@ -173,14 +174,26 @@ def _suppress_native_stdout():
     which a real end-to-end MCP test caught (empagliflozin-vs-SGLT2 docking produced
     "Failed to parse JSONRPC message" errors even though the underlying docking result
     was still correct). Fix: dup2 fd 1 to /dev/null for the duration of the native calls,
-    then restore the real stdout fd."""
+    then restore the real stdout fd.
+
+    A first version of this fix (dup2-only, no explicit flush) left a residual leak: the
+    final "mode | affinity | ..." results table is written through a BUFFERED C stdio
+    stream inside the Vina extension that is not flushed synchronously -- verified by
+    instrumenting the actual code path, those bytes only reached the real fd at Python
+    interpreter shutdown, AFTER dup2 had already restored fd 1. An independent review
+    caught this. Fix: flush C's own stdio buffers via libc `fflush(NULL)` (flushes every
+    open C stream, not just Python's, since `sys.stdout.flush()` alone cannot reach a
+    buffer the Vina C++ extension wrote into directly) BEFORE restoring the real fd, so
+    any buffered native output drains to /dev/null instead of leaking out later."""
     stdout_fd = sys.stdout.fileno()
     saved_fd = os.dup(stdout_fd)
     devnull_fd = os.open(os.devnull, os.O_WRONLY)
+    libc = ctypes.CDLL(None)
     try:
         os.dup2(devnull_fd, stdout_fd)
         yield
     finally:
+        libc.fflush(None)  # drain any buffered native (C stdio) output while fd -> /dev/null
         os.dup2(saved_fd, stdout_fd)
         os.close(devnull_fd)
         os.close(saved_fd)
