@@ -12,7 +12,7 @@ out-of-scope-decline rule) — see `SYSTEM_PROMPT.md`'s own v5.0.0 note.
 
 | Directory | What it is | Vendored from | Verified (this integration) |
 |---|---|---|---|
-| `birca_math/` | The BIRCA repair-equation fixes + 17-model health atlas, re-derived on a canonical spine, fixing 3 concrete faults in the source monograph's literal equations | `research_universal_solver` PRs #7 (Python) and #8 (7 Coq files, kept upstream) | `birca_repair.py` 6/6 PASS, `health_atlas.py` 17/17 PASS (real scipy integration) |
+| `birca_math/` | The BIRCA repair-equation fixes + 17-model health atlas, re-derived on a canonical spine, fixing 3 concrete faults in the source monograph's literal equations | `solver arc (private)` PRs #7 (Python) and #8 (7 Coq files, kept upstream) | `birca_repair.py` 6/6 PASS, `health_atlas.py` 17/17 PASS (real scipy integration) |
 | `rg_qor/` | RG_QOR v0.5.0 — an offline, standard-library-only evidence-quotient/claim-citation-validation runtime | `morrocwi/readout_genesis`, pinned commit `f7aa4ca3cf6a81172bbd2f2c9a3ae92f3ecd075f` | `selftest`: 14/14 PASS |
 | `rg_open_science/` | RG Open-Science Drug-Food-Lane v3.0 — a research-only drug/food/disease lane compiler with a molecular-docking admission bridge, tool registry, and data-adapter contracts (network disabled by default) | `readout_genesis` family, supersedes an earlier v2.0 package (confirmed by structural diff — v2.0 is fully contained in v3.0) | `validate`, `list-tools`, `dependency-check`, `workflow-plan`, `adapter-template` all run successfully |
 | `docking/` | A thin wrapper around a local AutoDock Vina install implementing `rg_open_science`'s `docking_execution: ADMISSION_ONLY` contract — re-docks an externally-sourced, already-known ligand into its own crystal binding site as a docking-software accuracy check | New for this integration (not vendored — written against this session's proven Vina pipeline) | 1HVR+XK2: PASS (RMSD 0.58 Å); 4A9J+TYL (paracetamol): FAIL (RMSD 2.26 Å, correctly — see `docking/README.md`) |
@@ -54,6 +54,6 @@ and `birca_docking_admission` needs the full chemistry profile (vina/openbabel/r
 ## Keeping in sync
 
 `birca_math/` is a vendored, unmodified copy — see `birca_math/PROVENANCE.md` for how to
-re-sync it if the upstream `research_universal_solver` modules change. `rg_qor/` and
+re-sync it if the upstream `solver arc (private)` modules change. `rg_qor/` and
 `rg_open_science/` are vendored standalone release packages — re-vendor from a newer
 release rather than hand-editing them in place.

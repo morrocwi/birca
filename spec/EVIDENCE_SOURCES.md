@@ -118,13 +118,13 @@ client for a generic system).
 
 ## Theoretical/mathematical grounding (separate from clinical evidence above — internal-consistency tier)
 
-`research_universal_solver` (`src/anse_spine/solvers/birca_repair.py`, `health_atlas.py`; PR
-`morrocwi/research_universal_solver#7`, **MERGED**) re-derives BIRCA's repair-loop dynamical objects as
+`solver arc (private)` (`src/anse_spine/solvers/birca_repair.py`, `health_atlas.py`; PR
+`solver arc (private) PR #7`, **MERGED**) re-derives BIRCA's repair-loop dynamical objects as
 faces of that project's canonical spine equation, fixing 3 concrete faults in the source monograph's literal
 Eq(2)/Eq(4)/Eq(3-7) and verifying (by real numerical integration, not assertion) that the corrected form
 reproduces the bistability/hysteresis/critical-slowing-down the monograph's own prose claims. The same
 equations are additionally formalized as 7 discrete, axiom-free Coq files in PR
-`morrocwi/research_universal_solver#8` (also **MERGED**) — the Coq proofs stay in that repo under its own
+`solver arc (private) PR #8` (also **MERGED**) — the Coq proofs stay in that repo under its own
 CI (`make verify-attempts`); this repo vendors only the derived, independently-runnable Python (see
 `compute/birca_math/PROVENANCE.md`, added v5.0.0). Claim tier:
 `finite_diagnostic`/`Dr` (internal mathematical consistency, readout-not-truth) — **this is not clinical or

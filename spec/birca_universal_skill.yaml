@@ -132,7 +132,7 @@ layer_0b_biopsychosocial_micro_screen:
     gating.
   mathematical_grounding_for_question_3:
     claim_tier: [Th_coqc, Dr/Open]   # Th_coqc for the discrete energy-balance math itself; Dr/Open for any physiological/clinical reading
-    source: "machine-checked, axiom-free Coq theorem (discrete rationals, no Reals): InfoTurbulenceSmootherAnchor (research_universal_solver formal/ stream) -- cited here as published/checked math, no code from that repo is used or shipped in birca"
+    source: "machine-checked, axiom-free Coq theorem (discrete rationals, no Reals): InfoTurbulenceSmootherAnchor (solver arc (private) formal/ stream) -- cited here as published/checked math, no code from that repo is used or shipped in birca"
     finding: >
       A 2-node energy-balance model (a 'panic' mode d = deviation from a calm anchor, injected turbulent
       power T*d vs smoother dissipation (v+g)*d^2, where v = the panicking system's own damping and g = a
@@ -327,7 +327,7 @@ dynamic_graph_boundary:
     review, inter-rater reliability, outcome tracking, safety testing, and bias/equity testing.
   mathematical_consistency_finding:
     claim_tier: [finite_diagnostic, Dr]   # NOT clinical/empirical validation -- readout-not-truth
-    source: "research_universal_solver, src/anse_spine/solvers/birca_repair.py and health_atlas.py (PR morrocwi/research_universal_solver#7, MERGED; formalized as 7 discrete axiom-free Coq files in PR #8, also MERGED -- both confirmed via `gh pr view`). Vendored, unmodified, into this repo's own compute/birca_math/ (v5.0.0) -- see compute/birca_math/PROVENANCE.md and the live-runnable birca_math_consistency_check MCP tool."
+    source: "solver arc (private), src/anse_spine/solvers/birca_repair.py and health_atlas.py (PR solver arc (private) PR #7, MERGED; formalized as 7 discrete axiom-free Coq files in PR #8, also MERGED -- both confirmed via `gh pr view`). Vendored, unmodified, into this repo's own compute/birca_math/ (v5.0.0) -- see compute/birca_math/PROVENANCE.md and the live-runnable birca_math_consistency_check MCP tool."
     finding: >
       The repair-loop dynamical objects (telegraph burden Eq 2, causal-safety Eq 4, repair-state Eq 3-7) as
       literally written in the source monograph have 3 concrete, fixable faults: (1) Eq(2)'s source term is

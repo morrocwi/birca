@@ -19,7 +19,7 @@ scope boundary, wired in as new tools on `mcp_server/server.py` (additive only �
 `birca_check_safety` are unchanged):
 
 - **`compute/birca_math/`** (`birca_repair.py`, `health_atlas.py`) — vendored, unmodified, from
-  `research_universal_solver`'s merged PR #7. Re-verified in this repo by direct execution:
+  `solver arc (private)`'s merged PR #7. Re-verified in this repo by direct execution:
   `birca_repair.py` 6/6 PASS, `health_atlas.py` 17/17 PASS (real `scipy` integration, not asserted). New
   MCP tool: `birca_math_consistency_check`. See `compute/birca_math/PROVENANCE.md`.
 - **`compute/rg_qor/`** (`RG_QOR_v0.5.0_STANDALONE.py`) — an offline, standard-library-only
@@ -56,7 +56,7 @@ scope boundary, wired in as new tools on `mcp_server/server.py` (additive only �
 ### Fixed — a stale claim, found during this integration
 
 `spec/birca_universal_skill.yaml`'s `mathematical_consistency_finding` field (added in v1.3.0) stated PR
-`morrocwi/research_universal_solver#7` was "NOT YET MERGED... treat as pending, not ratified." Confirmed via
+`solver arc (private) PR #7` was "NOT YET MERGED... treat as pending, not ratified." Confirmed via
 `gh pr view` that PR #7 **is merged**, and that its equations are additionally formalized as 7 discrete,
 axiom-free Coq files in PR #8 (also merged, not previously mentioned anywhere in this repo's own spec).
 Corrected in `spec/birca_universal_skill.yaml`, `spec/EVIDENCE_SOURCES.md`, and `README.md`'s validation-history
@@ -75,7 +75,7 @@ of what was true when they were written — only the current-state docs were sta
 - License: `compute/` inherits the same CC BY-NC-SA 4.0 + mandatory-disclaimer terms as the rest of this
   repo (same rights holder, same non-commercial/educational posture, per explicit instruction) — `LICENSE.md`
   itself was not modified.
-- Formal Coq files backing `birca_math/` (`research_universal_solver`'s `formal/Info*_attempt.v`, PR #8)
+- Formal Coq files backing `birca_math/` (`solver arc (private)`'s `formal/Info*_attempt.v`, PR #8)
   were not re-verified for current CI/`Th_coqc` status as part of this release — that repo's own
   `make verify-attempts` is the authoritative check if this claim is cited going forward.
 
@@ -217,7 +217,7 @@ the first round, consistent with the package converging rather than churning.
 ## v1.10.3 (2026-07-09) — fix a real regression in the public repo's own README, caught by the maintainer
 
 The maintainer, following the install instructions from this dev copy's README, asked why the "Quick
-start" clone command pointed at a private LAN address (`http://192.168.1.120:3000/anse/cpg.git`) instead of
+start" clone command pointed at a private LAN address (redacted) instead of
 the public repo. Investigation confirmed a real regression, not a misunderstanding: the v1.10.1 mirror step
 did a blind whole-file `cp` of `README.md` from this dev copy into the public standalone repo
 (`github.com/morrocwi/birca`), which **overwrote that repo's own standalone-specific content** with this
@@ -227,8 +227,8 @@ dev copy's internal-monorepo wording. Confirmed by diffing every tagged version:
 replaced the standalone repo's own opening banner and Governance note (which had already correctly
 distinguished "approved to merge/publish" from "clinical-safety reviewed" — the exact distinction the
 v1.10.1/v1.10.2 wording passes were separately trying to fix in *this* dev copy) with this dev copy's
-internal wording, including references to internal-only file paths (`cpq_skill/agenthub/...`,
-`research/governance/sim/birca_gates.py`) that don't exist as such in the standalone repo, and a
+internal wording, including references to internal-only file paths (a private governance-config path
+inside the command center (private), `research/governance/sim/birca_gates.py`) that don't exist as such in the standalone repo, and a
 now-nonsensical sentence reading "no AI session may make this repository... publicly visible... without
 that review" inside a repo that has already been public for 5+ versions.
 
@@ -307,7 +307,7 @@ Self-test expanded from 4 to 10 cases (added one case per fix above, run live, a
 **Documentation -- an "approval scope" ambiguity, found across four files, all reworded:**
 
 7. `SYSTEM_PROMPT.md`'s header, `SKILL.md`'s status line, `README.md`'s opening version line, and
-   `cpq_skill/INDEX_SKILLS.yaml`'s `status:` field all used unqualified "human-approved" / "human-reviewed"
+   the command center (private)'s own skill-index `status:` field all used unqualified "human-approved" / "human-reviewed"
    language that could be read as "the clinical-safety content has been human-reviewed" -- directly
    contradicting the same package's own Governance note and "What's still open" item stating a human
    two-reviewer clinical-safety audit has **not** happened. Reworded all four to explicitly scope what was
@@ -515,9 +515,9 @@ mechanics, pre-Bötzinger all confirmed passing).
 
 ## v1.5.0 (2026-07-09) — machine-checked (Th_coqc) grounding for Layer 0b's support-person question
 
-Per the maintainer's request to read about "turbulence-smoother-anchor" work in research_universal_solver
+Per the maintainer's request to read about "turbulence-smoother-anchor" work in solver arc (private)
 and pull the relevant knowledge into the skill (while, per the standing instruction, making NO changes to
-research_universal_solver itself -- read-only investigation, citation only):
+solver arc (private) itself -- read-only investigation, citation only):
 
 Found `InfoTurbulenceSmootherAnchor` -- a machine-checked, axiom-free Coq theorem (discrete rationals only,
 no Reals; `Th_coqc` tier, the strongest claim tier this evidence base uses) that proves a 2-node
@@ -547,9 +547,9 @@ mechanisms or depth gates.
 
 ## v1.4.0 (2026-07-09) — cross-domain literature corroboration: physical AND mental health
 
-Per the maintainer's request to read research_universal_solver's health/cognitive equation work and pull
+Per the maintainer's request to read solver arc (private)'s health/cognitive equation work and pull
 out what's relevant to physical and mental health for birca -- while explicitly directed NOT to make any
-further changes inside research_universal_solver itself, this release cites the underlying PUBLISHED
+further changes inside solver arc (private) itself, this release cites the underlying PUBLISHED
 LITERATURE directly (not the sister-repo code) as independent structural corroboration for BIRCA's own
 equation forms and biopsychosocial framing:
 
@@ -582,10 +582,10 @@ eligibility gates, and is not clinical evidence for any individual user -- same 
 `plausibility_vs_validation` and `mathematical_consistency_finding`. Verified: fresh reinstall confirms the
 new text extracts and renders correctly; no change to BIRCA's own safety mechanisms or depth gates.
 
-## v1.3.0 (2026-07-09) — mathematical-consistency grounding connected (from research_universal_solver)
+## v1.3.0 (2026-07-09) — mathematical-consistency grounding connected (from solver arc (private))
 
 Adds a scoped, honestly-tiered reference to a separate mathematical-consistency finding: a
-`research_universal_solver` module (`birca_repair.py`, PR `morrocwi/research_universal_solver#7`, not yet
+`solver arc (private)` module (`birca_repair.py`, PR `solver arc (private) PR #7`, not yet
 merged) re-derives BIRCA's repair-loop equations as a face of that project's canonical spine equation,
 fixing 3 concrete faults in the source monograph's literal Eq(2)/Eq(4)/Eq(3-7) (dimensional inconsistency,
 an unbounded causal-safety term, and a repair-state equation structurally incapable of the bistability/
@@ -601,7 +601,7 @@ form reproduces bistability, hysteresis, and critical slowing down.
   explicit non-validation caveat.
 - Added a "Theoretical/mathematical grounding" section to `spec/EVIDENCE_SOURCES.md`, clearly separated from
   the Tier 0-8 clinical evidence libraries so it is never conflated with clinical evidence.
-- Cross-repo note: the `research_universal_solver` PR itself corrected an overclaim found during self-review
+- Cross-repo note: the `solver arc (private)` PR itself corrected an overclaim found during self-review
   — its own `health_atlas.py` module originally asserted its 17-model self-test "verified" that all 17
   classical health models are literally one unified spine equation; that claim was reworded to distinguish
   what the test actually checks (each model's own textbook behavior — `finite_diagnostic`) from the
@@ -810,7 +810,7 @@ AUTO-FAIL, 1 ERROR (retest needed).** Full detail, evidence quotes, and honest a
 
 **This package does NOT yet meet its own stated 100-item acceptance bar** (0 AUTO-FAIL required on
 dimension A) — v1.0.2 has one open, unfixed, real safety gap (A35). Readiness downgraded accordingly, not
-upgraded, despite the large amount of new passing evidence — see `cpq_skill/INDEX_SKILLS.yaml`.
+upgraded, despite the large amount of new passing evidence — see the command center (private)'s own skill index.
 
 ## v1.0.2 (2026-07-09) — closed the one stress-test gap, retested clean
 

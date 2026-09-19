@@ -1,15 +1,15 @@
 # Provenance — `compute/birca_math/`
 
 `birca_repair.py` and `health_atlas.py` are vendored, unmodified copies of the Python solver
-modules from `morrocwi/research_universal_solver`, `src/anse_spine/solvers/`, as merged in
-[PR #7](https://github.com/morrocwi/research_universal_solver/pull/7) ("solvers: BIRCA
+modules from `solver arc (private)`, `src/anse_spine/solvers/`, as merged in PR #7 (private
+repository, not publicly linkable) ("solvers: BIRCA
 repair-equation fixes + 17-model health atlas (with overclaim correction)").
 
 The same equations are additionally formalized as 7 discrete, axiom-free Coq files
 (`InfoHealthCuspFold`, `InfoHealthCausalRelax`, `InfoBioHomeostasis`, `InfoEpidemicThreshold`,
-`InfoCoupledCuspEP3`, `InfoEP3Directionality`, `InfoEP3LagGranger`) in
-[PR #8](https://github.com/morrocwi/research_universal_solver/pull/8) of that same repo.
-**The Coq proofs are not vendored here** — they stay in `research_universal_solver` under its
+`InfoCoupledCuspEP3`, `InfoEP3Directionality`, `InfoEP3LagGranger`) in PR #8 (private repository,
+not publicly linkable) of that same repo.
+**The Coq proofs are not vendored here** — they stay in `solver arc (private)` under its
 own CI (`make verify-attempts`), which is the authoritative place to re-check `Th_coqc`
 status. This directory only carries the derived, independently-runnable Python.
 
@@ -43,6 +43,6 @@ Both exit `0` on full pass, non-zero otherwise.
 
 ## Keeping this in sync
 
-If `research_universal_solver`'s `birca_repair.py`/`health_atlas.py` changes, re-vendor from
+If `solver arc (private)`'s `birca_repair.py`/`health_atlas.py` changes, re-vendor from
 there — do not hand-edit the copies here without also updating upstream, or the two will
 silently drift and this directory's provenance claim becomes false.

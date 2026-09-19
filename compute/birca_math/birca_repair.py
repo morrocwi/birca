@@ -25,7 +25,7 @@ objects that, taken literally, do NOT do what the surrounding prose says:
                  equilibrium and therefore CANNOT show the bistability / hysteresis / cusp
                  that EP-2 and the critical-slowing-down claim (sec 3.5) require.
 
-CANONICAL SPINE (research_universal_solver master equation):
+CANONICAL SPINE (solver arc (private) master equation):
         M Phi_tt + D Phi_t + K L_R Phi + gradV(Phi) = J - eta
         telegraph envelope:  tau_c u_tt + u_t = D grad^2 u
 Reading each BIRCA object as a face of this spine supplies exactly the two ingredients the
