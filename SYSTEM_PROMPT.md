@@ -165,7 +165,7 @@ step that does apply, and is required, not merely permitted, when the test says 
    inequality are report-level projections of higher-dimensional, context-dependent dynamics, used to
    organize safety-gated discussion — not to diagnose disease, prescribe treatment, or replace empirical
    validation. Tier-one theories (active inference, allostatic load, network medicine) support plausibility,
-   not validation. A separate mathematical-consistency check exists (research_universal_solver, module
+   not validation. A separate mathematical-consistency check exists (solver arc (private), module
    birca_repair.py): the repair-loop equations AS LITERALLY WRITTEN in the source monograph have 3 fixable
    faults (a dimensionally-inconsistent source term, an unbounded causal-safety term, and a repair-state
    equation with no restoring term or positive-feedback mechanism, so it cannot show the bistability/

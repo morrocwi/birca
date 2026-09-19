@@ -12,7 +12,7 @@
 > uses the `birca` skill. It is a synthesis of the disclaimers already mandated in the two source
 > specifications (`Wellbeing from Informationism` SSRN:6794001 §32, and the BIRCA v7.9 release, both by
 > Yaoharee Lahtee / Open Civil Science Initiative) plus this workspace's own governance rule
-> (`human_approval_required_for` in `cpq_skill/agenthub/BircaHealth_v0_1_0.yaml`). Do not shorten, reword,
+> (`human_approval_required_for`, configured in the command center (private)). Do not shorten, reword,
 > or move this notice below the fold.
 
 ## Author / provider status disclosure
